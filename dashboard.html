@@ -1,0 +1,1609 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Revytal — Clinic Dashboard · Mend Physical Therapy</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=DM+Mono:ital,wght@0,300;0,400;0,500;1,300&family=Instrument+Serif:ital@0;1&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600&display=swap');
+
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+
+:root{
+  --bg:        #080C10;
+  --bg2:       #0D1117;
+  --bg3:       #131920;
+  --surface:   #161D26;
+  --surface2:  #1C2530;
+  --border:    rgba(255,255,255,0.07);
+  --border2:   rgba(255,255,255,0.12);
+  --teal:      #1BA6A6;
+  --teal2:     #7ED4D4;
+  --teal3:     rgba(27,166,166,0.12);
+  --text:      #E8EDF2;
+  --text2:     #8A9BB0;
+  --text3:     #4A5A6E;
+  --green:     #22C55E;
+  --green2:    rgba(34,197,94,0.12);
+  --amber:     #F59E0B;
+  --amber2:    rgba(245,158,11,0.12);
+  --red:       #EF4444;
+  --red2:      rgba(239,68,68,0.12);
+  --font-body: 'DM Sans', system-ui, sans-serif;
+  --font-mono: 'DM Mono', monospace;
+  --font-serif:'Instrument Serif', Georgia, serif;
+  --radius:    14px;
+  --radius-sm: 8px;
+}
+
+html{height:100%;scroll-behavior:smooth}
+
+body{
+  background:var(--bg);
+  color:var(--text);
+  font-family:var(--font-body);
+  min-height:100vh;
+  overflow-x:hidden;
+  -webkit-font-smoothing:antialiased;
+  font-size:14px;
+}
+
+body::before{
+  content:'';
+  position:fixed;inset:0;
+  background-image:
+    linear-gradient(rgba(27,166,166,0.022) 1px,transparent 1px),
+    linear-gradient(90deg,rgba(27,166,166,0.022) 1px,transparent 1px);
+  background-size:52px 52px;
+  pointer-events:none;z-index:0;
+}
+
+body::after{
+  content:'';
+  position:fixed;
+  top:-30vh;left:50%;
+  transform:translateX(-50%);
+  width:1000px;height:600px;
+  background:radial-gradient(ellipse at center,rgba(27,166,166,0.06) 0%,transparent 65%);
+  pointer-events:none;z-index:0;
+}
+
+/* ── Shell layout ──────────────────────────────────────────── */
+.shell{
+  display:flex;
+  min-height:100vh;
+  position:relative;z-index:1;
+}
+
+/* ── Sidebar ──────────────────────────────────────────────── */
+.sidebar{
+  width:220px;
+  flex-shrink:0;
+  background:var(--surface);
+  border-right:1px solid var(--border);
+  display:flex;
+  flex-direction:column;
+  position:sticky;top:0;
+  height:100vh;
+  overflow:hidden;
+  z-index:10;
+}
+
+.sidebar-logo{
+  display:flex;align-items:center;gap:10px;
+  padding:22px 20px 18px;
+  border-bottom:1px solid var(--border);
+}
+
+.logo-mark{
+  width:28px;height:28px;
+  background:var(--teal);
+  border-radius:7px;
+  display:flex;align-items:center;justify-content:center;
+  flex-shrink:0;
+  box-shadow:0 0 18px rgba(27,166,166,0.38);
+}
+
+.logo-mark svg{display:block}
+
+.logo-text{
+  font-family:var(--font-serif);
+  font-size:18px;
+  color:var(--text);
+  letter-spacing:-0.2px;
+}
+
+.sidebar-clinic{
+  padding:14px 20px;
+  border-bottom:1px solid var(--border);
+}
+
+.sidebar-clinic-label{
+  font-size:10px;
+  font-weight:600;
+  letter-spacing:0.1em;
+  text-transform:uppercase;
+  color:var(--text3);
+  margin-bottom:4px;
+}
+
+.sidebar-clinic-name{
+  font-size:13px;
+  font-weight:600;
+  color:var(--text2);
+}
+
+.sidebar-nav{
+  flex:1;
+  padding:12px 10px;
+  display:flex;flex-direction:column;gap:2px;
+}
+
+.nav-item{
+  display:flex;align-items:center;gap:10px;
+  padding:9px 12px;
+  border-radius:var(--radius-sm);
+  font-size:13px;
+  font-weight:500;
+  color:var(--text3);
+  cursor:pointer;
+  transition:all 0.15s;
+  user-select:none;
+}
+
+.nav-item:hover{
+  background:rgba(255,255,255,0.04);
+  color:var(--text2);
+}
+
+.nav-item.active{
+  background:rgba(27,166,166,0.1);
+  color:var(--teal2);
+}
+
+.nav-item svg{flex-shrink:0;opacity:0.7}
+.nav-item.active svg{opacity:1}
+
+.sidebar-bottom{
+  padding:14px 20px;
+  border-top:1px solid var(--border);
+}
+
+.sidebar-status{
+  display:flex;align-items:center;gap:7px;
+  font-size:11px;
+  color:var(--text3);
+  font-family:var(--font-mono);
+}
+
+.status-dot{
+  width:6px;height:6px;
+  border-radius:50%;
+  background:var(--green);
+  box-shadow:0 0 6px rgba(34,197,94,0.5);
+  animation:pulseDot 2s ease infinite;
+}
+
+/* ── Main content ─────────────────────────────────────────── */
+.main{
+  flex:1;
+  min-width:0;
+  display:flex;flex-direction:column;
+}
+
+/* ── Topbar ──────────────────────────────────────────────── */
+.topbar{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:16px 32px;
+  border-bottom:1px solid var(--border);
+  background:rgba(8,12,16,0.7);
+  backdrop-filter:blur(12px);
+  -webkit-backdrop-filter:blur(12px);
+  position:sticky;top:0;z-index:9;
+}
+
+.topbar-title{
+  display:flex;flex-direction:column;
+}
+
+.topbar-label{
+  font-size:11px;
+  font-weight:500;
+  letter-spacing:0.08em;
+  text-transform:uppercase;
+  color:var(--text3);
+  margin-bottom:1px;
+}
+
+.topbar-heading{
+  font-family:var(--font-serif);
+  font-size:20px;
+  font-weight:400;
+  color:var(--text);
+  letter-spacing:-0.02em;
+}
+
+.topbar-right{
+  display:flex;align-items:center;gap:10px;
+}
+
+.topbar-date{
+  font-size:12px;
+  color:var(--text3);
+  font-family:var(--font-mono);
+}
+
+.btn{
+  display:inline-flex;align-items:center;gap:7px;
+  font-family:var(--font-body);
+  font-size:12px;
+  font-weight:600;
+  padding:8px 16px;
+  border-radius:var(--radius-sm);
+  border:none;
+  cursor:pointer;
+  transition:all 0.2s;
+  text-decoration:none;
+}
+
+.btn-teal{
+  background:var(--teal);
+  color:#fff;
+  box-shadow:0 0 18px rgba(27,166,166,0.25);
+}
+.btn-teal:hover{
+  background:#1bbfbf;
+  box-shadow:0 0 28px rgba(27,166,166,0.45);
+  transform:translateY(-1px);
+}
+
+.btn-ghost{
+  background:var(--surface2);
+  color:var(--text2);
+  border:1px solid var(--border);
+}
+.btn-ghost:hover{
+  border-color:var(--border2);
+  color:var(--text);
+}
+
+/* ── Page content ─────────────────────────────────────────── */
+.content{
+  padding:32px;
+  flex:1;
+  display:flex;flex-direction:column;gap:24px;
+}
+
+/* ── Stat cards ──────────────────────────────────────────── */
+.stats-row{
+  display:grid;
+  grid-template-columns:repeat(4,1fr);
+  gap:14px;
+}
+
+.stat-card{
+  background:var(--surface);
+  border:1px solid var(--border);
+  border-radius:var(--radius);
+  padding:22px 24px;
+  position:relative;
+  overflow:hidden;
+  transition:border-color 0.3s,box-shadow 0.3s;
+  opacity:0;
+  transform:translateY(12px);
+}
+
+.stat-card.in{
+  opacity:1;transform:none;
+  transition:opacity 0.5s ease,transform 0.5s ease,border-color 0.3s,box-shadow 0.3s;
+}
+
+.stat-card:hover{
+  border-color:rgba(27,166,166,0.2);
+  box-shadow:0 4px 28px rgba(0,0,0,0.4);
+}
+
+.stat-card::after{
+  content:'';
+  position:absolute;
+  top:0;left:0;right:0;
+  height:2px;
+  background:linear-gradient(90deg,var(--teal),transparent);
+  opacity:0;
+  transition:opacity 0.3s;
+}
+
+.stat-card:hover::after{opacity:1}
+
+.stat-label{
+  font-size:11px;
+  font-weight:500;
+  letter-spacing:0.08em;
+  text-transform:uppercase;
+  color:var(--text3);
+  margin-bottom:10px;
+  display:flex;align-items:center;gap:6px;
+}
+
+.stat-label svg{opacity:0.6}
+
+.stat-value{
+  font-family:var(--font-mono);
+  font-size:28px;
+  font-weight:500;
+  color:var(--text);
+  letter-spacing:-0.02em;
+  line-height:1;
+  margin-bottom:6px;
+}
+
+.stat-value.teal{color:var(--teal2)}
+
+.stat-sub{
+  font-size:11px;
+  color:var(--text3);
+  display:flex;align-items:center;gap:5px;
+}
+
+.stat-delta{
+  display:inline-flex;align-items:center;gap:3px;
+  font-size:11px;
+  font-weight:600;
+  padding:2px 7px;
+  border-radius:100px;
+}
+
+.delta-up{
+  color:var(--green);
+  background:var(--green2);
+}
+
+/* ── Panel ────────────────────────────────────────────────── */
+.panel{
+  background:var(--surface);
+  border:1px solid var(--border);
+  border-radius:var(--radius);
+  overflow:hidden;
+  opacity:0;
+  transform:translateY(14px);
+}
+
+.panel.in{
+  opacity:1;transform:none;
+  transition:opacity 0.55s ease,transform 0.55s ease;
+}
+
+.panel-header{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:16px 22px;
+  border-bottom:1px solid var(--border);
+}
+
+.panel-title{
+  display:flex;align-items:center;gap:8px;
+  font-size:12px;
+  font-weight:600;
+  letter-spacing:0.06em;
+  text-transform:uppercase;
+  color:var(--text2);
+}
+
+.panel-dot{
+  width:6px;height:6px;
+  border-radius:50%;
+  background:var(--teal);
+  box-shadow:0 0 6px rgba(27,166,166,0.5);
+  animation:pulseDot 2s ease infinite;
+}
+
+.panel-count{
+  font-family:var(--font-mono);
+  font-size:11px;
+  color:var(--text3);
+  background:var(--bg3);
+  border:1px solid var(--border);
+  padding:3px 9px;
+  border-radius:100px;
+}
+
+/* ── Orders table ─────────────────────────────────────────── */
+.table-wrap{overflow-x:auto}
+
+table{
+  width:100%;
+  border-collapse:collapse;
+}
+
+thead tr{
+  border-bottom:1px solid var(--border);
+}
+
+thead th{
+  font-size:11px;
+  font-weight:600;
+  letter-spacing:0.07em;
+  text-transform:uppercase;
+  color:var(--text3);
+  padding:12px 22px;
+  text-align:left;
+  white-space:nowrap;
+}
+
+thead th:last-child{text-align:right}
+
+tbody tr{
+  border-bottom:1px solid var(--border);
+  transition:background 0.15s;
+  opacity:0;
+  transform:translateX(-8px);
+}
+
+tbody tr.in{
+  opacity:1;transform:none;
+  transition:opacity 0.4s ease,transform 0.4s ease,background 0.15s;
+}
+
+tbody tr:last-child{border-bottom:none}
+
+tbody tr:hover{background:rgba(255,255,255,0.02)}
+
+td{
+  padding:14px 22px;
+  font-size:13px;
+  color:var(--text2);
+  vertical-align:middle;
+  white-space:nowrap;
+}
+
+td:last-child{text-align:right}
+
+.td-initials{
+  display:flex;align-items:center;gap:10px;
+}
+
+.initials-avatar{
+  width:30px;height:30px;
+  border-radius:8px;
+  background:var(--surface2);
+  border:1px solid var(--border);
+  display:flex;align-items:center;justify-content:center;
+  font-family:var(--font-mono);
+  font-size:11px;
+  font-weight:500;
+  color:var(--teal2);
+  flex-shrink:0;
+}
+
+.td-product{
+  max-width:200px;
+  overflow:hidden;
+  text-overflow:ellipsis;
+}
+
+.td-product-name{
+  font-size:13px;
+  color:var(--text);
+  font-weight:500;
+  white-space:nowrap;
+  overflow:hidden;
+  text-overflow:ellipsis;
+  max-width:190px;
+}
+
+.td-product-sku{
+  font-family:var(--font-mono);
+  font-size:10px;
+  color:var(--text3);
+  margin-top:1px;
+}
+
+.td-price{
+  font-family:var(--font-mono);
+  font-size:13px;
+  font-weight:500;
+  color:var(--text);
+}
+
+.td-date{
+  font-family:var(--font-mono);
+  font-size:11px;
+  color:var(--text3);
+}
+
+/* ── Status badges ────────────────────────────────────────── */
+.badge{
+  display:inline-flex;align-items:center;gap:5px;
+  font-size:11px;
+  font-weight:600;
+  padding:4px 10px;
+  border-radius:100px;
+  letter-spacing:0.03em;
+  white-space:nowrap;
+}
+
+.badge::before{
+  content:'';
+  width:5px;height:5px;
+  border-radius:50%;
+}
+
+.badge-fulfilled{
+  color:var(--green);
+  background:var(--green2);
+  border:1px solid rgba(34,197,94,0.2);
+}
+.badge-fulfilled::before{background:var(--green)}
+
+.badge-paid{
+  color:var(--teal2);
+  background:var(--teal3);
+  border:1px solid rgba(27,166,166,0.2);
+}
+.badge-paid::before{background:var(--teal)}
+
+.badge-pending{
+  color:var(--amber);
+  background:var(--amber2);
+  border:1px solid rgba(245,158,11,0.2);
+}
+.badge-pending::before{background:var(--amber)}
+
+.badge-failed{
+  color:var(--red);
+  background:var(--red2);
+  border:1px solid rgba(239,68,68,0.2);
+}
+.badge-failed::before{background:var(--red)}
+
+/* ── Supplier column ──────────────────────────────────────── */
+.supplier-tag{
+  display:inline-flex;align-items:center;gap:5px;
+  font-size:11px;
+  font-weight:500;
+  color:var(--text3);
+  background:var(--bg3);
+  border:1px solid var(--border);
+  padding:3px 9px;
+  border-radius:100px;
+}
+
+/* ── Empty state ──────────────────────────────────────────── */
+.empty-state{
+  display:flex;flex-direction:column;align-items:center;
+  padding:56px 24px;
+  text-align:center;
+}
+
+.empty-icon{
+  width:48px;height:48px;
+  border-radius:14px;
+  background:var(--bg3);
+  border:1px solid var(--border);
+  display:flex;align-items:center;justify-content:center;
+  margin-bottom:16px;
+}
+
+.empty-title{
+  font-size:14px;
+  font-weight:600;
+  color:var(--text2);
+  margin-bottom:6px;
+}
+
+.empty-sub{
+  font-size:12px;
+  color:var(--text3);
+  max-width:280px;
+  line-height:1.6;
+}
+
+/* ── Revenue mini chart ───────────────────────────────────── */
+.chart-panel{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:14px;
+}
+
+.mini-chart{
+  background:var(--bg3);
+  border-radius:var(--radius-sm);
+  padding:0 0 6px;
+  height:56px;
+  display:flex;align-items:flex-end;gap:3px;
+  overflow:hidden;
+  padding:0 2px 4px;
+}
+
+.bar{
+  flex:1;
+  background:rgba(27,166,166,0.2);
+  border-radius:3px 3px 0 0;
+  min-height:4px;
+  transition:background 0.2s;
+}
+.bar:hover{background:rgba(27,166,166,0.5)}
+.bar.today{background:var(--teal);opacity:0.9}
+
+/* ── Breakdown card ──────────────────────────────────────── */
+.breakdown-row{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:10px 0;
+  border-bottom:1px solid var(--border);
+}
+.breakdown-row:last-child{border-bottom:none}
+
+.breakdown-label{
+  font-size:12px;
+  color:var(--text2);
+  display:flex;align-items:center;gap:8px;
+}
+
+.breakdown-dot{
+  width:7px;height:7px;
+  border-radius:50%;
+}
+
+.breakdown-val{
+  font-family:var(--font-mono);
+  font-size:12px;
+  font-weight:500;
+  color:var(--text);
+}
+
+/* ── Error / loading states ──────────────────────────────── */
+.loading-row td{
+  color:var(--text3) !important;
+  font-style:italic;
+}
+
+.error-banner{
+  background:var(--red2);
+  border:1px solid rgba(239,68,68,0.2);
+  border-radius:var(--radius-sm);
+  padding:12px 16px;
+  font-size:12px;
+  color:var(--red);
+  display:flex;align-items:center;gap:8px;
+  margin-bottom:12px;
+  display:none;
+}
+
+.error-banner.show{display:flex}
+
+/* ── Realtime pulse ──────────────────────────────────────── */
+.live-pill{
+  display:inline-flex;align-items:center;gap:5px;
+  font-size:10px;
+  font-weight:600;
+  letter-spacing:0.06em;
+  text-transform:uppercase;
+  color:var(--green);
+  background:var(--green2);
+  border:1px solid rgba(34,197,94,0.2);
+  padding:4px 9px;
+  border-radius:100px;
+}
+
+.live-dot{
+  width:5px;height:5px;
+  border-radius:50%;
+  background:var(--green);
+  animation:pulseDot 1.5s ease infinite;
+}
+
+/* ── Toast ────────────────────────────────────────────────── */
+.toast{
+  position:fixed;
+  bottom:28px;right:28px;
+  background:var(--surface2);
+  border:1px solid var(--border2);
+  border-radius:12px;
+  padding:14px 20px;
+  font-size:13px;
+  color:var(--text);
+  display:flex;align-items:center;gap:10px;
+  z-index:999;
+  transform:translateY(20px);
+  opacity:0;
+  pointer-events:none;
+  transition:all 0.3s ease;
+  box-shadow:0 8px 40px rgba(0,0,0,0.5);
+}
+
+.toast.show{
+  transform:translateY(0);
+  opacity:1;
+  pointer-events:auto;
+}
+
+.toast-icon{
+  width:20px;height:20px;
+  border-radius:6px;
+  display:flex;align-items:center;justify-content:center;
+  flex-shrink:0;
+}
+
+/* ── Schema modal ─────────────────────────────────────────── */
+.modal-overlay{
+  position:fixed;inset:0;
+  background:rgba(0,0,0,0.65);
+  backdrop-filter:blur(6px);
+  z-index:200;
+  display:none;
+  align-items:center;
+  justify-content:center;
+  padding:24px;
+}
+
+.modal-overlay.show{display:flex}
+
+.modal{
+  background:var(--surface);
+  border:1px solid var(--border2);
+  border-radius:20px;
+  width:100%;
+  max-width:640px;
+  max-height:85vh;
+  overflow:hidden;
+  display:flex;flex-direction:column;
+  animation:fadeUp 0.3s ease both;
+}
+
+.modal-header{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:18px 24px;
+  border-bottom:1px solid var(--border);
+  flex-shrink:0;
+}
+
+.modal-title{
+  font-size:14px;
+  font-weight:600;
+  color:var(--text);
+}
+
+.modal-close{
+  width:28px;height:28px;
+  border-radius:7px;
+  background:var(--bg3);
+  border:1px solid var(--border);
+  color:var(--text3);
+  cursor:pointer;
+  display:flex;align-items:center;justify-content:center;
+  transition:all 0.2s;
+}
+.modal-close:hover{color:var(--text);border-color:var(--border2)}
+
+.modal-body{
+  overflow-y:auto;
+  padding:24px;
+  flex:1;
+}
+
+.modal-body::-webkit-scrollbar{width:5px}
+.modal-body::-webkit-scrollbar-track{background:transparent}
+.modal-body::-webkit-scrollbar-thumb{background:var(--surface2);border-radius:3px}
+
+.code-block{
+  background:var(--bg3);
+  border:1px solid var(--border);
+  border-radius:10px;
+  padding:16px 18px;
+  font-family:var(--font-mono);
+  font-size:11.5px;
+  line-height:1.8;
+  color:var(--text2);
+  overflow-x:auto;
+  margin-bottom:16px;
+}
+
+.code-block .k{color:var(--teal)} /* keyword */
+.code-block .t{color:var(--teal2)} /* type */
+.code-block .s{color:#98C379} /* string */
+.code-block .c{color:var(--text3);font-style:italic} /* comment */
+.code-block .n{color:#E5C07B} /* number/name */
+
+.code-section-title{
+  font-size:11px;
+  font-weight:600;
+  letter-spacing:0.08em;
+  text-transform:uppercase;
+  color:var(--text3);
+  margin-bottom:8px;
+}
+
+/* ── Animations ───────────────────────────────────────────── */
+@keyframes fadeUp{
+  from{opacity:0;transform:translateY(12px)}
+  to{opacity:1;transform:none}
+}
+
+@keyframes pulseDot{
+  0%,100%{box-shadow:0 0 5px currentColor}
+  50%{box-shadow:0 0 12px currentColor}
+}
+
+/* ── Responsive ───────────────────────────────────────────── */
+@media(max-width:900px){
+  .stats-row{grid-template-columns:repeat(2,1fr)}
+  .chart-panel{grid-template-columns:1fr}
+}
+
+@media(max-width:700px){
+  .sidebar{display:none}
+  .topbar{padding:14px 18px}
+  .content{padding:18px}
+  .stats-row{grid-template-columns:1fr 1fr}
+  thead th:nth-child(4),td:nth-child(4),
+  thead th:nth-child(5),td:nth-child(5){display:none}
+}
+
+@media(max-width:440px){
+  .stats-row{grid-template-columns:1fr}
+}
+
+::selection{background:rgba(27,166,166,0.22);color:var(--text)}
+::-webkit-scrollbar{width:5px}
+::-webkit-scrollbar-track{background:var(--bg2)}
+::-webkit-scrollbar-thumb{background:var(--surface2);border-radius:3px}
+</style>
+</head>
+<body>
+
+<!--
+═══════════════════════════════════════════════════════════════════════════════
+  REVYTAL CLINIC DASHBOARD
+  Mend Physical Therapy — First Clinic Partner
+
+  SETUP CHECKLIST:
+  1. Create a Supabase project at https://supabase.com
+  2. Run the SQL schema below (click "Schema" button in the dashboard)
+  3. Replace SUPABASE_URL and SUPABASE_ANON_KEY below with your project values
+  4. Configure your Stripe webhook (see webhook reference in Schema modal)
+  5. Enable Supabase Realtime on the `orders` table
+
+  PHI NOTICE: This dashboard is designed to be PHI-free.
+  - Use patient initials only (e.g. "J.D.") — never full names
+  - No DOB, phone, email, or medical details stored or displayed
+  - All patient identification is limited to the `patient_initials` field
+═══════════════════════════════════════════════════════════════════════════════
+-->
+
+<!-- ── SUPABASE CONFIG — replace these values ───────────────────────────── -->
+<script>
+  const SUPABASE_URL      = 'https://YOUR_PROJECT_ID.supabase.co';
+  const SUPABASE_ANON_KEY = 'YOUR_ANON_KEY_HERE';
+  const CLINIC_ID         = 'YOUR_CLINIC_ID_HERE'; // UUID from clinics table
+</script>
+
+<div class="shell">
+
+  <!-- Sidebar -->
+  <aside class="sidebar">
+    <div class="sidebar-logo">
+      <div class="logo-mark">
+        <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
+          <path d="M7 1L12 4V10L7 13L2 10V4L7 1Z" stroke="white" stroke-width="1.5" stroke-linejoin="round"/>
+          <circle cx="7" cy="7" r="2" fill="white"/>
+        </svg>
+      </div>
+      <span class="logo-text">Revytal</span>
+    </div>
+
+    <div class="sidebar-clinic">
+      <div class="sidebar-clinic-label">Clinic</div>
+      <div class="sidebar-clinic-name">Mend Physical Therapy</div>
+    </div>
+
+    <nav class="sidebar-nav">
+      <div class="nav-item active">
+        <svg width="15" height="15" viewBox="0 0 15 15" fill="none">
+          <rect x="1.5" y="1.5" width="5" height="5" rx="1.5" stroke="currentColor" stroke-width="1.3"/>
+          <rect x="8.5" y="1.5" width="5" height="5" rx="1.5" stroke="currentColor" stroke-width="1.3"/>
+          <rect x="1.5" y="8.5" width="5" height="5" rx="1.5" stroke="currentColor" stroke-width="1.3"/>
+          <rect x="8.5" y="8.5" width="5" height="5" rx="1.5" stroke="currentColor" stroke-width="1.3"/>
+        </svg>
+        Overview
+      </div>
+      <div class="nav-item" onclick="showSection('orders')">
+        <svg width="15" height="15" viewBox="0 0 15 15" fill="none">
+          <rect x="1.5" y="2.5" width="12" height="10" rx="2" stroke="currentColor" stroke-width="1.3"/>
+          <path d="M4.5 5.5h6M4.5 7.5h6M4.5 9.5h4" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/>
+        </svg>
+        Orders
+      </div>
+      <div class="nav-item" onclick="openSchema()">
+        <svg width="15" height="15" viewBox="0 0 15 15" fill="none">
+          <path d="M7.5 1.5L13 4.5V10.5L7.5 13.5L2 10.5V4.5L7.5 1.5Z" stroke="currentColor" stroke-width="1.3" stroke-linejoin="round"/>
+          <path d="M4.5 6l3 3 3-3" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+        Schema &amp; Setup
+      </div>
+    </nav>
+
+    <div class="sidebar-bottom">
+      <div class="sidebar-status">
+        <span class="status-dot"></span>
+        Connected
+      </div>
+    </div>
+  </aside>
+
+  <!-- Main -->
+  <div class="main">
+
+    <!-- Topbar -->
+    <header class="topbar">
+      <div class="topbar-title">
+        <span class="topbar-label">Clinic Dashboard</span>
+        <span class="topbar-heading">Revenue Overview</span>
+      </div>
+      <div class="topbar-right">
+        <span class="live-pill"><span class="live-dot"></span>Live</span>
+        <span class="topbar-date" id="current-date">—</span>
+        <button class="btn btn-ghost" onclick="refreshOrders()">
+          <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M1.5 6A4.5 4.5 0 006 10.5a4.5 4.5 0 004-2.5" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/><path d="M10.5 6A4.5 4.5 0 006 1.5a4.5 4.5 0 00-3.5 1.7" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/><path d="M10.5 4V6h-2" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          Refresh
+        </button>
+        <button class="btn btn-teal" onclick="openSchema()">
+          <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M6 1.5v9M1.5 6h9" stroke="white" stroke-width="1.5" stroke-linecap="round"/></svg>
+          Setup Guide
+        </button>
+      </div>
+    </header>
+
+    <!-- Content -->
+    <div class="content">
+
+      <!-- Error banner -->
+      <div class="error-banner" id="error-banner">
+        <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><circle cx="7" cy="7" r="5.5" stroke="currentColor" stroke-width="1.3"/><path d="M7 4.5v3M7 9.5v.5" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/></svg>
+        <span id="error-text">Could not connect to Supabase. Check your URL and anon key.</span>
+      </div>
+
+      <!-- Stats row -->
+      <div class="stats-row" id="stats-row">
+        <div class="stat-card" style="transition-delay:0s">
+          <div class="stat-label">
+            <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M6 1v10M3 3.5C3 2.7 4.3 2 6 2s3 .7 3 1.5S7.7 5 6 5 3 5.8 3 6.5 4.3 8 6 8s3 .7 3 1.5S7.7 10 6 10s-3-.7-3-1.5" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/></svg>
+            Revenue This Month
+          </div>
+          <div class="stat-value teal" id="stat-revenue">—</div>
+          <div class="stat-sub" id="stat-revenue-sub">Loading…</div>
+        </div>
+        <div class="stat-card" style="transition-delay:0.07s">
+          <div class="stat-label">
+            <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><rect x="1.5" y="2" width="9" height="8" rx="1.5" stroke="currentColor" stroke-width="1.2"/><path d="M4 5h4M4 7h2.5" stroke="currentColor" stroke-width="1.1" stroke-linecap="round"/></svg>
+            Orders This Month
+          </div>
+          <div class="stat-value" id="stat-orders">—</div>
+          <div class="stat-sub" id="stat-orders-sub">Loading…</div>
+        </div>
+        <div class="stat-card" style="transition-delay:0.14s">
+          <div class="stat-label">
+            <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M2 9.5L5 6.5l2.5 2L10 4" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            Avg. Order Value
+          </div>
+          <div class="stat-value" id="stat-avg">—</div>
+          <div class="stat-sub">Per fulfilled order</div>
+        </div>
+        <div class="stat-card" style="transition-delay:0.21s">
+          <div class="stat-label">
+            <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><circle cx="6" cy="6" r="4.5" stroke="currentColor" stroke-width="1.2"/><path d="M4 6l1.5 1.5L8 4" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            Fulfillment Rate
+          </div>
+          <div class="stat-value" id="stat-fulfill">—</div>
+          <div class="stat-sub">Orders marked fulfilled</div>
+        </div>
+      </div>
+
+      <!-- Chart + Breakdown row -->
+      <div class="chart-panel">
+        <!-- Daily revenue sparkline -->
+        <div class="panel" id="chart-panel">
+          <div class="panel-header">
+            <div class="panel-title">
+              <div class="panel-dot"></div>
+              Daily Revenue
+            </div>
+            <span class="panel-count" id="chart-label">This month</span>
+          </div>
+          <div style="padding:16px 20px 20px">
+            <div class="mini-chart" id="bar-chart"></div>
+          </div>
+        </div>
+
+        <!-- Supplier breakdown -->
+        <div class="panel" id="breakdown-panel">
+          <div class="panel-header">
+            <div class="panel-title">
+              <div class="panel-dot"></div>
+              Supplier Breakdown
+            </div>
+          </div>
+          <div style="padding:4px 20px 8px" id="breakdown-body">
+            <div class="breakdown-row">
+              <span class="breakdown-label"><span class="breakdown-dot" style="background:var(--teal)"></span>Loading…</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Orders table -->
+      <div class="panel" id="orders-panel">
+        <div class="panel-header">
+          <div class="panel-title">
+            <div class="panel-dot"></div>
+            Recent Orders
+          </div>
+          <span class="panel-count" id="order-count">0 orders</span>
+        </div>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>Patient</th>
+                <th>Product</th>
+                <th>Price</th>
+                <th>Supplier</th>
+                <th>Status</th>
+                <th>Date</th>
+                <th>Order ID</th>
+              </tr>
+            </thead>
+            <tbody id="orders-tbody">
+              <tr class="loading-row in">
+                <td colspan="7" style="text-align:center;padding:36px;color:var(--text3)">
+                  Connecting to Supabase…
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+    </div><!-- /content -->
+  </div><!-- /main -->
+</div><!-- /shell -->
+
+<!-- Toast -->
+<div class="toast" id="toast">
+  <div class="toast-icon" style="background:var(--green2)">
+    <svg width="11" height="11" viewBox="0 0 11 11" fill="none"><path d="M2 5.5L4.5 8L9 3" stroke="#22C55E" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+  </div>
+  <span id="toast-text">New order received</span>
+</div>
+
+<!-- Schema Modal -->
+<div class="modal-overlay" id="schema-modal" onclick="closeSchemaOnOverlay(event)">
+  <div class="modal">
+    <div class="modal-header">
+      <span class="modal-title">Supabase Schema &amp; Setup Reference</span>
+      <button class="modal-close" onclick="closeSchema()">
+        <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M2 2l8 8M10 2l-8 8" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+      </button>
+    </div>
+    <div class="modal-body">
+
+      <p class="code-section-title">1 — Run this SQL in your Supabase SQL Editor</p>
+      <div class="code-block"><span class="c">-- ── clinics ─────────────────────────────────────────────────</span>
+<span class="k">create table</span> <span class="n">clinics</span> (
+  <span class="n">id</span>           <span class="t">uuid</span> <span class="k">primary key default</span> gen_random_uuid(),
+  <span class="n">name</span>         <span class="t">text</span> <span class="k">not null</span>,
+  <span class="n">slug</span>         <span class="t">text</span> <span class="k">unique</span>,
+  <span class="n">contact_email</span> <span class="t">text</span>,
+  <span class="n">created_at</span>   <span class="t">timestamptz</span> <span class="k">default</span> now()
+);
+
+<span class="c">-- Insert Mend Physical Therapy (copy the returned id into CLINIC_ID)</span>
+<span class="k">insert into</span> <span class="n">clinics</span> (name, slug, contact_email)
+<span class="k">values</span> (<span class="s">'Mend Physical Therapy'</span>, <span class="s">'mend-pt'</span>, <span class="s">'will@mendtherapyla.com'</span>)
+<span class="k">returning</span> id;
+
+<span class="c">-- ── products ─────────────────────────────────────────────────</span>
+<span class="k">create table</span> <span class="n">products</span> (
+  <span class="n">id</span>           <span class="t">uuid</span> <span class="k">primary key default</span> gen_random_uuid(),
+  <span class="n">product_name</span> <span class="t">text</span> <span class="k">not null</span>,
+  <span class="n">sku</span>          <span class="t">text</span> <span class="k">unique not null</span>,
+  <span class="n">supplier</span>     <span class="t">text</span> <span class="k">not null</span>,
+  <span class="n">price</span>        <span class="t">numeric(10,2) not null</span>,
+  <span class="n">cost</span>         <span class="t">numeric(10,2)</span>,
+  <span class="n">url</span>          <span class="t">text</span>,
+  <span class="n">tags</span>         <span class="t">text</span>,
+  <span class="n">active</span>       <span class="t">boolean default true</span>,
+  <span class="n">created_at</span>   <span class="t">timestamptz default</span> now()
+);
+
+<span class="c">-- ── orders ───────────────────────────────────────────────────</span>
+<span class="c">-- PHI NOTE: patient_initials only (e.g. 'J.D.'). No full names, DOB,</span>
+<span class="c">-- phone numbers, emails, or any other patient identifiers.</span>
+<span class="k">create table</span> <span class="n">orders</span> (
+  <span class="n">id</span>                <span class="t">uuid primary key default</span> gen_random_uuid(),
+  <span class="n">clinic_id</span>         <span class="t">uuid references clinics(id)</span>,
+  <span class="n">product_name</span>      <span class="t">text not null</span>,
+  <span class="n">sku</span>               <span class="t">text not null</span>,
+  <span class="n">supplier</span>          <span class="t">text not null</span>,
+  <span class="n">price</span>             <span class="t">numeric(10,2) not null</span>,
+  <span class="n">cost</span>              <span class="t">numeric(10,2)</span>,
+  <span class="n">margin</span>            <span class="t">numeric(10,2)
+                       generated always as (price - coalesce(cost,0)) stored</span>,
+  <span class="n">patient_initials</span>  <span class="t">text</span>,          <span class="c">-- 'J.D.' — NO other patient data</span>
+  <span class="n">checkout_url</span>      <span class="t">text</span>,
+  <span class="n">stripe_session_id</span> <span class="t">text unique</span>,
+  <span class="n">status</span>            <span class="t">text default</span> <span class="s">'pending'</span>
+                        <span class="k">check</span> (status <span class="k">in</span> (<span class="s">'pending'</span>,<span class="s">'paid'</span>,<span class="s">'fulfilled'</span>,<span class="s">'failed'</span>)),
+  <span class="n">created_at</span>        <span class="t">timestamptz default</span> now(),
+  <span class="n">fulfilled_at</span>      <span class="t">timestamptz</span>
+);
+
+<span class="c">-- Indexes</span>
+<span class="k">create index on</span> orders (clinic_id);
+<span class="k">create index on</span> orders (stripe_session_id);
+<span class="k">create index on</span> orders (created_at <span class="k">desc</span>);
+<span class="k">create index on</span> orders (status);
+
+<span class="c">-- Enable realtime (run in Supabase Dashboard → Database → Replication)</span>
+<span class="c">-- Or run: alter publication supabase_realtime add table orders;</span></div>
+
+      <p class="code-section-title">2 — Enable Realtime on the orders table</p>
+      <div class="code-block"><span class="c">-- In Supabase SQL Editor:</span>
+<span class="k">alter publication</span> supabase_realtime <span class="k">add table</span> orders;</div>
+
+      <p class="code-section-title">3 — Stripe Webhook (Next.js / Node handler pseudocode)</p>
+      <div class="code-block"><span class="c">// Listen for: checkout.session.completed</span>
+<span class="c">// Stripe Dashboard → Developers → Webhooks → Add endpoint</span>
+<span class="c">// URL: https://your-backend.com/api/webhook</span>
+
+<span class="k">const</span> event = stripe.webhooks.constructEvent(body, sig, secret);
+
+<span class="k">if</span> (event.type === <span class="s">'checkout.session.completed'</span>) {
+  <span class="k">const</span> session = event.data.object;
+  <span class="k">const</span> { sku, product_name, supplier,
+          price, cost, clinic_id,
+          patient_initials }  = session.metadata;
+  <span class="c">// ↑ Pass these as metadata when creating the Checkout Session</span>
+  <span class="c">// patient_initials = initials only — never full name</span>
+
+  <span class="k">await</span> supabase.from(<span class="s">'orders'</span>).insert({
+    clinic_id,
+    product_name,
+    sku,
+    supplier,
+    price:            parseFloat(price),
+    cost:             parseFloat(cost),
+    patient_initials, <span class="c">// e.g. 'J.D.'</span>
+    checkout_url:     session.url,
+    stripe_session_id: session.id,
+    status:           <span class="s">'paid'</span>
+  });
+
+  <span class="c">// Then send supplier email (see main app)</span>
+  <span class="k">await</span> routeToSupplier({ sku, supplier, patient_initials });
+
+  <span class="c">// Update to fulfilled after supplier routing</span>
+  <span class="k">await</span> supabase.from(<span class="s">'orders'</span>)
+    .update({ status: <span class="s">'fulfilled'</span>, fulfilled_at: <span class="k">new</span> Date() })
+    .eq(<span class="s">'stripe_session_id'</span>, session.id);
+}</div>
+
+      <p class="code-section-title">4 — Row Level Security (recommended)</p>
+      <div class="code-block"><span class="k">alter table</span> orders <span class="k">enable row level security</span>;
+
+<span class="c">-- Allow service role full access (webhook uses this)</span>
+<span class="k">create policy</span> <span class="s">"service_role_all"</span> <span class="k">on</span> orders
+  <span class="k">as permissive for all to</span> service_role
+  <span class="k">using</span> (true) <span class="k">with check</span> (true);
+
+<span class="c">-- Allow anon read for dashboard (scope to clinic_id)</span>
+<span class="k">create policy</span> <span class="s">"anon_read_clinic"</span> <span class="k">on</span> orders
+  <span class="k">for select to</span> anon
+  <span class="k">using</span> (clinic_id = <span class="s">'YOUR_CLINIC_ID'</span>::uuid);</div>
+
+    </div><!-- /modal-body -->
+  </div><!-- /modal -->
+</div><!-- /modal-overlay -->
+
+<script>
+// ══════════════════════════════════════════════════════════════════════════════
+//  REVYTAL CLINIC DASHBOARD — RUNTIME
+//  Supabase REST + Realtime via fetch (no SDK dependency)
+// ══════════════════════════════════════════════════════════════════════════════
+
+// ── Date display ──────────────────────────────────────────────────────────────
+(function(){
+  const el = document.getElementById('current-date');
+  if(el) el.textContent = new Date().toLocaleDateString('en-US',{
+    weekday:'short', month:'short', day:'numeric', year:'numeric'
+  });
+})();
+
+// ── Supabase REST client (no external SDK) ────────────────────────────────────
+const DB = {
+  async query(table, params = {}){
+    const url = new URL(`${SUPABASE_URL}/rest/v1/${table}`);
+    Object.entries(params).forEach(([k,v]) => url.searchParams.set(k,v));
+    const res = await fetch(url.toString(), {
+      headers:{
+        'apikey': SUPABASE_ANON_KEY,
+        'Authorization': `Bearer ${SUPABASE_ANON_KEY}`,
+        'Accept': 'application/json',
+      }
+    });
+    if(!res.ok) throw new Error(`Supabase error ${res.status}: ${await res.text()}`);
+    return res.json();
+  }
+};
+
+// ── Realtime via Supabase WebSocket channel ───────────────────────────────────
+let realtimeWs = null;
+
+function connectRealtime(){
+  if(!SUPABASE_URL || SUPABASE_URL.includes('YOUR_PROJECT')) return;
+
+  const wsUrl = SUPABASE_URL
+    .replace('https://','wss://')
+    .replace('http://','ws://');
+
+  try {
+    realtimeWs = new WebSocket(`${wsUrl}/realtime/v1/websocket?apikey=${SUPABASE_ANON_KEY}&vsn=1.0.0`);
+
+    realtimeWs.onopen = () => {
+      // Join the orders table channel
+      realtimeWs.send(JSON.stringify({
+        topic: `realtime:public:orders`,
+        event: 'phx_join',
+        payload: { config:{ broadcast:{self:false}, presence:{key:''} } },
+        ref: '1'
+      }));
+    };
+
+    realtimeWs.onmessage = (e) => {
+      try {
+        const msg = JSON.parse(e.data);
+        if(msg.event === 'INSERT' || msg.event === 'UPDATE'){
+          const row = msg.payload?.record;
+          if(row && (!CLINIC_ID || CLINIC_ID.includes('YOUR') || row.clinic_id === CLINIC_ID)){
+            refreshOrders();
+            showToast(`New order — ${row.product_name || 'product'} · ${row.status || 'received'}`);
+          }
+        }
+        // Heartbeat
+        if(msg.event === 'phx_reply' && msg.ref === '1'){
+          // Successfully joined
+        }
+      } catch(_){}
+    };
+
+    realtimeWs.onerror = () => { realtimeWs = null; };
+
+    // Heartbeat every 30s
+    setInterval(()=>{
+      if(realtimeWs && realtimeWs.readyState === WebSocket.OPEN){
+        realtimeWs.send(JSON.stringify({topic:'phoenix',event:'heartbeat',payload:{},ref:'hb'}));
+      }
+    }, 30000);
+
+  } catch(_){}
+}
+
+// ── State ─────────────────────────────────────────────────────────────────────
+let allOrders = [];
+
+// ── Formatters ────────────────────────────────────────────────────────────────
+function fmt$(n){
+  if(n == null || isNaN(n)) return '$—';
+  return '$' + Number(n).toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2});
+}
+
+function fmtDate(iso){
+  if(!iso) return '—';
+  const d = new Date(iso);
+  return d.toLocaleDateString('en-US',{month:'short',day:'numeric'}) + ' ' +
+         d.toLocaleTimeString('en-US',{hour:'numeric',minute:'2-digit',hour12:true});
+}
+
+function fmtShortId(id){
+  if(!id) return '—';
+  return id.slice(-8).toUpperCase();
+}
+
+function monthStart(){
+  const n = new Date();
+  return new Date(n.getFullYear(), n.getMonth(), 1).toISOString();
+}
+
+// ── Badge renderer ─────────────────────────────────────────────────────────────
+function badge(status){
+  const map = {
+    fulfilled: ['fulfilled','Fulfilled'],
+    paid:      ['paid','Paid'],
+    pending:   ['pending','Pending'],
+    failed:    ['failed','Failed'],
+  };
+  const [cls,label] = map[status] || ['pending', status || 'Unknown'];
+  return `<span class="badge badge-${cls}">${label}</span>`;
+}
+
+// ── Render stats ───────────────────────────────────────────────────────────────
+function renderStats(orders){
+  const month = monthStart();
+  const monthOrders = orders.filter(o => o.created_at >= month);
+  const paid = monthOrders.filter(o => o.status === 'paid' || o.status === 'fulfilled');
+  const fulfilled = monthOrders.filter(o => o.status === 'fulfilled');
+
+  const revenue = paid.reduce((s,o) => s + parseFloat(o.price||0), 0);
+  const avg     = paid.length ? revenue / paid.length : 0;
+  const fRate   = monthOrders.length ? Math.round(fulfilled.length / monthOrders.length * 100) : 0;
+
+  animateCount('stat-revenue', revenue, true);
+  animateCount('stat-orders',  monthOrders.length, false);
+  animateCount('stat-avg',     avg, true);
+
+  document.getElementById('stat-fulfill').textContent = `${fRate}%`;
+  document.getElementById('stat-revenue-sub').innerHTML = `<span class="stat-delta delta-up">↑ this month</span>`;
+  document.getElementById('stat-orders-sub').textContent = `${paid.length} paid · ${fulfilled.length} fulfilled`;
+  document.getElementById('order-count').textContent = `${orders.length} order${orders.length!==1?'s':''}`;
+}
+
+function animateCount(id, val, isMoney){
+  const el = document.getElementById(id);
+  if(!el) return;
+  const duration = 700;
+  const start = performance.now();
+  const startVal = 0;
+  (function tick(now){
+    const t = Math.min((now - start) / duration, 1);
+    const ease = 1 - Math.pow(1-t, 3);
+    const cur = startVal + (val - startVal) * ease;
+    el.textContent = isMoney ? fmt$(cur) : Math.round(cur).toString();
+    if(t < 1) requestAnimationFrame(tick);
+  })(start);
+}
+
+// ── Render bar chart ───────────────────────────────────────────────────────────
+function renderChart(orders){
+  const container = document.getElementById('bar-chart');
+  if(!container) return;
+  container.innerHTML = '';
+
+  const now    = new Date();
+  const days   = new Date(now.getFullYear(), now.getMonth()+1, 0).getDate();
+  const today  = now.getDate();
+
+  const byDay = {};
+  orders.forEach(o => {
+    if(!o.created_at) return;
+    const d = new Date(o.created_at).getDate();
+    byDay[d] = (byDay[d]||0) + parseFloat(o.price||0);
+  });
+
+  const maxVal = Math.max(...Object.values(byDay), 1);
+
+  for(let d = 1; d <= days; d++){
+    const bar = document.createElement('div');
+    const h   = byDay[d] ? Math.max(8, Math.round(byDay[d] / maxVal * 52)) : 4;
+    bar.className = 'bar' + (d === today ? ' today' : '');
+    bar.style.height = h + 'px';
+    bar.title = `${new Date(now.getFullYear(),now.getMonth(),d).toLocaleDateString('en-US',{month:'short',day:'numeric'})}: ${fmt$(byDay[d]||0)}`;
+    container.appendChild(bar);
+  }
+
+  const m = now.toLocaleString('en-US',{month:'long',year:'numeric'});
+  const el = document.getElementById('chart-label');
+  if(el) el.textContent = m;
+}
+
+// ── Render supplier breakdown ──────────────────────────────────────────────────
+function renderBreakdown(orders){
+  const body = document.getElementById('breakdown-body');
+  if(!body) return;
+
+  const paid = orders.filter(o => o.status === 'paid' || o.status === 'fulfilled');
+  const bySupplier = {};
+  paid.forEach(o => {
+    bySupplier[o.supplier] = (bySupplier[o.supplier]||0) + parseFloat(o.price||0);
+  });
+
+  const sorted = Object.entries(bySupplier).sort((a,b)=>b[1]-a[1]);
+  const colors = ['var(--teal)','var(--teal2)','#4F6D8C','#22C55E'];
+
+  if(!sorted.length){
+    body.innerHTML = `<div class="breakdown-row"><span class="breakdown-label" style="color:var(--text3)">No paid orders yet</span></div>`;
+    return;
+  }
+
+  body.innerHTML = sorted.map(([sup,rev],i)=>`
+    <div class="breakdown-row">
+      <span class="breakdown-label">
+        <span class="breakdown-dot" style="background:${colors[i%colors.length]}"></span>
+        ${sup}
+      </span>
+      <span class="breakdown-val">${fmt$(rev)}</span>
+    </div>`).join('');
+}
+
+// ── Render orders table ────────────────────────────────────────────────────────
+function renderTable(orders){
+  const tbody = document.getElementById('orders-tbody');
+  if(!tbody) return;
+
+  if(!orders.length){
+    tbody.innerHTML = `
+      <tr class="in">
+        <td colspan="7">
+          <div class="empty-state">
+            <div class="empty-icon">
+              <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+                <rect x="3" y="4" width="14" height="12" rx="3" stroke="#4A5A6E" stroke-width="1.5"/>
+                <path d="M7 8h6M7 11h4" stroke="#4A5A6E" stroke-width="1.3" stroke-linecap="round"/>
+              </svg>
+            </div>
+            <div class="empty-title">No orders yet</div>
+            <div class="empty-sub">Run your first order through the Revytal checkout app. It will appear here in real time.</div>
+          </div>
+        </td>
+      </tr>`;
+    return;
+  }
+
+  tbody.innerHTML = orders.map((o,i) => `
+    <tr style="transition-delay:${i*0.04}s">
+      <td>
+        <div class="td-initials">
+          <div class="initials-avatar">${o.patient_initials||'—'}</div>
+          <span style="font-family:var(--font-mono);font-size:12px">${o.patient_initials||'—'}</span>
+        </div>
+      </td>
+      <td class="td-product">
+        <div class="td-product-name">${o.product_name||'—'}</div>
+        <div class="td-product-sku">${o.sku||'—'}</div>
+      </td>
+      <td class="td-price">${fmt$(o.price)}</td>
+      <td><span class="supplier-tag">${o.supplier||'—'}</span></td>
+      <td>${badge(o.status)}</td>
+      <td class="td-date">${fmtDate(o.created_at)}</td>
+      <td style="font-family:var(--font-mono);font-size:10px;color:var(--text3)">${fmtShortId(o.stripe_session_id||o.id)}</td>
+    </tr>`).join('');
+
+  // Animate rows in
+  requestAnimationFrame(()=>{
+    tbody.querySelectorAll('tr').forEach((row,i)=>{
+      setTimeout(()=> row.classList.add('in'), i*45);
+    });
+  });
+}
+
+// ── Main load ─────────────────────────────────────────────────────────────────
+async function refreshOrders(){
+  // Check config
+  if(!SUPABASE_URL || SUPABASE_URL.includes('YOUR_PROJECT')){
+    showConfigPrompt();
+    return;
+  }
+
+  try {
+    hideError();
+
+    // Build query params
+    const params = {
+      'order': 'created_at.desc',
+      'limit': '100',
+    };
+
+    // If clinic ID is configured, filter by it
+    if(CLINIC_ID && !CLINIC_ID.includes('YOUR')){
+      params['clinic_id'] = `eq.${CLINIC_ID}`;
+    }
+
+    const orders = await DB.query('orders', params);
+    allOrders = orders;
+
+    renderStats(orders);
+    renderChart(orders);
+    renderBreakdown(orders);
+    renderTable(orders);
+    animateCards();
+
+  } catch(err){
+    showError(err.message);
+    console.error('[Revytal Dashboard]', err);
+  }
+}
+
+// ── Config prompt (not yet set up) ────────────────────────────────────────────
+function showConfigPrompt(){
+  const tbody = document.getElementById('orders-tbody');
+  if(tbody){
+    tbody.innerHTML = `
+      <tr class="in">
+        <td colspan="7">
+          <div class="empty-state">
+            <div class="empty-icon" style="background:rgba(27,166,166,0.1);border-color:rgba(27,166,166,0.2)">
+              <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+                <path d="M10 3L16 6.5V13.5L10 17L4 13.5V6.5L10 3Z" stroke="#1BA6A6" stroke-width="1.5" stroke-linejoin="round"/>
+                <circle cx="10" cy="10" r="2.5" fill="#1BA6A6"/>
+              </svg>
+            </div>
+            <div class="empty-title" style="color:var(--teal2)">Supabase not configured</div>
+            <div class="empty-sub">Replace SUPABASE_URL and SUPABASE_ANON_KEY at the top of this file with your project credentials. Then click <strong style="color:var(--text2)">Setup Guide</strong> to create the schema.</div>
+          </div>
+        </td>
+      </tr>`;
+  }
+
+  // Zero out stats
+  ['stat-revenue','stat-orders','stat-avg','stat-fulfill'].forEach(id=>{
+    const el = document.getElementById(id);
+    if(el) el.textContent = '—';
+  });
+
+  document.getElementById('stat-revenue-sub').textContent = 'Configure Supabase to see data';
+  document.getElementById('stat-orders-sub').textContent = '';
+
+  animateCards();
+}
+
+// ── Error handling ─────────────────────────────────────────────────────────────
+function showError(msg){
+  const b = document.getElementById('error-banner');
+  const t = document.getElementById('error-text');
+  if(b) b.classList.add('show');
+  if(t) t.textContent = msg;
+}
+
+function hideError(){
+  const b = document.getElementById('error-banner');
+  if(b) b.classList.remove('show');
+}
+
+// ── Card entrance animation ────────────────────────────────────────────────────
+function animateCards(){
+  document.querySelectorAll('.stat-card').forEach((c,i)=>{
+    setTimeout(()=> c.classList.add('in'), i*80);
+  });
+  document.querySelectorAll('.panel').forEach((p,i)=>{
+    setTimeout(()=> p.classList.add('in'), 200 + i*80);
+  });
+}
+
+// ── Toast ──────────────────────────────────────────────────────────────────────
+let toastTimer = null;
+
+function showToast(msg){
+  const toast = document.getElementById('toast');
+  const text  = document.getElementById('toast-text');
+  if(!toast || !text) return;
+  text.textContent = msg;
+  toast.classList.add('show');
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(()=> toast.classList.remove('show'), 4000);
+}
+
+// ── Schema modal ───────────────────────────────────────────────────────────────
+function openSchema(){
+  document.getElementById('schema-modal').classList.add('show');
+}
+
+function closeSchema(){
+  document.getElementById('schema-modal').classList.remove('show');
+}
+
+function closeSchemaOnOverlay(e){
+  if(e.target.id === 'schema-modal') closeSchema();
+}
+
+// ── Section nav (stub) ─────────────────────────────────────────────────────────
+function showSection(s){
+  document.querySelectorAll('.nav-item').forEach(n=> n.classList.remove('active'));
+  // For now all sections are on one page; this just updates active state
+}
+
+// ── Auto-refresh every 60s ─────────────────────────────────────────────────────
+setInterval(refreshOrders, 60000);
+
+// ── Boot ───────────────────────────────────────────────────────────────────────
+refreshOrders();
+connectRealtime();
+</script>
+</body>
+</html>
