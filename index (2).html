@@ -1,0 +1,1497 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Revytal — Clinical Commerce Infrastructure</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=DM+Mono:ital,wght@0,300;0,400;0,500;1,300&family=Instrument+Serif:ital@0;1&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600&display=swap');
+
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+
+:root{
+  --bg:       #080C10;
+  --bg2:      #0D1117;
+  --bg3:      #131920;
+  --surface:  #161D26;
+  --surface2: #1C2530;
+  --border:   rgba(255,255,255,0.07);
+  --border2:  rgba(255,255,255,0.12);
+  --teal:     #1BA6A6;
+  --teal2:    #7ED4D4;
+  --teal3:    rgba(27,166,166,0.15);
+  --blue:     #0A3A5E;
+  --slate:    #4F6D8C;
+  --text:     #E8EDF2;
+  --text2:    #8A9BB0;
+  --text3:    #4A5A6E;
+  --green:    #22C55E;
+  --amber:    #F59E0B;
+  --red:      #EF4444;
+  --font-body: 'DM Sans', system-ui, sans-serif;
+  --font-mono: 'DM Mono', monospace;
+  --font-serif:'Instrument Serif', Georgia, serif;
+}
+
+html{height:100%}
+body{
+  background:var(--bg);
+  color:var(--text);
+  font-family:var(--font-body);
+  min-height:100vh;
+  overflow-x:hidden;
+  -webkit-font-smoothing:antialiased;
+}
+
+/* ── Background grid + glow ─────────────────────────────── */
+body::before{
+  content:'';
+  position:fixed;inset:0;
+  background-image:
+    linear-gradient(rgba(27,166,166,0.03) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(27,166,166,0.03) 1px, transparent 1px);
+  background-size:48px 48px;
+  pointer-events:none;
+  z-index:0;
+}
+
+body::after{
+  content:'';
+  position:fixed;
+  top:-20vh;left:50%;
+  transform:translateX(-50%);
+  width:900px;height:500px;
+  background:radial-gradient(ellipse at center, rgba(27,166,166,0.08) 0%, transparent 70%);
+  pointer-events:none;
+  z-index:0;
+}
+
+/* ── Layout ──────────────────────────────────────────────── */
+.app{
+  position:relative;
+  z-index:1;
+  max-width:1100px;
+  margin:0 auto;
+  padding:0 24px 80px;
+}
+
+/* ── Nav ─────────────────────────────────────────────────── */
+nav{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:20px 0;
+  border-bottom:1px solid var(--border);
+  margin-bottom:48px;
+}
+
+.nav-logo{
+  display:flex;align-items:center;gap:10px;
+}
+
+.nav-logo-mark{
+  width:28px;height:28px;
+  background:var(--teal);
+  border-radius:7px;
+  display:flex;align-items:center;justify-content:center;
+  box-shadow:0 0 20px rgba(27,166,166,0.4);
+}
+
+.nav-logo-mark svg{display:block}
+
+.nav-wordmark{
+  font-family:var(--font-serif);
+  font-size:20px;
+  color:var(--text);
+  letter-spacing:-0.3px;
+}
+
+.nav-badge{
+  font-size:11px;
+  font-weight:500;
+  letter-spacing:0.1em;
+  text-transform:uppercase;
+  color:var(--teal);
+  background:rgba(27,166,166,0.1);
+  border:1px solid rgba(27,166,166,0.2);
+  padding:4px 12px;
+  border-radius:100px;
+}
+
+/* ── Hero ────────────────────────────────────────────────── */
+.hero{
+  text-align:center;
+  padding:20px 0 56px;
+}
+
+.hero-eyebrow{
+  font-size:11px;
+  font-weight:500;
+  letter-spacing:0.14em;
+  text-transform:uppercase;
+  color:var(--teal);
+  margin-bottom:16px;
+  opacity:0;
+  animation:fadeUp 0.6s 0.2s ease both;
+}
+
+.hero-title{
+  font-family:var(--font-serif);
+  font-size:clamp(36px,5vw,60px);
+  font-weight:400;
+  line-height:1.1;
+  letter-spacing:-0.02em;
+  color:var(--text);
+  margin-bottom:16px;
+  opacity:0;
+  animation:fadeUp 0.6s 0.35s ease both;
+}
+
+.hero-title em{
+  font-style:italic;
+  color:var(--teal2);
+}
+
+.hero-sub{
+  font-size:16px;
+  color:var(--text2);
+  max-width:480px;
+  margin:0 auto 32px;
+  line-height:1.65;
+  opacity:0;
+  animation:fadeUp 0.6s 0.5s ease both;
+}
+
+.hero-cta{
+  display:inline-flex;align-items:center;gap:8px;
+  background:var(--teal);
+  color:#fff;
+  font-size:14px;
+  font-weight:600;
+  padding:12px 24px;
+  border-radius:10px;
+  border:none;
+  cursor:pointer;
+  transition:all 0.2s;
+  box-shadow:0 0 30px rgba(27,166,166,0.35);
+  opacity:0;
+  animation:fadeUp 0.6s 0.65s ease both;
+}
+
+.hero-cta:hover{
+  background:#1bbfbf;
+  box-shadow:0 0 40px rgba(27,166,166,0.5);
+  transform:translateY(-1px);
+}
+
+.hero-cta svg{transition:transform 0.2s}
+.hero-cta:hover svg{transform:translateX(3px)}
+
+/* ── Stage label ─────────────────────────────────────────── */
+.stage-label{
+  display:flex;align-items:center;gap:10px;
+  font-size:11px;
+  font-weight:500;
+  letter-spacing:0.1em;
+  text-transform:uppercase;
+  color:var(--text3);
+  margin-bottom:16px;
+}
+
+.stage-label::before{
+  content:'';
+  flex:1;
+  height:1px;
+  background:var(--border);
+}
+
+.stage-label::after{
+  content:'';
+  flex:1;
+  height:1px;
+  background:var(--border);
+}
+
+/* ── Main demo panel ─────────────────────────────────────── */
+#demo-area{
+  display:none;
+  flex-direction:column;
+  gap:16px;
+  animation:fadeUp 0.5s ease both;
+}
+
+#demo-area.visible{display:flex}
+
+/* ── Glass card ──────────────────────────────────────────── */
+.card{
+  background:var(--surface);
+  border:1px solid var(--border);
+  border-radius:16px;
+  overflow:hidden;
+  transition:border-color 0.3s;
+}
+
+.card.active{border-color:rgba(27,166,166,0.3)}
+
+.card-header{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:16px 20px;
+  border-bottom:1px solid var(--border);
+}
+
+.card-title{
+  display:flex;align-items:center;gap:8px;
+  font-size:12px;
+  font-weight:600;
+  letter-spacing:0.06em;
+  text-transform:uppercase;
+  color:var(--text2);
+}
+
+.card-title-dot{
+  width:6px;height:6px;
+  border-radius:50%;
+  background:var(--text3);
+  transition:background 0.3s,box-shadow 0.3s;
+}
+
+.card.active .card-title-dot{
+  background:var(--teal);
+  box-shadow:0 0 8px rgba(27,166,166,0.6);
+  animation:pulseDot 1.5s ease infinite;
+}
+
+.card-status{
+  font-size:11px;
+  font-weight:500;
+  color:var(--text3);
+  background:var(--bg3);
+  padding:3px 10px;
+  border-radius:100px;
+  border:1px solid var(--border);
+  transition:all 0.3s;
+}
+
+.card-status.running{
+  color:var(--teal);
+  background:rgba(27,166,166,0.1);
+  border-color:rgba(27,166,166,0.25);
+}
+
+.card-status.done{
+  color:var(--green);
+  background:rgba(34,197,94,0.1);
+  border-color:rgba(34,197,94,0.25);
+}
+
+.card-body{padding:20px}
+
+/* ── Input area ──────────────────────────────────────────── */
+#input-area{
+  margin-bottom:32px;
+  opacity:0;
+  animation:fadeUp 0.6s 0.8s ease both;
+}
+
+.input-wrapper{
+  background:var(--surface);
+  border:1px solid var(--border2);
+  border-radius:14px;
+  padding:2px;
+  transition:border-color 0.3s,box-shadow 0.3s;
+}
+
+.input-wrapper:focus-within{
+  border-color:rgba(27,166,166,0.5);
+  box-shadow:0 0 0 3px rgba(27,166,166,0.1);
+}
+
+.input-label{
+  font-size:11px;
+  font-weight:500;
+  letter-spacing:0.08em;
+  text-transform:uppercase;
+  color:var(--teal);
+  padding:12px 16px 4px;
+  display:flex;align-items:center;gap:6px;
+}
+
+.input-field{
+  width:100%;
+  background:transparent;
+  border:none;
+  outline:none;
+  font-family:var(--font-body);
+  font-size:15px;
+  color:var(--text);
+  padding:4px 16px 14px;
+  resize:none;
+  line-height:1.5;
+}
+
+.input-field::placeholder{color:var(--text3)}
+
+.input-footer{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:10px 14px;
+  border-top:1px solid var(--border);
+}
+
+.input-hint{
+  font-size:12px;
+  color:var(--text3);
+  display:flex;align-items:center;gap:6px;
+}
+
+.run-btn{
+  display:flex;align-items:center;gap:7px;
+  background:var(--teal);
+  color:#fff;
+  font-family:var(--font-body);
+  font-size:13px;
+  font-weight:600;
+  padding:9px 18px;
+  border-radius:8px;
+  border:none;
+  cursor:pointer;
+  transition:all 0.2s;
+  box-shadow:0 0 20px rgba(27,166,166,0.3);
+}
+
+.run-btn:hover{
+  background:#1bbfbf;
+  box-shadow:0 0 30px rgba(27,166,166,0.5);
+}
+
+.run-btn:disabled{
+  opacity:0.45;
+  cursor:not-allowed;
+  box-shadow:none;
+}
+
+/* ── AI Engine panel ─────────────────────────────────────── */
+#ai-engine .card-body{
+  font-family:var(--font-mono);
+  font-size:12.5px;
+  line-height:1.7;
+  color:var(--text2);
+  min-height:80px;
+}
+
+.ai-line{
+  display:flex;
+  gap:8px;
+  opacity:0;
+  transform:translateY(4px);
+  transition:opacity 0.4s ease, transform 0.4s ease;
+}
+
+.ai-line.show{opacity:1;transform:none}
+
+.ai-prefix{color:var(--teal3);color:var(--teal)}
+.ai-text{color:var(--text2)}
+.ai-text.highlight{color:var(--teal2)}
+.ai-text.dim{color:var(--text3)}
+.ai-text.warn{color:var(--amber)}
+
+.thinking-dots{
+  display:inline-flex;gap:3px;align-items:center;
+}
+
+.thinking-dots span{
+  width:4px;height:4px;
+  border-radius:50%;
+  background:var(--teal);
+  animation:blink 1.2s ease infinite;
+}
+
+.thinking-dots span:nth-child(2){animation-delay:0.2s}
+.thinking-dots span:nth-child(3){animation-delay:0.4s}
+
+/* ── Intent extraction ───────────────────────────────────── */
+#intent-panel .card-body{padding:16px 20px}
+
+.intent-chips{
+  display:flex;flex-wrap:wrap;gap:8px;
+}
+
+.intent-chip{
+  display:flex;align-items:center;gap:8px;
+  background:var(--bg3);
+  border:1px solid var(--border);
+  border-radius:100px;
+  padding:7px 14px;
+  font-size:13px;
+  color:var(--text2);
+  opacity:0;
+  transform:scale(0.9) translateY(6px);
+  transition:opacity 0.35s ease,transform 0.35s ease,border-color 0.3s;
+}
+
+.intent-chip.show{opacity:1;transform:none}
+.intent-chip:hover{border-color:var(--border2)}
+
+.intent-chip-icon{
+  width:20px;height:20px;
+  border-radius:6px;
+  display:flex;align-items:center;justify-content:center;
+  font-size:11px;
+}
+
+.intent-chip.anatomy .intent-chip-icon{background:rgba(27,166,166,0.15);color:var(--teal)}
+.intent-chip.product  .intent-chip-icon{background:rgba(126,212,212,0.1);color:var(--teal2)}
+.intent-chip.condition .intent-chip-icon{background:rgba(245,158,11,0.1);color:var(--amber)}
+.intent-chip.supplement .intent-chip-icon{background:rgba(34,197,94,0.1);color:var(--green)}
+
+.intent-chip-label{font-weight:500;font-size:12px;letter-spacing:0.04em}
+.intent-chip-value{font-size:13px;color:var(--text)}
+
+/* ── SKU cards ───────────────────────────────────────────── */
+#sku-panel .card-body{
+  display:flex;flex-direction:column;gap:10px;
+  padding:16px 20px;
+}
+
+.sku-card{
+  display:flex;align-items:center;gap:16px;
+  background:var(--bg3);
+  border:1px solid var(--border);
+  border-radius:12px;
+  padding:14px 16px;
+  opacity:0;
+  transform:translateX(-12px);
+  transition:opacity 0.4s ease,transform 0.4s ease,border-color 0.3s,box-shadow 0.3s;
+}
+
+.sku-card.show{opacity:1;transform:none}
+
+.sku-card:hover{
+  border-color:var(--border2);
+  box-shadow:0 4px 24px rgba(0,0,0,0.3);
+}
+
+.sku-icon{
+  width:44px;height:44px;
+  border-radius:10px;
+  background:var(--surface2);
+  display:flex;align-items:center;justify-content:center;
+  font-size:20px;
+  flex-shrink:0;
+  border:1px solid var(--border);
+}
+
+.sku-info{flex:1;min-width:0}
+
+.sku-name{
+  font-size:14px;
+  font-weight:600;
+  color:var(--text);
+  margin-bottom:3px;
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
+}
+
+.sku-meta{
+  display:flex;align-items:center;gap:8px;
+  font-size:12px;
+  color:var(--text3);
+}
+
+.sku-tag{
+  background:rgba(27,166,166,0.1);
+  color:var(--teal);
+  border:1px solid rgba(27,166,166,0.2);
+  padding:2px 8px;
+  border-radius:100px;
+  font-size:11px;
+  font-weight:500;
+}
+
+.sku-right{
+  text-align:right;
+  flex-shrink:0;
+}
+
+.sku-price{
+  font-size:16px;
+  font-weight:600;
+  color:var(--text);
+  margin-bottom:2px;
+}
+
+.sku-sku{
+  font-family:var(--font-mono);
+  font-size:10px;
+  color:var(--text3);
+}
+
+.sku-match{
+  display:inline-flex;align-items:center;gap:4px;
+  font-size:10px;
+  font-weight:600;
+  color:var(--green);
+  background:rgba(34,197,94,0.1);
+  border:1px solid rgba(34,197,94,0.2);
+  padding:2px 8px;
+  border-radius:100px;
+  margin-top:4px;
+}
+
+/* ── Checkout ────────────────────────────────────────────── */
+#checkout-panel .card-body{padding:16px 20px}
+
+.checkout-url-box{
+  display:flex;align-items:center;gap:0;
+  background:var(--bg3);
+  border:1px solid var(--border);
+  border-radius:10px;
+  overflow:hidden;
+  margin-bottom:12px;
+  opacity:0;
+  transition:opacity 0.4s,border-color 0.3s;
+}
+
+.checkout-url-box.show{opacity:1}
+.checkout-url-box:hover{border-color:var(--border2)}
+
+.checkout-url-prefix{
+  font-family:var(--font-mono);
+  font-size:12px;
+  color:var(--text3);
+  padding:11px 12px;
+  background:var(--surface);
+  border-right:1px solid var(--border);
+  white-space:nowrap;
+  flex-shrink:0;
+}
+
+.checkout-url-token{
+  font-family:var(--font-mono);
+  font-size:12px;
+  color:var(--teal2);
+  padding:11px 14px;
+  flex:1;
+  overflow:hidden;
+  text-overflow:ellipsis;
+  white-space:nowrap;
+}
+
+.checkout-copy-btn{
+  background:var(--surface2);
+  border:none;
+  border-left:1px solid var(--border);
+  padding:11px 14px;
+  color:var(--text3);
+  cursor:pointer;
+  transition:color 0.2s,background 0.2s;
+  flex-shrink:0;
+  font-size:12px;
+  font-family:var(--font-body);
+}
+
+.checkout-copy-btn:hover{color:var(--teal);background:var(--surface)}
+
+.checkout-meta{
+  display:flex;gap:8px;flex-wrap:wrap;
+  opacity:0;
+  transition:opacity 0.4s 0.2s;
+}
+
+.checkout-meta.show{opacity:1}
+
+.checkout-pill{
+  display:flex;align-items:center;gap:5px;
+  font-size:11px;
+  font-weight:500;
+  color:var(--text3);
+  background:var(--bg3);
+  border:1px solid var(--border);
+  padding:5px 10px;
+  border-radius:100px;
+}
+
+.checkout-pill svg{flex-shrink:0}
+
+/* ── Timeline ────────────────────────────────────────────── */
+#timeline-panel .card-body{padding:16px 20px}
+
+.timeline{
+  display:flex;flex-direction:column;gap:0;
+}
+
+.tl-item{
+  display:flex;align-items:flex-start;gap:14px;
+  padding:10px 0;
+  opacity:0;
+  transform:translateY(6px);
+  transition:opacity 0.4s ease,transform 0.4s ease;
+}
+
+.tl-item.show{opacity:1;transform:none}
+
+.tl-left{
+  display:flex;flex-direction:column;align-items:center;
+  flex-shrink:0;
+  padding-top:2px;
+}
+
+.tl-dot{
+  width:10px;height:10px;
+  border-radius:50%;
+  background:var(--surface2);
+  border:2px solid var(--text3);
+  transition:background 0.4s,border-color 0.4s,box-shadow 0.4s;
+  position:relative;
+  z-index:1;
+}
+
+.tl-dot.done{
+  background:var(--green);
+  border-color:var(--green);
+  box-shadow:0 0 8px rgba(34,197,94,0.5);
+}
+
+.tl-dot.active{
+  background:var(--teal);
+  border-color:var(--teal);
+  box-shadow:0 0 8px rgba(27,166,166,0.6);
+  animation:pulseDot 1.5s ease infinite;
+}
+
+.tl-dot.pending{
+  background:var(--surface2);
+  border-color:var(--text3);
+}
+
+.tl-line{
+  width:1px;flex:1;min-height:20px;
+  background:var(--border);
+  margin:2px 0;
+}
+
+.tl-item:last-child .tl-line{display:none}
+
+.tl-right{flex:1;padding-bottom:8px}
+
+.tl-title{
+  font-size:13px;
+  font-weight:600;
+  color:var(--text2);
+  margin-bottom:2px;
+  transition:color 0.3s;
+}
+
+.tl-item.show .tl-title.active-title{color:var(--teal)}
+.tl-item.show .tl-title.done-title{color:var(--text)}
+
+.tl-sub{
+  font-size:12px;
+  color:var(--text3);
+  line-height:1.4;
+}
+
+.tl-time{
+  font-family:var(--font-mono);
+  font-size:10px;
+  color:var(--text3);
+  margin-top:3px;
+}
+
+.tl-pill-done{
+  display:inline-flex;align-items:center;gap:4px;
+  font-size:10px;
+  font-weight:600;
+  color:var(--green);
+  background:rgba(34,197,94,0.1);
+  border:1px solid rgba(34,197,94,0.2);
+  padding:2px 8px;
+  border-radius:100px;
+  margin-top:4px;
+}
+
+/* ── Supplier row ────────────────────────────────────────── */
+.supplier-row{
+  display:flex;gap:10px;flex-wrap:wrap;
+  margin-top:12px;
+  padding-top:12px;
+  border-top:1px solid var(--border);
+  opacity:0;
+  transition:opacity 0.4s;
+}
+
+.supplier-row.show{opacity:1}
+
+.supplier-card{
+  flex:1;min-width:180px;
+  background:var(--bg3);
+  border:1px solid var(--border);
+  border-radius:10px;
+  padding:12px 14px;
+  transition:border-color 0.3s;
+}
+
+.supplier-card.routed{
+  border-color:rgba(34,197,94,0.25);
+  background:rgba(34,197,94,0.03);
+}
+
+.supplier-label{
+  font-size:10px;
+  font-weight:600;
+  letter-spacing:0.08em;
+  text-transform:uppercase;
+  color:var(--text3);
+  margin-bottom:5px;
+}
+
+.supplier-name{
+  font-size:13px;
+  font-weight:600;
+  color:var(--text);
+  margin-bottom:3px;
+}
+
+.supplier-status{
+  font-size:11px;
+  color:var(--text3);
+  display:flex;align-items:center;gap:5px;
+}
+
+.supplier-status.sent{color:var(--green)}
+
+/* ── Final state banner ──────────────────────────────────── */
+#fulfilled-banner{
+  display:none;
+  background:linear-gradient(135deg, rgba(34,197,94,0.08) 0%, rgba(27,166,166,0.08) 100%);
+  border:1px solid rgba(34,197,94,0.2);
+  border-radius:14px;
+  padding:24px 28px;
+  text-align:center;
+  animation:fadeUp 0.5s ease both;
+}
+
+#fulfilled-banner.show{display:block}
+
+.banner-icon{
+  width:48px;height:48px;
+  background:rgba(34,197,94,0.15);
+  border-radius:50%;
+  display:flex;align-items:center;justify-content:center;
+  margin:0 auto 14px;
+  border:1px solid rgba(34,197,94,0.3);
+}
+
+.banner-title{
+  font-family:var(--font-serif);
+  font-size:22px;
+  color:var(--text);
+  margin-bottom:6px;
+}
+
+.banner-sub{
+  font-size:13px;
+  color:var(--text2);
+  margin-bottom:16px;
+  max-width:380px;
+  margin-left:auto;
+  margin-right:auto;
+}
+
+.banner-stats{
+  display:flex;justify-content:center;gap:32px;flex-wrap:wrap;
+}
+
+.banner-stat{
+  text-align:center;
+}
+
+.banner-stat-n{
+  font-size:22px;
+  font-weight:600;
+  color:var(--teal2);
+  display:block;
+  font-family:var(--font-mono);
+}
+
+.banner-stat-l{
+  font-size:11px;
+  color:var(--text3);
+  text-transform:uppercase;
+  letter-spacing:0.08em;
+}
+
+/* ── Restart btn ──────────────────────────────────────────── */
+.restart-btn{
+  display:inline-flex;align-items:center;gap:7px;
+  background:transparent;
+  color:var(--text2);
+  font-family:var(--font-body);
+  font-size:13px;
+  font-weight:500;
+  padding:9px 18px;
+  border-radius:8px;
+  border:1px solid var(--border2);
+  cursor:pointer;
+  transition:all 0.2s;
+  margin-top:16px;
+}
+
+.restart-btn:hover{
+  border-color:var(--teal);
+  color:var(--teal);
+  background:rgba(27,166,166,0.05);
+}
+
+/* ── Keyframes ───────────────────────────────────────────── */
+@keyframes fadeUp{
+  from{opacity:0;transform:translateY(14px)}
+  to{opacity:1;transform:none}
+}
+
+@keyframes blink{
+  0%,80%,100%{opacity:1}
+  40%{opacity:0.2}
+}
+
+@keyframes pulseDot{
+  0%,100%{box-shadow:0 0 6px rgba(27,166,166,0.5)}
+  50%{box-shadow:0 0 14px rgba(27,166,166,0.9)}
+}
+
+@keyframes shimmer{
+  from{background-position:200% center}
+  to{background-position:-200% center}
+}
+
+/* ── Grid layout for cards ───────────────────────────────── */
+.demo-grid{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:16px;
+}
+
+@media(max-width:680px){
+  .demo-grid{grid-template-columns:1fr}
+  .hero-title{font-size:32px}
+}
+
+/* ── Scrollbar ───────────────────────────────────────────── */
+::-webkit-scrollbar{width:6px}
+::-webkit-scrollbar-track{background:var(--bg2)}
+::-webkit-scrollbar-thumb{background:var(--surface2);border-radius:3px}
+
+/* ── Selection ───────────────────────────────────────────── */
+::selection{background:rgba(27,166,166,0.25);color:var(--text)}
+</style>
+</head>
+<body>
+<div class="app">
+
+  <!-- Nav -->
+  <nav>
+    <div class="nav-logo">
+      <div class="nav-logo-mark">
+        <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
+          <path d="M7 1L12 4V10L7 13L2 10V4L7 1Z" stroke="white" stroke-width="1.5" stroke-linejoin="round"/>
+          <circle cx="7" cy="7" r="2" fill="white"/>
+        </svg>
+      </div>
+      <span class="nav-wordmark">Revytal</span>
+    </div>
+    <span class="nav-badge">Live Demo</span>
+  </nav>
+
+  <!-- Hero -->
+  <div class="hero">
+    <p class="hero-eyebrow">Clinical Commerce Infrastructure</p>
+    <h1 class="hero-title">The rail between<br/><em>clinical intent</em> and fulfilled care.</h1>
+    <p class="hero-sub">Watch Revytal extract clinical intent, match SKUs, generate checkout, and route to suppliers — automatically.</p>
+    <button class="hero-cta" onclick="startDemo()">
+      <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M3 7L11 7M8 4L11 7L8 10" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      Run the Demo
+    </button>
+  </div>
+
+  <!-- Input -->
+  <div id="input-area">
+    <p class="stage-label">Clinical Input</p>
+    <div class="input-wrapper">
+      <div class="input-label">
+        <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><circle cx="6" cy="6" r="4" stroke="#1BA6A6" stroke-width="1.5"/><path d="M6 4V6L7 7" stroke="#1BA6A6" stroke-width="1.2" stroke-linecap="round"/></svg>
+        Provider Note
+      </div>
+      <textarea id="provider-input" class="input-field" rows="2" placeholder="e.g. knee brace for MCL sprain…">Let's get you a knee brace for your MCL sprain and I want you to start a vitamin D supplement</textarea>
+      <div class="input-footer">
+        <span class="input-hint">
+          <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M6 1L7.5 4.5L11 5L8.5 7.5L9 11L6 9.5L3 11L3.5 7.5L1 5L4.5 4.5L6 1Z" stroke="#4A5A6E" stroke-width="1.2" stroke-linejoin="round"/></svg>
+          AI will extract clinical intent
+        </span>
+        <button class="run-btn" id="run-btn" onclick="runPipeline()">
+          <svg width="13" height="13" viewBox="0 0 13 13" fill="none"><path d="M2.5 2.5L10.5 6.5L2.5 10.5V2.5Z" fill="white"/></svg>
+          Run Pipeline
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Demo area -->
+  <div id="demo-area">
+
+    <!-- Row 1: AI Engine + Intent -->
+    <div class="demo-grid">
+
+      <!-- AI Engine -->
+      <div class="card" id="ai-engine">
+        <div class="card-header">
+          <div class="card-title">
+            <div class="card-title-dot"></div>
+            AI Engine
+          </div>
+          <span class="card-status" id="ai-status">Idle</span>
+        </div>
+        <div class="card-body" id="ai-log">
+          <div class="ai-line">
+            <span class="ai-prefix">▸</span>
+            <span class="ai-text dim">Awaiting input…</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Intent Extraction -->
+      <div class="card" id="intent-panel">
+        <div class="card-header">
+          <div class="card-title">
+            <div class="card-title-dot"></div>
+            Intent Extraction
+          </div>
+          <span class="card-status" id="intent-status">Idle</span>
+        </div>
+        <div class="card-body">
+          <div class="intent-chips" id="intent-chips">
+            <div class="ai-line show">
+              <span class="ai-prefix" style="color:var(--text3)">–</span>
+              <span class="ai-text dim">No intents extracted yet</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Row 2: SKU Match + Checkout -->
+    <div class="demo-grid">
+
+      <!-- SKU Match -->
+      <div class="card" id="sku-panel">
+        <div class="card-header">
+          <div class="card-title">
+            <div class="card-title-dot"></div>
+            SKU Match
+          </div>
+          <span class="card-status" id="sku-status">Idle</span>
+        </div>
+        <div class="card-body" id="sku-body">
+          <div class="ai-line show">
+            <span class="ai-prefix" style="color:var(--text3)">–</span>
+            <span class="ai-text dim">Awaiting intent extraction…</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Checkout -->
+      <div class="card" id="checkout-panel">
+        <div class="card-header">
+          <div class="card-title">
+            <div class="card-title-dot"></div>
+            Checkout Link
+          </div>
+          <span class="card-status" id="checkout-status">Idle</span>
+        </div>
+        <div class="card-body" id="checkout-body">
+          <div class="ai-line show">
+            <span class="ai-prefix" style="color:var(--text3)">–</span>
+            <span class="ai-text dim">Awaiting SKU match…</span>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Row 3: Order Timeline -->
+    <div class="card" id="timeline-panel">
+      <div class="card-header">
+        <div class="card-title">
+          <div class="card-title-dot"></div>
+          Order Status Timeline
+        </div>
+        <span class="card-status" id="timeline-status">Idle</span>
+      </div>
+      <div class="card-body" id="timeline-body">
+        <div class="ai-line show">
+          <span class="ai-prefix" style="color:var(--text3)">–</span>
+          <span class="ai-text dim">Awaiting checkout…</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Fulfilled Banner -->
+    <div id="fulfilled-banner">
+      <div class="banner-icon">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+          <path d="M5 13L9 17L19 7" stroke="#22C55E" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </div>
+      <h2 class="banner-title">Order Fulfilled</h2>
+      <p class="banner-sub">The full Revytal loop completed in seconds. Clinician did nothing after the recommendation.</p>
+      <div class="banner-stats">
+        <div class="banner-stat">
+          <span class="banner-stat-n" id="stat-time">4.2s</span>
+          <span class="banner-stat-l">Total latency</span>
+        </div>
+        <div class="banner-stat">
+          <span class="banner-stat-n">2</span>
+          <span class="banner-stat-l">SKUs matched</span>
+        </div>
+        <div class="banner-stat">
+          <span class="banner-stat-n">2</span>
+          <span class="banner-stat-l">Suppliers routed</span>
+        </div>
+        <div class="banner-stat">
+          <span class="banner-stat-n">0</span>
+          <span class="banner-stat-l">Clinician steps</span>
+        </div>
+      </div>
+      <button class="restart-btn" onclick="resetDemo()">
+        <svg width="13" height="13" viewBox="0 0 13 13" fill="none"><path d="M2 6.5A4.5 4.5 0 017 2a4.5 4.5 0 014.5 4.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><path d="M11.5 6.5A4.5 4.5 0 016 11a4.5 4.5 0 01-4-2.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><path d="M2 9V6.5H4.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        Run Again
+      </button>
+    </div>
+
+  </div><!-- /demo-area -->
+
+</div><!-- /app -->
+
+<script>
+// ── State ──────────────────────────────────────────────────
+let running = false;
+let startTime = 0;
+
+// ── Helpers ────────────────────────────────────────────────
+function delay(ms){ return new Promise(r => setTimeout(r,ms)); }
+
+function setStatus(id, text, cls){
+  const el = document.getElementById(id);
+  el.textContent = text;
+  el.className = 'card-status ' + (cls||'');
+}
+
+function activateCard(id){
+  const c = document.getElementById(id);
+  c.classList.add('active');
+}
+
+function deactivateCard(id){
+  const c = document.getElementById(id);
+  c.classList.remove('active');
+}
+
+function showLine(container, prefix, text, cls, delay_ms){
+  return new Promise(resolve => {
+    setTimeout(()=>{
+      const line = document.createElement('div');
+      line.className = 'ai-line';
+      line.innerHTML = `<span class="ai-prefix">${prefix}</span><span class="ai-text ${cls||''}">${text}</span>`;
+      container.appendChild(line);
+      // Trigger reflow
+      line.offsetHeight;
+      line.classList.add('show');
+      resolve();
+    }, delay_ms||0);
+  });
+}
+
+function clearEl(id){ document.getElementById(id).innerHTML = ''; }
+
+function generateToken(){
+  const chars = 'abcdefghijklmnopqrstuvwxyz0123456789';
+  let t = '';
+  for(let i=0;i<24;i++) t += chars[Math.floor(Math.random()*chars.length)];
+  return t;
+}
+
+// ── Demo start ─────────────────────────────────────────────
+function startDemo(){
+  document.querySelector('.hero-cta').style.display = 'none';
+  const da = document.getElementById('demo-area');
+  da.classList.add('visible');
+  da.scrollIntoView({behavior:'smooth', block:'start'});
+}
+
+// ── Main pipeline ──────────────────────────────────────────
+async function runPipeline(){
+  if(running) return;
+  running = true;
+  startTime = Date.now();
+
+  const runBtn = document.getElementById('run-btn');
+  runBtn.disabled = true;
+
+  // Hide banner if showing
+  document.getElementById('fulfilled-banner').classList.remove('show');
+
+  // ── PHASE 1: AI ENGINE ─────────────────────────────────
+  activateCard('ai-engine');
+  setStatus('ai-status','Running','running');
+  const log = document.getElementById('ai-log');
+  clearEl('ai-log');
+
+  await showLine(log,'▸','Initializing Revytal inference engine…','',0);
+  await delay(400);
+  await showLine(log,'▸','Parsing provider note…','',0);
+  await delay(500);
+
+  // Show thinking dots
+  const thinkLine = document.createElement('div');
+  thinkLine.className = 'ai-line';
+  thinkLine.innerHTML = `<span class="ai-prefix">▸</span><span class="ai-text">Extracting clinical entities <span class="thinking-dots"><span></span><span></span><span></span></span></span>`;
+  log.appendChild(thinkLine);
+  thinkLine.offsetHeight;
+  thinkLine.classList.add('show');
+
+  await delay(1200);
+  thinkLine.querySelector('.thinking-dots').remove();
+  thinkLine.querySelector('.ai-text').textContent = 'Extracting clinical entities — done';
+  thinkLine.querySelector('.ai-text').className = 'ai-text highlight';
+
+  await delay(200);
+  await showLine(log,'▸','Entities: [knee brace] [MCL sprain] [vitamin D supplement]','highlight',0);
+  await delay(300);
+  await showLine(log,'▸','Confidence: 0.97 · 0.94 · 0.99','dim',0);
+  await delay(300);
+  await showLine(log,'▸','Routing to SKU matcher…','',0);
+
+  setStatus('ai-status','Done','done');
+  deactivateCard('ai-engine');
+
+  // ── PHASE 2: INTENT EXTRACTION ────────────────────────
+  activateCard('intent-panel');
+  setStatus('intent-status','Extracting','running');
+
+  const chips = document.getElementById('intent-chips');
+  chips.innerHTML = '';
+
+  const intents = [
+    { icon:'🦴', label:'Anatomy', value:'MCL / Knee', cls:'anatomy', d:0 },
+    { icon:'🩹', label:'Product', value:'Knee Brace', cls:'product', d:120 },
+    { icon:'⚠️', label:'Condition', value:'MCL Sprain', cls:'condition', d:240 },
+    { icon:'💊', label:'Supplement', value:'Vitamin D', cls:'supplement', d:360 },
+  ];
+
+  intents.forEach(intent => {
+    setTimeout(()=>{
+      const chip = document.createElement('div');
+      chip.className = `intent-chip ${intent.cls}`;
+      chip.innerHTML = `
+        <div class="intent-chip-icon">${intent.icon}</div>
+        <div>
+          <div class="intent-chip-label" style="color:var(--text3);font-size:10px;text-transform:uppercase;letter-spacing:0.06em;margin-bottom:1px">${intent.label}</div>
+          <div class="intent-chip-value">${intent.value}</div>
+        </div>`;
+      chips.appendChild(chip);
+      chip.offsetHeight;
+      chip.classList.add('show');
+    }, intent.d);
+  });
+
+  await delay(600);
+  setStatus('intent-status','Done','done');
+  deactivateCard('intent-panel');
+
+  // ── PHASE 3: SKU MATCH ────────────────────────────────
+  await delay(100);
+  activateCard('sku-panel');
+  setStatus('sku-status','Matching','running');
+
+  const skuBody = document.getElementById('sku-body');
+  skuBody.innerHTML = '';
+
+  const skus = [
+    {
+      emoji:'🦵',
+      name:'DonJoy Performance Bionic Knee Brace',
+      sku:'SKU-KNE-7821',
+      tag:'Orthopedics',
+      price:'$89.95',
+      supplier:'MeyerPT',
+      match:'97% match',
+      d:0,
+    },
+    {
+      emoji:'☀️',
+      name:'NatureMade Vitamin D3 5000 IU — 90ct',
+      sku:'SKU-VIT-2204',
+      tag:'Supplements',
+      price:'$18.49',
+      supplier:'Brace Direct',
+      match:'99% match',
+      d:200,
+    }
+  ];
+
+  skus.forEach(sku => {
+    setTimeout(()=>{
+      const card = document.createElement('div');
+      card.className = 'sku-card';
+      card.innerHTML = `
+        <div class="sku-icon">${sku.emoji}</div>
+        <div class="sku-info">
+          <div class="sku-name">${sku.name}</div>
+          <div class="sku-meta">
+            <span class="sku-tag">${sku.tag}</span>
+            <span>${sku.supplier}</span>
+          </div>
+          <div class="sku-match">
+            <svg width="8" height="8" viewBox="0 0 8 8" fill="none"><circle cx="4" cy="4" r="3" fill="#22C55E"/></svg>
+            ${sku.match}
+          </div>
+        </div>
+        <div class="sku-right">
+          <div class="sku-price">${sku.price}</div>
+          <div class="sku-sku">${sku.sku}</div>
+        </div>`;
+      skuBody.appendChild(card);
+      card.offsetHeight;
+      card.classList.add('show');
+    }, sku.d);
+  });
+
+  await delay(600);
+  setStatus('sku-status','2 matched','done');
+  deactivateCard('sku-panel');
+
+  // ── PHASE 4: CHECKOUT LINK ────────────────────────────
+  await delay(100);
+  activateCard('checkout-panel');
+  setStatus('checkout-status','Generating','running');
+
+  const checkoutBody = document.getElementById('checkout-body');
+  checkoutBody.innerHTML = '';
+
+  const token = generateToken();
+  const checkoutUrl = `rvt_${token}`;
+
+  const urlBox = document.createElement('div');
+  urlBox.className = 'checkout-url-box';
+  urlBox.innerHTML = `
+    <span class="checkout-url-prefix">revytal.io/pay/</span>
+    <span class="checkout-url-token" id="co-token"></span>
+    <button class="checkout-copy-btn" onclick="copyUrl(this,'${checkoutUrl}')">Copy</button>`;
+  checkoutBody.appendChild(urlBox);
+
+  await delay(50);
+  urlBox.classList.add('show');
+
+  // Typewriter the token
+  const tokenEl = document.getElementById('co-token');
+  for(let i=0;i<=checkoutUrl.length;i++){
+    await delay(28);
+    tokenEl.textContent = checkoutUrl.slice(0,i) + (i<checkoutUrl.length ? '▌':'');
+  }
+
+  const meta = document.createElement('div');
+  meta.className = 'checkout-meta';
+  meta.innerHTML = `
+    <div class="checkout-pill">
+      <svg width="10" height="10" viewBox="0 0 10 10" fill="none"><rect x="1" y="2" width="8" height="6" rx="1.5" stroke="#4A5A6E" stroke-width="1"/><path d="M3 5h4" stroke="#4A5A6E" stroke-width="1" stroke-linecap="round"/></svg>
+      Stripe Checkout
+    </div>
+    <div class="checkout-pill">
+      <svg width="10" height="10" viewBox="0 0 10 10" fill="none"><path d="M5 1v3.5L7 6" stroke="#4A5A6E" stroke-width="1" stroke-linecap="round"/><circle cx="5" cy="5" r="4" stroke="#4A5A6E" stroke-width="1"/></svg>
+      Expires 24h
+    </div>
+    <div class="checkout-pill">
+      <svg width="10" height="10" viewBox="0 0 10 10" fill="none"><path d="M1.5 5L3.5 7L8.5 3" stroke="#4A5A6E" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      QR ready
+    </div>
+    <div class="checkout-pill">
+      <svg width="10" height="10" viewBox="0 0 10 10" fill="none"><path d="M5 1a4 4 0 100 8A4 4 0 005 1z" stroke="#4A5A6E" stroke-width="1"/><path d="M3.5 5l1 1L6.5 3.5" stroke="#4A5A6E" stroke-width="1" stroke-linecap="round"/></svg>
+      $108.44 total
+    </div>`;
+  checkoutBody.appendChild(meta);
+  await delay(100);
+  meta.classList.add('show');
+
+  setStatus('checkout-status','Live','done');
+  deactivateCard('checkout-panel');
+
+  // ── PHASE 5: ORDER TIMELINE ───────────────────────────
+  await delay(200);
+  activateCard('timeline-panel');
+  setStatus('timeline-status','Processing','running');
+
+  const timelineBody = document.getElementById('timeline-body');
+  timelineBody.innerHTML = '';
+
+  // Build timeline
+  const tl = document.createElement('div');
+  tl.className = 'timeline';
+  timelineBody.appendChild(tl);
+
+  const steps = [
+    {
+      title:'Order received',
+      sub:'Payment captured · $108.44',
+      time:'T+0.0s',
+      dotCls:'done',
+      titleCls:'done-title',
+      pill:null,
+      d:0,
+    },
+    {
+      title:'Intent verified',
+      sub:'2 SKUs confirmed · MCL knee brace + Vitamin D',
+      time:'T+0.4s',
+      dotCls:'done',
+      titleCls:'done-title',
+      pill:null,
+      d:300,
+    },
+    {
+      title:'Routing to suppliers',
+      sub:'MeyerPT → knee brace · Brace Direct → vitamin D',
+      time:'T+1.1s',
+      dotCls:'done',
+      titleCls:'done-title',
+      pill:null,
+      d:700,
+    },
+    {
+      title:'Supplier confirmation',
+      sub:'Both suppliers acknowledged · Fulfillment initiated',
+      time:'T+2.3s',
+      dotCls:'done',
+      titleCls:'done-title',
+      pill:null,
+      d:1200,
+    },
+    {
+      title:'Order fulfilled',
+      sub:'Shipping labels generated · Tracking dispatched to patient',
+      time:'T+3.8s',
+      dotCls:'done',
+      titleCls:'done-title',
+      pill:'Fulfilled',
+      d:1800,
+    },
+  ];
+
+  steps.forEach((step,i) => {
+    setTimeout(()=>{
+      const item = document.createElement('div');
+      item.className = 'tl-item';
+      item.innerHTML = `
+        <div class="tl-left">
+          <div class="tl-dot pending" id="tl-dot-${i}"></div>
+          <div class="tl-line"></div>
+        </div>
+        <div class="tl-right">
+          <div class="tl-title ${step.titleCls}" id="tl-title-${i}">${step.title}</div>
+          <div class="tl-sub">${step.sub}</div>
+          <div class="tl-time">${step.time}</div>
+          ${step.pill ? `<div class="tl-pill-done" id="tl-pill-${i}" style="display:none"><svg width="8" height="8" viewBox="0 0 8 8" fill="none"><path d="M1.5 4L3 5.5L6.5 2.5" stroke="#22C55E" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg>${step.pill}</div>` : ''}
+        </div>`;
+      tl.appendChild(item);
+      item.offsetHeight;
+      item.classList.add('show');
+
+      // Animate dot to done after a short delay
+      setTimeout(()=>{
+        const dot = document.getElementById(`tl-dot-${i}`);
+        if(dot){
+          dot.classList.remove('pending','active');
+          dot.classList.add('done');
+        }
+        if(step.pill){
+          const pill = document.getElementById(`tl-pill-${i}`);
+          if(pill) pill.style.display = 'inline-flex';
+        }
+      }, 300);
+    }, step.d);
+  });
+
+  // Supplier routing display
+  await delay(1400);
+
+  const supplierRow = document.createElement('div');
+  supplierRow.className = 'supplier-row';
+  supplierRow.innerHTML = `
+    <div class="supplier-card routed" id="sc-meyerpt">
+      <div class="supplier-label">Supplier A</div>
+      <div class="supplier-name">MeyerPT</div>
+      <div class="supplier-status sent">
+        <svg width="8" height="8" viewBox="0 0 8 8" fill="none"><circle cx="4" cy="4" r="3" fill="#22C55E"/></svg>
+        Order sent · DonJoy Knee Brace
+      </div>
+    </div>
+    <div class="supplier-card routed" id="sc-bd">
+      <div class="supplier-label">Supplier B</div>
+      <div class="supplier-name">Brace Direct</div>
+      <div class="supplier-status sent">
+        <svg width="8" height="8" viewBox="0 0 8 8" fill="none"><circle cx="4" cy="4" r="3" fill="#22C55E"/></svg>
+        Order sent · Vitamin D3 5000 IU
+      </div>
+    </div>`;
+  timelineBody.appendChild(supplierRow);
+  await delay(100);
+  supplierRow.classList.add('show');
+
+  await delay(800);
+  setStatus('timeline-status','Fulfilled','done');
+  deactivateCard('timeline-panel');
+
+  // ── FINAL: BANNER ──────────────────────────────────────
+  await delay(600);
+
+  const elapsed = ((Date.now() - startTime) / 1000).toFixed(1);
+  document.getElementById('stat-time').textContent = elapsed + 's';
+
+  const banner = document.getElementById('fulfilled-banner');
+  banner.classList.add('show');
+  banner.scrollIntoView({behavior:'smooth', block:'nearest'});
+
+  running = false;
+  runBtn.disabled = false;
+  runBtn.innerHTML = `<svg width="13" height="13" viewBox="0 0 13 13" fill="none"><path d="M2.5 2.5L10.5 6.5L2.5 10.5V2.5Z" fill="white"/></svg> Run Again`;
+}
+
+// ── Copy URL ────────────────────────────────────────────────
+function copyUrl(btn, token){
+  const full = 'https://revytal.io/pay/' + token;
+  navigator.clipboard.writeText(full).catch(()=>{});
+  btn.textContent = 'Copied!';
+  setTimeout(()=>{ btn.textContent = 'Copy'; }, 2000);
+}
+
+// ── Reset ───────────────────────────────────────────────────
+function resetDemo(){
+  // Reset all cards
+  ['ai-engine','intent-panel','sku-panel','checkout-panel','timeline-panel'].forEach(id=>{
+    deactivateCard(id);
+  });
+
+  ['ai-status','intent-status','sku-status','checkout-status','timeline-status'].forEach(id=>{
+    setStatus(id,'Idle','');
+  });
+
+  document.getElementById('ai-log').innerHTML = '<div class="ai-line show"><span class="ai-prefix" style="color:var(--text3)">▸</span><span class="ai-text dim">Awaiting input…</span></div>';
+  document.getElementById('intent-chips').innerHTML = '<div class="ai-line show"><span class="ai-prefix" style="color:var(--text3)">–</span><span class="ai-text dim">No intents extracted yet</span></div>';
+  document.getElementById('sku-body').innerHTML = '<div class="ai-line show"><span class="ai-prefix" style="color:var(--text3)">–</span><span class="ai-text dim">Awaiting intent extraction…</span></div>';
+  document.getElementById('checkout-body').innerHTML = '<div class="ai-line show"><span class="ai-prefix" style="color:var(--text3)">–</span><span class="ai-text dim">Awaiting SKU match…</span></div>';
+  document.getElementById('timeline-body').innerHTML = '<div class="ai-line show"><span class="ai-prefix" style="color:var(--text3)">–</span><span class="ai-text dim">Awaiting checkout…</span></div>';
+
+  document.getElementById('fulfilled-banner').classList.remove('show');
+
+  const runBtn = document.getElementById('run-btn');
+  runBtn.disabled = false;
+  runBtn.innerHTML = `<svg width="13" height="13" viewBox="0 0 13 13" fill="none"><path d="M2.5 2.5L10.5 6.5L2.5 10.5V2.5Z" fill="white"/></svg> Run Pipeline`;
+}
+</script>
+</body>
+</html>
