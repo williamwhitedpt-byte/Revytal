@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Revytal — Signals</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=DM+Mono:ital,wght@0,300;0,400;0,500;1,300&family=Instrument+Serif:ital@0;1&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600&display=swap');
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#080C10;--bg2:#0D1117;--bg3:#131920;
+  --surface:#161D26;--surface2:#1C2530;
+  --border:rgba(255,255,255,0.07);--border2:rgba(255,255,255,0.12);
+  --teal:#1BA6A6;--teal2:#7ED4D4;
+  --text:#E8EDF2;--text2:#8A9BB0;--text3:#4A5A6E;
+  --font-body:'DM Sans',system-ui,sans-serif;
+  --font-mono:'DM Mono',monospace;
+  --font-serif:'Instrument Serif',Georgia,serif;
+}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--text);font-family:var(--font-body);min-height:100vh;overflow-x:hidden;-webkit-font-smoothing:antialiased;line-height:1.7}
+body::before{content:'';position:fixed;inset:0;background-image:linear-gradient(rgba(27,166,166,0.022) 1px,transparent 1px),linear-gradient(90deg,rgba(27,166,166,0.022) 1px,transparent 1px);background-size:52px 52px;pointer-events:none;z-index:0}
+body::after{content:'';position:fixed;top:-25vh;left:50%;transform:translateX(-50%);width:1000px;height:640px;background:radial-gradient(ellipse at center,rgba(27,166,166,0.07) 0%,transparent 68%);pointer-events:none;z-index:0}
+.app{position:relative;z-index:1;max-width:800px;margin:0 auto;padding:0 24px 120px}
+nav{display:flex;align-items:center;justify-content:space-between;padding:20px 0;border-bottom:1px solid var(--border);position:sticky;top:0;background:rgba(8,12,16,0.88);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);z-index:100}
+.nav-logo{display:flex;align-items:center;gap:10px;text-decoration:none}
+.logo-mark{width:28px;height:28px;background:var(--teal);border-radius:7px;display:flex;align-items:center;justify-content:center;box-shadow:0 0 18px rgba(27,166,166,0.38);flex-shrink:0}
+.logo-mark svg{display:block}
+.logo-text{font-family:var(--font-serif);font-size:19px;color:var(--text);letter-spacing:-0.2px}
+.nav-badge{font-size:11px;font-weight:500;letter-spacing:0.1em;text-transform:uppercase;color:var(--teal);background:rgba(27,166,166,0.1);border:1px solid rgba(27,166,166,0.2);padding:4px 12px;border-radius:100px}
+.hero{padding:80px 0 64px;text-align:center}
+.hero-eyebrow{display:inline-flex;align-items:center;gap:7px;font-size:11px;font-weight:600;letter-spacing:0.14em;text-transform:uppercase;color:var(--teal);margin-bottom:20px;opacity:0;animation:fadeUp 0.7s 0.1s ease both}
+.hero-eyebrow::before,.hero-eyebrow::after{content:'';display:block;width:20px;height:1px;background:var(--teal);opacity:0.5}
+.hero-title{font-family:var(--font-serif);font-size:clamp(38px,5.5vw,62px);font-weight:400;color:var(--text);line-height:1.1;letter-spacing:-0.025em;margin-bottom:22px;opacity:0;animation:fadeUp 0.7s 0.22s ease both}
+.hero-sub{font-size:16px;color:var(--text2);max-width:520px;margin:0 auto;line-height:1.7;font-style:italic;font-family:var(--font-serif);opacity:0;animation:fadeUp 0.7s 0.36s ease both}
+.index-strip{display:flex;flex-wrap:wrap;gap:6px;justify-content:center;padding:24px 0 0;opacity:0;animation:fadeUp 0.7s 0.5s ease both}
+.index-pill{font-size:11px;font-weight:500;letter-spacing:0.05em;color:var(--text3);background:var(--surface);border:1px solid var(--border);padding:5px 12px;border-radius:100px;text-decoration:none;transition:all 0.2s;cursor:pointer}
+.index-pill:hover{color:var(--teal2);border-color:rgba(27,166,166,0.3);background:rgba(27,166,166,0.06)}
+.divider{height:1px;background:var(--border);margin:72px 0 0}
+.signal{padding-top:72px;opacity:0;transform:translateY(22px);transition:opacity 0.65s ease,transform 0.65s ease}
+.signal.visible{opacity:1;transform:none}
+.signal-header{display:flex;align-items:flex-start;gap:16px;margin-bottom:24px}
+.signal-icon{width:36px;height:36px;flex-shrink:0;background:rgba(27,166,166,0.08);border:1px solid rgba(27,166,166,0.15);border-radius:10px;display:flex;align-items:center;justify-content:center;margin-top:4px}
+.signal-icon svg{display:block}
+.signal-label-group{flex:1}
+.signal-label{font-size:11px;font-weight:600;letter-spacing:0.12em;text-transform:uppercase;color:var(--teal);margin-bottom:5px}
+.signal-heading{font-family:var(--font-serif);font-size:clamp(22px,3vw,30px);font-weight:400;color:var(--text);line-height:1.2;letter-spacing:-0.02em}
+.signal-heading em{font-style:italic;color:var(--teal2)}
+.signal-panel{background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:28px 32px;position:relative;overflow:hidden;transition:border-color 0.3s}
+.signal-panel::before{content:'';position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,var(--teal),transparent 60%);opacity:0.4}
+.signal-panel:hover{border-color:rgba(27,166,166,0.2)}
+.signal-panel p{font-size:15px;color:var(--text2);line-height:1.78;margin-bottom:14px}
+.signal-panel p:last-child{margin-bottom:0}
+.signal-panel strong{color:var(--text);font-weight:600}
+.signal-callout{display:flex;align-items:flex-start;gap:12px;margin-top:20px;padding-top:20px;border-top:1px solid var(--border)}
+.callout-bar{width:2px;flex-shrink:0;border-radius:2px;background:var(--teal);align-self:stretch;opacity:0.7}
+.callout-text{font-family:var(--font-serif);font-size:17px;font-style:italic;color:var(--text);line-height:1.55;margin:0 !important}
+.callout-text strong{font-style:normal;color:var(--teal2);font-weight:400}
+.bottom-line{margin-top:80px;background:linear-gradient(135deg,rgba(27,166,166,0.07) 0%,rgba(10,58,94,0.1) 100%);border:1px solid rgba(27,166,166,0.18);border-radius:20px;padding:52px 48px;text-align:center;position:relative;overflow:hidden;opacity:0;transform:translateY(22px);transition:opacity 0.65s ease,transform 0.65s ease}
+.bottom-line.visible{opacity:1;transform:none}
+.bottom-line::before{content:'';position:absolute;top:-60px;left:50%;transform:translateX(-50%);width:400px;height:200px;background:radial-gradient(ellipse,rgba(27,166,166,0.1) 0%,transparent 70%);pointer-events:none}
+.bottom-line-label{font-size:11px;font-weight:600;letter-spacing:0.12em;text-transform:uppercase;color:var(--teal);margin-bottom:20px;display:flex;align-items:center;justify-content:center;gap:8px}
+.bottom-line-label::before,.bottom-line-label::after{content:'';display:block;width:24px;height:1px;background:var(--teal);opacity:0.5}
+.bottom-line h2{font-family:var(--font-serif);font-size:clamp(24px,3.5vw,36px);font-weight:400;color:var(--text);line-height:1.2;letter-spacing:-0.02em;margin-bottom:28px}
+.bottom-line p{font-size:15px;color:var(--text2);line-height:1.75;margin-bottom:14px;max-width:580px;margin-left:auto;margin-right:auto}
+.bottom-line p:last-of-type{margin-bottom:0}
+.final-line{margin-top:32px;font-family:var(--font-serif);font-size:20px;font-style:italic;color:var(--teal2);display:block}
+footer{margin-top:64px;padding-top:24px;border-top:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px}
+.footer-logo{display:flex;align-items:center;gap:8px;font-family:var(--font-serif);font-size:16px;color:var(--text3)}
+.footer-copy{font-size:12px;color:var(--text3);font-family:var(--font-mono)}
+@keyframes fadeUp{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
+@media(max-width:600px){.signal-panel{padding:22px 20px}.bottom-line{padding:36px 24px}.signal-header{gap:12px}.hero{padding:56px 0 44px}}
+::selection{background:rgba(27,166,166,0.22);color:var(--text)}
+::-webkit-scrollbar{width:5px}::-webkit-scrollbar-track{background:var(--bg2)}::-webkit-scrollbar-thumb{background:var(--surface2);border-radius:3px}
+</style>
+</head>
+<body>
+<div class="app">
+
+<nav>
+  <a class="nav-logo" href="/">
+    <div class="logo-mark">
+      <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M7 1L12 4V10L7 13L2 10V4L7 1Z" stroke="white" stroke-width="1.5" stroke-linejoin="round"/><circle cx="7" cy="7" r="2" fill="white"/></svg>
+    </div>
+    <span class="logo-text">Revytal</span>
+  </a>
+  <span class="nav-badge">Signals</span>
+</nav>
+
+<div class="hero">
+  <div class="hero-eyebrow">Investor Signals</div>
+  <h1 class="hero-title">Revytal — Signals</h1>
+  <p class="hero-sub">The moment clinical AI expands, this is the infrastructure layer it needs.</p>
+  <div class="index-strip">
+    <span class="index-pill" onclick="goTo('macro')">Macro</span>
+    <span class="index-pill" onclick="goTo('competitive')">Competitive</span>
+    <span class="index-pill" onclick="goTo('provider')">Provider</span>
+    <span class="index-pill" onclick="goTo('consumer')">Consumer</span>
+    <span class="index-pill" onclick="goTo('regulatory')">Regulatory</span>
+    <span class="index-pill" onclick="goTo('supplier')">Supplier</span>
+    <span class="index-pill" onclick="goTo('category')">Category</span>
+    <span class="index-pill" onclick="goTo('founder')">Founder</span>
+  </div>
+</div>
+
+<div class="divider"></div>
+
+<div class="signal" id="macro">
+  <div class="signal-header">
+    <div class="signal-icon"><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><circle cx="8" cy="8" r="5.5" stroke="#1BA6A6" stroke-width="1.3"/><path d="M8 5v3l2 1.5" stroke="#1BA6A6" stroke-width="1.3" stroke-linecap="round"/></svg></div>
+    <div class="signal-label-group">
+      <div class="signal-label">Macro Signal</div>
+      <h2 class="signal-heading">AI is becoming the new front door<br/>to <em>healthcare.</em></h2>
+    </div>
+  </div>
+  <div class="signal-panel">
+    <p>Amazon's launch of a Health AI assistant on its consumer platform confirms that AI will mediate patient decisions at scale — routing millions of people through AI-generated health guidance before they ever reach a clinic.</p>
+    <p>This creates a structural shift. As AI surfaces recommendations across the care journey, the downstream moment — the clinical recommendation itself — becomes newly visible, newly capturable, and newly valuable. The infrastructure layer that captures it doesn't exist yet.</p>
+    <div class="signal-callout">
+      <div class="callout-bar"></div>
+      <p class="callout-text">Revytal is building it.</p>
+    </div>
+  </div>
+</div>
+
+<div class="divider"></div>
+
+<div class="signal" id="competitive">
+  <div class="signal-header">
+    <div class="signal-icon"><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M3 8h10M8 3l5 5-5 5" stroke="#1BA6A6" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+    <div class="signal-label-group">
+      <div class="signal-label">Competitive Signal</div>
+      <h2 class="signal-heading">Big Tech is validating the category.<br/><em>None of them are building the rail.</em></h2>
+    </div>
+  </div>
+  <div class="signal-panel">
+    <p>Amazon, Microsoft, and OpenAI are investing in health navigation, virtual care, and clinical documentation. They are not capturing OTC and product intent from outpatient providers. They are not building compliant commerce infrastructure for physical therapy clinics, orthopedic practices, or sports medicine groups.</p>
+    <div class="signal-callout">
+      <div class="callout-bar"></div>
+      <p class="callout-text">The category is being validated from above. The ground-level infrastructure remains unbuilt. <strong>That gap is Revytal's entry point — and its moat.</strong></p>
+    </div>
+  </div>
+</div>
+
+<div class="divider"></div>
+
+<div class="signal" id="provider">
+  <div class="signal-header">
+    <div class="signal-icon"><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><rect x="3" y="2" width="10" height="12" rx="2" stroke="#1BA6A6" stroke-width="1.3"/><path d="M6 6h4M6 9h2.5" stroke="#1BA6A6" stroke-width="1.2" stroke-linecap="round"/></svg></div>
+    <div class="signal-label-group">
+      <div class="signal-label">Provider Signal</div>
+      <h2 class="signal-heading">Clinics generate billions in downstream<br/>product revenue <em>they never collect.</em></h2>
+    </div>
+  </div>
+  <div class="signal-panel">
+    <p>Providers recommend braces, orthotics, topicals, and recovery equipment in every session. The recommendation is trusted. The patient acts on it. The purchase happens somewhere else. The clinic sees none of it.</p>
+    <p>There is no compliant, automated mechanism for capturing that demand. No product built for the outpatient workflow. No rail between the clinical moment and the transaction.</p>
+    <div class="signal-callout">
+      <div class="callout-bar"></div>
+      <p class="callout-text">Revytal gives providers a new revenue stream <strong>without adding a single step to the clinical workflow.</strong></p>
+    </div>
+  </div>
+</div>
+
+<div class="divider"></div>
+
+<div class="signal" id="consumer">
+  <div class="signal-header">
+    <div class="signal-icon"><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><circle cx="8" cy="5.5" r="2.5" stroke="#1BA6A6" stroke-width="1.3"/><path d="M3 13c0-2.8 2.2-5 5-5s5 2.2 5 5" stroke="#1BA6A6" stroke-width="1.3" stroke-linecap="round"/></svg></div>
+    <div class="signal-label-group">
+      <div class="signal-label">Consumer Signal</div>
+      <h2 class="signal-heading">Patients are already buying<br/><em>what clinicians recommend.</em></h2>
+    </div>
+  </div>
+  <div class="signal-panel">
+    <p>The behavior exists. The intent is already there. The only missing piece is infrastructure that makes the clinic the starting point rather than Amazon. Revytal routes the transaction back through the provider relationship where it originated.</p>
+    <div class="signal-callout">
+      <div class="callout-bar"></div>
+      <p class="callout-text">HSA-eligible checkout and clinical-grade SKUs reinforce the trust that already exists. <strong>Revytal doesn't create new behavior — it captures existing behavior.</strong></p>
+    </div>
+  </div>
+</div>
+
+<div class="divider"></div>
+
+<div class="signal" id="regulatory">
+  <div class="signal-header">
+    <div class="signal-icon"><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M8 2L13 4.5V9c0 2.5-2 4.5-5 5C5 13.5 3 11.5 3 9V4.5L8 2Z" stroke="#1BA6A6" stroke-width="1.3" stroke-linejoin="round"/><path d="M5.5 8l2 2L11 6" stroke="#1BA6A6" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+    <div class="signal-label-group">
+      <div class="signal-label">Regulatory Signal</div>
+      <h2 class="signal-heading">No PHI. No EHR integration.<br/><em>Deploys instantly.</em></h2>
+    </div>
+  </div>
+  <div class="signal-panel">
+    <p>The tools that have tried to enter outpatient workflows have failed on friction: HIPAA compliance burdens, EHR dependency, six-month implementation cycles. Revytal is architecturally different. No patient data is stored. No EHR touchpoint is required. A clinic can run its first live order the same day it activates.</p>
+    <div class="signal-callout">
+      <div class="callout-bar"></div>
+      <p class="callout-text">In a category where friction is the primary adoption barrier, <strong>zero friction is a structural advantage.</strong></p>
+    </div>
+  </div>
+</div>
+
+<div class="divider"></div>
+
+<div class="signal" id="supplier">
+  <div class="signal-header">
+    <div class="signal-icon"><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M2 5l6-3 6 3v6l-6 3-6-3V5Z" stroke="#1BA6A6" stroke-width="1.3" stroke-linejoin="round"/><path d="M8 2v12M2 5l6 3 6-3" stroke="#1BA6A6" stroke-width="1.1" stroke-linecap="round"/></svg></div>
+    <div class="signal-label-group">
+      <div class="signal-label">Supplier Signal</div>
+      <h2 class="signal-heading">Clinical-grade suppliers need<br/>a <em>non-Amazon channel.</em></h2>
+    </div>
+  </div>
+  <div class="signal-panel">
+    <p>Amazon commoditizes product recommendations and erodes supplier margin. Suppliers selling through outpatient clinics get something Amazon cannot offer: clinical endorsement, patient trust, and a direct fulfillment relationship grounded in a care context.</p>
+    <div class="signal-callout">
+      <div class="callout-bar"></div>
+      <p class="callout-text">Revytal gives suppliers a defensible distribution channel through the most credible sales environment that exists — <strong>the provider relationship. That channel doesn't exist today.</strong></p>
+    </div>
+  </div>
+</div>
+
+<div class="divider"></div>
+
+<div class="signal" id="category">
+  <div class="signal-header">
+    <div class="signal-icon"><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M8 2l1.5 3.5L13 6l-2.5 2.5.5 3.5L8 10.5 5 12l.5-3.5L3 6l3.5-.5L8 2Z" stroke="#1BA6A6" stroke-width="1.3" stroke-linejoin="round"/></svg></div>
+    <div class="signal-label-group">
+      <div class="signal-label">Category Signal</div>
+      <h2 class="signal-heading">Ambient AI is exposing the clinical<br/>recommendation moment <em>for the first time.</em></h2>
+    </div>
+  </div>
+  <div class="signal-panel">
+    <p>As documentation, scheduling, and billing move toward invisible automation, the clinical encounter becomes a structured signal. Recommendations that were previously verbal, untracked, and uncaptured become discrete, actionable events.</p>
+    <p>That structural shift creates a new category: <strong>Clinical Commerce Infrastructure</strong> — the rail between provider intent and patient action.</p>
+    <div class="signal-callout">
+      <div class="callout-bar"></div>
+      <p class="callout-text">The company that builds the first credible version of this rail <strong>names the category and sets the terms for everything that follows.</strong></p>
+    </div>
+  </div>
+</div>
+
+<div class="divider"></div>
+
+<div class="signal" id="founder">
+  <div class="signal-header">
+    <div class="signal-icon"><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><circle cx="8" cy="5" r="3" stroke="#1BA6A6" stroke-width="1.3"/><path d="M2.5 14c0-3 2.5-5 5.5-5s5.5 2 5.5 5" stroke="#1BA6A6" stroke-width="1.3" stroke-linecap="round"/><path d="M10.5 7.5L12 9l2-3" stroke="#1BA6A6" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+    <div class="signal-label-group">
+      <div class="signal-label">Founder Signal</div>
+      <h2 class="signal-heading">Nearly a decade inside outpatient care.<br/><em>This problem was lived, not researched.</em></h2>
+    </div>
+  </div>
+  <div class="signal-panel">
+    <p>This is not a market identified through research. It is a problem lived from the inside — watching revenue leak out of the system on every patient visit, understanding the exact constraints that make clinical workflows resistant to new tools, and knowing precisely what zero friction looks like in practice.</p>
+    <div class="signal-callout">
+      <div class="callout-bar"></div>
+      <p class="callout-text">Infrastructure companies in healthcare require founder-market fit that goes beyond domain knowledge. It requires having been the person who needed the infrastructure and found nothing there. <strong>That is the founder insight Revytal is built on.</strong></p>
+    </div>
+  </div>
+</div>
+
+<div class="bottom-line" id="bottom">
+  <div class="bottom-line-label">The Bottom Line</div>
+  <h2>Every signal points to the same conclusion.</h2>
+  <p>The clinical recommendation is the most trusted commercial signal in healthcare. It has never been captured. The infrastructure to capture it has never been built.</p>
+  <p>Ambient AI is making the recommendation moment visible for the first time. Big Tech is validating AI-mediated healthcare at scale. Outpatient clinics are actively looking for non-insurance revenue. Suppliers need a non-Amazon channel. Patients already act on what providers recommend.</p>
+  <p>The rail is inevitable. The category will be defined by whoever builds it first.</p>
+  <span class="final-line">Revytal is building it now.</span>
+</div>
+
+<footer>
+  <div class="footer-logo">
+    <div class="logo-mark" style="width:20px;height:20px;border-radius:5px;box-shadow:none"><svg width="10" height="10" viewBox="0 0 14 14" fill="none"><path d="M7 1L12 4V10L7 13L2 10V4L7 1Z" stroke="white" stroke-width="1.5" stroke-linejoin="round"/><circle cx="7" cy="7" r="2" fill="white"/></svg></div>
+    Revytal
+  </div>
+  <span class="footer-copy">© 2025 · Clinical Commerce Infrastructure</span>
+</footer>
+
+</div>
+<script>
+(function(){
+  const els=document.querySelectorAll('.signal,.bottom-line');
+  if(!els.length)return;
+  const io=new IntersectionObserver((entries)=>{
+    entries.forEach(e=>{if(e.isIntersecting){e.target.classList.add('visible');io.unobserve(e.target);}});
+  },{threshold:0.08,rootMargin:'0px 0px -40px 0px'});
+  els.forEach(el=>io.observe(el));
+})();
+function goTo(id){
+  const el=document.getElementById(id);
+  if(!el)return;
+  window.scrollTo({top:el.getBoundingClientRect().top+window.scrollY-80,behavior:'smooth'});
+}
+</script>
+</body>
+</html>
