@@ -23,11 +23,14 @@ body::before{content:'';position:fixed;inset:0;background-image:linear-gradient(
 body::after{content:'';position:fixed;top:-25vh;left:50%;transform:translateX(-50%);width:1000px;height:640px;background:radial-gradient(ellipse at center,rgba(27,166,166,0.07) 0%,transparent 68%);pointer-events:none;z-index:0}
 .app{position:relative;z-index:1;max-width:800px;margin:0 auto;padding:0 24px 120px}
 nav{display:flex;align-items:center;justify-content:space-between;padding:20px 0;border-bottom:1px solid var(--border);position:sticky;top:0;background:rgba(8,12,16,0.88);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);z-index:100}
-.nav-logo{display:flex;align-items:center;gap:10px;text-decoration:none}
-.logo-mark{width:28px;height:28px;background:var(--teal);border-radius:7px;display:flex;align-items:center;justify-content:center;box-shadow:0 0 18px rgba(27,166,166,0.38);flex-shrink:0}
-.logo-mark svg{display:block}
-.logo-text{font-family:var(--font-serif);font-size:19px;color:var(--text);letter-spacing:-0.2px}
+.nav-logo-mark{display:flex;align-items:center;gap:10px}
+.nav-logo-mark .nav-logo-mark{width:28px;height:28px;background:var(--teal);border-radius:7px;display:flex;align-items:center;justify-content:center;box-shadow:0 0 18px rgba(27,166,166,0.38);flex-shrink:0}
+.nav-logo-mark .nav-logo-mark svg{display:block}
+.nav-wordmark{font-family:var(--font-serif);font-size:19px;color:var(--text);letter-spacing:-0.2px}
+.nav-right{display:flex;align-items:center;gap:10px}
 .nav-badge{font-size:11px;font-weight:500;letter-spacing:0.1em;text-transform:uppercase;color:var(--teal);background:rgba(27,166,166,0.1);border:1px solid rgba(27,166,166,0.2);padding:4px 12px;border-radius:100px}
+.nav-demo-link{font-size:12px;font-weight:500;color:var(--text2);text-decoration:none;padding:6px 14px;border-radius:8px;border:1px solid var(--border2);background:var(--surface);transition:all 0.2s;display:flex;align-items:center;gap:6px}
+.nav-demo-link:hover{color:var(--teal);border-color:rgba(27,166,166,0.35);background:rgba(27,166,166,0.07)}
 .hero{padding:80px 0 64px;text-align:center}
 .hero-eyebrow{display:inline-flex;align-items:center;gap:7px;font-size:11px;font-weight:600;letter-spacing:0.14em;text-transform:uppercase;color:var(--teal);margin-bottom:20px;opacity:0;animation:fadeUp 0.7s 0.1s ease both}
 .hero-eyebrow::before,.hero-eyebrow::after{content:'';display:block;width:20px;height:1px;background:var(--teal);opacity:0.5}
@@ -69,7 +72,7 @@ footer{margin-top:64px;padding-top:24px;border-top:1px solid var(--border);displ
 .footer-logo{display:flex;align-items:center;gap:8px;font-family:var(--font-serif);font-size:16px;color:var(--text3)}
 .footer-copy{font-size:12px;color:var(--text3);font-family:var(--font-mono)}
 @keyframes fadeUp{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
-@media(max-width:600px){.signal-panel{padding:22px 20px}.bottom-line{padding:36px 24px}.signal-header{gap:12px}.hero{padding:56px 0 44px}}
+@media(max-width:600px){.signal-panel{padding:22px 20px}.bottom-line{padding:36px 24px}.signal-header{gap:12px}.hero{padding:56px 0 44px}.nav-badge{display:none}}
 ::selection{background:rgba(27,166,166,0.22);color:var(--text)}
 ::-webkit-scrollbar{width:5px}::-webkit-scrollbar-track{background:var(--bg2)}::-webkit-scrollbar-thumb{background:var(--surface2);border-radius:3px}
 </style>
@@ -78,7 +81,7 @@ footer{margin-top:64px;padding-top:24px;border-top:1px solid var(--border);displ
 <div class="app">
 
 <nav>
-  <div class="nav-logo">
+  <div class="nav-logo-mark">
     <div class="nav-logo-mark">
       <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
         <path d="M7 1L12 4V10L7 13L2 10V4L7 1Z" stroke="white" stroke-width="1.5" stroke-linejoin="round"/>
@@ -87,17 +90,14 @@ footer{margin-top:64px;padding-top:24px;border-top:1px solid var(--border);displ
     </div>
     <span class="nav-wordmark">Revytal</span>
   </div>
-
   <div class="nav-right">
     <span class="nav-badge">Clinical Commerce Infrastructure</span>
-
     <a class="nav-demo-link" href="demo/index.html">
       <svg width="11" height="11" viewBox="0 0 11 11" fill="none">
         <path d="M2 5.5L9 5.5M6.5 3L9 5.5L6.5 8" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/>
       </svg>
       Live Demo
     </a>
-
     <a class="nav-demo-link" href="signals.html">
       <svg width="11" height="11" viewBox="0 0 11 11" fill="none">
         <path d="M2 5.5L9 5.5M6.5 3L9 5.5L6.5 8" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/>
@@ -107,15 +107,10 @@ footer{margin-top:64px;padding-top:24px;border-top:1px solid var(--border);displ
   </div>
 </nav>
 
-
-
-
-
-
 <div class="hero">
   <div class="hero-eyebrow">Investor Signals</div>
   <h1 class="hero-title">Revytal — Signals</h1>
-  <p class="hero-sub">The moment clinical AI expands, this is the infrastructure layer it needs.</p>
+  <p class="hero-sub">The moment clinical AI expands, this is the infrastructure layer it needs. Two loops. One rail.</p>
   <div class="index-strip">
     <span class="index-pill" onclick="goTo('macro')">Macro</span>
     <span class="index-pill" onclick="goTo('competitive')">Competitive</span>
@@ -139,8 +134,9 @@ footer{margin-top:64px;padding-top:24px;border-top:1px solid var(--border);displ
     </div>
   </div>
   <div class="signal-panel">
-    <p>Amazon's launch of a Health AI assistant on its consumer platform confirms that AI will mediate patient decisions at scale — routing millions of people through AI-generated health guidance before they ever reach a clinic.</p>
-    <p>This creates a structural shift. As AI surfaces recommendations across the care journey, the downstream moment — the clinical recommendation itself — becomes newly visible, newly capturable, and newly valuable. The infrastructure layer that captures it doesn't exist yet.</p>
+    <p>Amazon's launch of a Health AI assistant on its consumer platform confirms that AI will mediate patient decisions at scale, routing millions of people through AI-generated health guidance before they ever reach a clinic.</p>
+    <p>This creates a structural shift. As AI surfaces recommendations across the care journey, the downstream moment — the clinical recommendation itself — becomes newly visible, newly capturable, and newly valuable. Not just as a transaction. As a signal.</p>
+    <p>The infrastructure layer that captures both doesn't exist yet.</p>
     <div class="signal-callout">
       <div class="callout-bar"></div>
       <p class="callout-text">Revytal is building it.</p>
@@ -159,10 +155,10 @@ footer{margin-top:64px;padding-top:24px;border-top:1px solid var(--border);displ
     </div>
   </div>
   <div class="signal-panel">
-    <p>Amazon, Microsoft, and OpenAI are investing in health navigation, virtual care, and clinical documentation. They are not capturing OTC and product intent from outpatient providers. They are not building compliant commerce infrastructure for physical therapy clinics, orthopedic practices, or sports medicine groups.</p>
+    <p>Amazon, Microsoft, and OpenAI are investing in health navigation, virtual care, and clinical documentation. They are not capturing OTC and product intent from outpatient providers. They are not building compliant commerce infrastructure for physical therapy clinics, orthopedic practices, or sports medicine groups. And none of them are building the evidence layer that sits on top of it.</p>
     <div class="signal-callout">
       <div class="callout-bar"></div>
-      <p class="callout-text">The category is being validated from above. The ground-level infrastructure remains unbuilt. <strong>That gap is Revytal's entry point — and its moat.</strong></p>
+      <p class="callout-text">The category is being validated from above. The ground-level infrastructure and the insight layer it enables remain unbuilt. <strong>That gap is Revytal's entry point and its moat.</strong></p>
     </div>
   </div>
 </div>
@@ -178,11 +174,11 @@ footer{margin-top:64px;padding-top:24px;border-top:1px solid var(--border);displ
     </div>
   </div>
   <div class="signal-panel">
-    <p>Providers recommend braces, orthotics, topicals, and recovery equipment in every session. The recommendation is trusted. The patient acts on it. The purchase happens somewhere else. The clinic sees none of it.</p>
-    <p>There is no compliant, automated mechanism for capturing that demand. No product built for the outpatient workflow. No rail between the clinical moment and the transaction.</p>
+    <p>Providers recommend braces, orthotics, topicals, and recovery equipment in every session. The recommendation is trusted. The patient acts on it. The purchase happens somewhere else. The clinic sees none of the revenue and none of the outcome data.</p>
+    <p>There is no compliant, automated mechanism for capturing that demand. No product built for the outpatient workflow. No rail between the clinical moment and the transaction. No system surfacing what the pattern of recommendations reveals over time.</p>
     <div class="signal-callout">
       <div class="callout-bar"></div>
-      <p class="callout-text">Revytal gives providers a new revenue stream <strong>without adding a single step to the clinical workflow.</strong></p>
+      <p class="callout-text">Revytal gives providers a new revenue stream and a new evidence layer <strong>without adding a single step to the clinical workflow.</strong></p>
     </div>
   </div>
 </div>
@@ -198,10 +194,10 @@ footer{margin-top:64px;padding-top:24px;border-top:1px solid var(--border);displ
     </div>
   </div>
   <div class="signal-panel">
-    <p>The behavior exists. The intent is already there. The only missing piece is infrastructure that makes the clinic the starting point rather than Amazon. Revytal routes the transaction back through the provider relationship where it originated.</p>
+    <p>The behavior exists. The intent is already there. The only missing piece is infrastructure that makes the clinic the starting point rather than Amazon, and that routes the outcome data back to the provider who made the call.</p>
     <div class="signal-callout">
       <div class="callout-bar"></div>
-      <p class="callout-text">HSA-eligible checkout and clinical-grade SKUs reinforce the trust that already exists. <strong>Revytal doesn't create new behavior — it captures existing behavior.</strong></p>
+      <p class="callout-text">HSA-eligible checkout and clinical-grade SKUs reinforce the trust that already exists. <strong>Revytal doesn't create new behavior. It captures existing behavior and closes the loop on it.</strong></p>
     </div>
   </div>
 </div>
@@ -218,6 +214,7 @@ footer{margin-top:64px;padding-top:24px;border-top:1px solid var(--border);displ
   </div>
   <div class="signal-panel">
     <p>The tools that have tried to enter outpatient workflows have failed on friction: HIPAA compliance burdens, EHR dependency, six-month implementation cycles. Revytal is architecturally different. No patient data is stored. No EHR touchpoint is required. A clinic can run its first live order the same day it activates.</p>
+    <p>The same architecture that makes commerce frictionless makes evidence aggregation compliant by design. Revytal captures signal at the population level, not the patient level, which keeps the system outside PHI constraints while still generating meaningful clinical insight over time.</p>
     <div class="signal-callout">
       <div class="callout-bar"></div>
       <p class="callout-text">In a category where friction is the primary adoption barrier, <strong>zero friction is a structural advantage.</strong></p>
@@ -237,9 +234,10 @@ footer{margin-top:64px;padding-top:24px;border-top:1px solid var(--border);displ
   </div>
   <div class="signal-panel">
     <p>Amazon commoditizes product recommendations and erodes supplier margin. Suppliers selling through outpatient clinics get something Amazon cannot offer: clinical endorsement, patient trust, and a direct fulfillment relationship grounded in a care context.</p>
+    <p>Over time, Revytal gives suppliers something even more valuable: aggregated signal on which products clinicians actually reach for, and which correlate with better patient outcomes. That is a dataset no retailer can build. It makes Revytal a strategic partner to suppliers, not just a distribution channel.</p>
     <div class="signal-callout">
       <div class="callout-bar"></div>
-      <p class="callout-text">Revytal gives suppliers a defensible distribution channel through the most credible sales environment that exists — <strong>the provider relationship. That channel doesn't exist today.</strong></p>
+      <p class="callout-text">Revytal gives suppliers a defensible distribution channel through the most credible sales environment that exists. <strong>The provider relationship. That channel doesn't exist today.</strong></p>
     </div>
   </div>
 </div>
@@ -256,10 +254,11 @@ footer{margin-top:64px;padding-top:24px;border-top:1px solid var(--border);displ
   </div>
   <div class="signal-panel">
     <p>As documentation, scheduling, and billing move toward invisible automation, the clinical encounter becomes a structured signal. Recommendations that were previously verbal, untracked, and uncaptured become discrete, actionable events.</p>
-    <p>That structural shift creates a new category: <strong>Clinical Commerce Infrastructure</strong> — the rail between provider intent and patient action.</p>
+    <p>That structural shift creates a new category: <strong>Clinical Commerce Infrastructure</strong>, the rail between provider intent and patient action. But the category has a second layer that most people haven't named yet: the evidence loop that emerges when you aggregate those signals at scale.</p>
+    <p>The commerce layer closes the revenue gap. The evidence layer raises the floor of clinical decision-making.</p>
     <div class="signal-callout">
       <div class="callout-bar"></div>
-      <p class="callout-text">The company that builds the first credible version of this rail <strong>names the category and sets the terms for everything that follows.</strong></p>
+      <p class="callout-text">The company that builds both <strong>names the category and sets the terms for everything that follows.</strong></p>
     </div>
   </div>
 </div>
@@ -275,10 +274,10 @@ footer{margin-top:64px;padding-top:24px;border-top:1px solid var(--border);displ
     </div>
   </div>
   <div class="signal-panel">
-    <p>This is not a market identified through research. It is a problem lived from the inside — watching revenue leak out of the system on every patient visit, understanding the exact constraints that make clinical workflows resistant to new tools, and knowing precisely what zero friction looks like in practice.</p>
+    <p>This is not a market identified through research. It is a problem lived from the inside, watching revenue leak out of the system on every patient visit, watching clinicians make recommendations with no feedback on what happened next, and understanding the exact constraints that make clinical workflows resistant to new tools.</p>
     <div class="signal-callout">
       <div class="callout-bar"></div>
-      <p class="callout-text">Infrastructure companies in healthcare require founder-market fit that goes beyond domain knowledge. It requires having been the person who needed the infrastructure and found nothing there. <strong>That is the founder insight Revytal is built on.</strong></p>
+      <p class="callout-text">Infrastructure companies in healthcare require founder-market fit that goes beyond domain knowledge. It requires having been the person who needed both the revenue rail and the evidence loop and found nothing there. <strong>That is the founder insight Revytal is built on.</strong></p>
     </div>
   </div>
 </div>
@@ -286,15 +285,15 @@ footer{margin-top:64px;padding-top:24px;border-top:1px solid var(--border);displ
 <div class="bottom-line" id="bottom">
   <div class="bottom-line-label">The Bottom Line</div>
   <h2>Every signal points to the same conclusion.</h2>
-  <p>The clinical recommendation is the most trusted commercial signal in healthcare. It has never been captured. The infrastructure to capture it has never been built.</p>
-  <p>Ambient AI is making the recommendation moment visible for the first time. Big Tech is validating AI-mediated healthcare at scale. Outpatient clinics are actively looking for non-insurance revenue. Suppliers need a non-Amazon channel. Patients already act on what providers recommend.</p>
-  <p>The rail is inevitable. The category will be defined by whoever builds it first.</p>
+  <p>The clinical recommendation is the most trusted commercial signal in healthcare. It has never been captured. The infrastructure to capture it has never been built. And the evidence layer that turns captured signals into clinical insight has never existed.</p>
+  <p>Ambient AI is making the recommendation moment visible for the first time. Big Tech is validating AI-mediated healthcare at scale. Outpatient clinics are actively looking for non-insurance revenue and better-supported clinical decisions. Suppliers need a non-Amazon channel with outcome data attached. Patients already act on what providers recommend.</p>
+  <p>Two loops. One rail. The category will be defined by whoever builds both first.</p>
   <span class="final-line">Revytal is building it now.</span>
 </div>
 
 <footer>
   <div class="footer-logo">
-    <div class="logo-mark" style="width:20px;height:20px;border-radius:5px;box-shadow:none"><svg width="10" height="10" viewBox="0 0 14 14" fill="none"><path d="M7 1L12 4V10L7 13L2 10V4L7 1Z" stroke="white" stroke-width="1.5" stroke-linejoin="round"/><circle cx="7" cy="7" r="2" fill="white"/></svg></div>
+    <div class="nav-logo-mark" style="width:20px;height:20px;border-radius:5px;box-shadow:none;background:var(--teal);display:flex;align-items:center;justify-content:center"><svg width="10" height="10" viewBox="0 0 14 14" fill="none"><path d="M7 1L12 4V10L7 13L2 10V4L7 1Z" stroke="white" stroke-width="1.5" stroke-linejoin="round"/><circle cx="7" cy="7" r="2" fill="white"/></svg></div>
     Revytal
   </div>
   <span class="footer-copy">© 2025 · Clinical Commerce Infrastructure</span>
