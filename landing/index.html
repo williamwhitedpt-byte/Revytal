@@ -1,0 +1,535 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Revytal — Clinical Commerce Infrastructure</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Instrument+Serif:ital@0;1&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600&display=swap');
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#080C10;--bg2:#0D1117;--bg3:#131920;
+  --surface:#161D26;--surface2:#1C2530;
+  --border:rgba(255,255,255,0.07);--border2:rgba(255,255,255,0.13);
+  --teal:#1BA6A6;--teal2:#7ED4D4;--teal3:rgba(27,166,166,0.08);
+  --text:#E8EDF2;--text2:#8A9BB0;--text3:#4A5A6E;
+  --font-body:'DM Sans',system-ui,sans-serif;
+  --font-serif:'Instrument Serif',Georgia,serif;
+  --font-mono:'DM Mono',monospace;
+}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--text);font-family:var(--font-body);line-height:1.7;overflow-x:hidden;-webkit-font-smoothing:antialiased}
+body::before{content:'';position:fixed;inset:0;background-image:linear-gradient(rgba(27,166,166,0.022) 1px,transparent 1px),linear-gradient(90deg,rgba(27,166,166,0.022) 1px,transparent 1px);background-size:52px 52px;pointer-events:none;z-index:0}
+body::after{content:'';position:fixed;top:-20vh;left:50%;transform:translateX(-50%);width:900px;height:600px;background:radial-gradient(ellipse at center,rgba(27,166,166,0.07) 0%,transparent 68%);pointer-events:none;z-index:0}
+.wrap{position:relative;z-index:1;max-width:1100px;margin:0 auto;padding:0 32px}
+section{padding:96px 0}
+.divider{height:1px;background:var(--border)}
+
+/* NAV */
+nav{position:sticky;top:0;z-index:100;background:rgba(8,12,16,0.88);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);border-bottom:1px solid var(--border)}
+.nav-inner{max-width:1100px;margin:0 auto;padding:0 32px;height:64px;display:flex;align-items:center;justify-content:space-between}
+.nav-logo{display:flex;align-items:center;gap:10px;text-decoration:none}
+.logo-mark{width:30px;height:30px;background:var(--teal);border-radius:8px;display:flex;align-items:center;justify-content:center;box-shadow:0 0 20px rgba(27,166,166,0.4);flex-shrink:0}
+.logo-word{font-family:var(--font-serif);font-size:20px;color:var(--text)}
+.nav-right{display:flex;align-items:center;gap:10px}
+.nav-badge{font-size:11px;font-weight:500;letter-spacing:0.08em;text-transform:uppercase;color:var(--teal);background:rgba(27,166,166,0.08);border:1px solid rgba(27,166,166,0.2);padding:5px 14px;border-radius:100px}
+.btn{display:inline-flex;align-items:center;gap:7px;font-family:var(--font-body);font-size:13px;font-weight:500;text-decoration:none;padding:8px 20px;border-radius:8px;transition:all 0.2s;cursor:pointer;border:none}
+.btn-primary{background:var(--teal);color:#fff;box-shadow:0 0 24px rgba(27,166,166,0.3)}
+.btn-primary:hover{background:#17898a;box-shadow:0 0 36px rgba(27,166,166,0.45)}
+.btn-outline{background:transparent;color:var(--teal2);border:1px solid rgba(27,166,166,0.35)}
+.btn-outline:hover{background:rgba(27,166,166,0.08);border-color:rgba(27,166,166,0.6)}
+
+/* HERO */
+.hero{padding:120px 0 80px}
+.hero-eyebrow{display:inline-flex;align-items:center;gap:8px;font-size:11px;font-weight:600;letter-spacing:0.14em;text-transform:uppercase;color:var(--teal);margin-bottom:24px;animation:fadeUp 0.6s 0.1s ease both}
+.hero-eyebrow::before,.hero-eyebrow::after{content:'';display:block;width:24px;height:1px;background:var(--teal);opacity:0.5}
+.hero h1{font-family:var(--font-serif);font-size:clamp(38px,5.5vw,66px);font-weight:400;line-height:1.08;letter-spacing:-0.03em;color:var(--text);max-width:820px;margin-bottom:24px;animation:fadeUp 0.6s 0.2s ease both}
+.hero h1 em{font-style:italic;color:var(--teal2)}
+.hero-sub{font-size:17px;color:var(--text2);max-width:580px;line-height:1.75;margin-bottom:40px;animation:fadeUp 0.6s 0.32s ease both}
+.hero-cta{display:flex;align-items:center;gap:14px;flex-wrap:wrap;margin-bottom:64px;animation:fadeUp 0.6s 0.44s ease both}
+.hero-cta .btn-primary{font-size:14px;padding:12px 28px;border-radius:10px}
+.hero-note{font-size:12px;color:var(--text3)}
+.video-wrap{position:relative;background:var(--surface);border:1px solid var(--border2);border-radius:16px;overflow:hidden;box-shadow:0 0 80px rgba(27,166,166,0.08),0 32px 64px rgba(0,0,0,0.4);animation:fadeUp 0.7s 0.56s ease both}
+.video-wrap::before{content:'';position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,var(--teal),transparent 60%);opacity:0.6;z-index:2}
+.video-label{padding:14px 20px;display:flex;align-items:center;gap:10px;border-bottom:1px solid var(--border)}
+.video-dot{width:8px;height:8px;border-radius:50%;background:var(--teal);box-shadow:0 0 8px rgba(27,166,166,0.6)}
+.video-label-text{font-size:11px;font-weight:500;letter-spacing:0.1em;text-transform:uppercase;color:var(--teal)}
+.video-inner{position:relative;width:100%;padding-top:56.25%}
+.video-inner video{position:absolute;top:0;left:0;width:100%;height:100%;display:block;background:#000}
+
+/* PROBLEM */
+.problem-strip{background:linear-gradient(135deg,rgba(27,166,166,0.05),rgba(13,51,51,0.3));border:1px solid rgba(27,166,166,0.18);border-radius:12px;padding:40px 48px;margin-bottom:40px}
+.problem-strip p{font-family:var(--font-serif);font-size:clamp(18px,2.2vw,24px);font-style:italic;color:var(--text);line-height:1.5;max-width:820px}
+.problem-strip strong{font-style:normal;color:var(--teal2);font-weight:400}
+
+/* EYEBROW + TITLE */
+.eyebrow{font-size:11px;font-weight:600;letter-spacing:0.14em;text-transform:uppercase;color:var(--teal);margin-bottom:16px;display:flex;align-items:center;gap:8px}
+.eyebrow::before{content:'';display:block;width:20px;height:1px;background:var(--teal);opacity:0.5}
+.section-title{font-family:var(--font-serif);font-size:clamp(28px,3.5vw,42px);font-weight:400;line-height:1.15;letter-spacing:-0.02em;color:var(--text);margin-bottom:14px}
+.section-title em{font-style:italic;color:var(--teal2)}
+.section-sub{font-size:16px;color:var(--text2);max-width:560px;line-height:1.75;margin-bottom:56px}
+
+/* PILLARS */
+.pillars-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px}
+.pillar-card{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:28px 30px;position:relative;overflow:hidden;transition:border-color 0.25s}
+.pillar-card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,var(--teal),transparent 60%);opacity:0;transition:opacity 0.25s}
+.pillar-card:hover{border-color:rgba(27,166,166,0.3)}
+.pillar-card:hover::before{opacity:1}
+.pillar-icon{width:36px;height:36px;background:rgba(27,166,166,0.08);border:1px solid rgba(27,166,166,0.15);border-radius:8px;display:flex;align-items:center;justify-content:center;margin-bottom:18px}
+.pillar-title{font-size:15px;font-weight:600;color:var(--text);margin-bottom:8px}
+.pillar-body{font-size:13px;color:var(--text2);line-height:1.65}
+
+/* HOW IT WORKS */
+.workflow-steps{display:grid;grid-template-columns:repeat(3,1fr);gap:0;margin-bottom:40px;border:1px solid var(--border);border-radius:12px;overflow:hidden}
+.workflow-step{padding:28px 24px;border-right:1px solid var(--border);position:relative;background:var(--surface)}
+.workflow-step:nth-child(3),.workflow-step:nth-child(6){border-right:none}
+.workflow-step:nth-child(4),.workflow-step:nth-child(5),.workflow-step:nth-child(6){border-top:1px solid var(--border)}
+.step-num{font-family:var(--font-mono);font-size:11px;font-weight:500;color:var(--teal);letter-spacing:0.08em;margin-bottom:14px;display:flex;align-items:center;gap:8px}
+.step-num::after{content:'';flex:1;height:1px;background:rgba(27,166,166,0.15)}
+.step-title{font-size:14px;font-weight:600;color:var(--text);margin-bottom:8px}
+.step-body{font-size:12.5px;color:var(--text2);line-height:1.6}
+
+/* FLOW DIAGRAM */
+.flow-diagram{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:32px;overflow-x:auto}
+.flow-nodes{display:flex;align-items:stretch;min-width:640px}
+.flow-node{flex:1;text-align:center}
+.flow-box{background:var(--bg2);border:1px solid var(--border2);border-radius:10px;padding:14px 8px;margin:0 6px;height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;transition:border-color 0.2s}
+.flow-box:hover{border-color:rgba(27,166,166,0.5)}
+.flow-box-label{font-size:12px;font-weight:500;color:var(--text);margin-bottom:4px}
+.flow-box-sub{font-size:10.5px;color:var(--text3)}
+.flow-arrow{flex-shrink:0;display:flex;align-items:center;color:var(--teal);opacity:0.4;font-size:16px;padding:0 2px}
+.flow-highlight .flow-box{border-color:rgba(27,166,166,0.4);background:rgba(27,166,166,0.05)}
+.flow-highlight .flow-box-label{color:var(--teal2)}
+
+/* PILOT */
+.pilot-panel{background:linear-gradient(135deg,rgba(27,166,166,0.06),rgba(10,30,30,0.4));border:1px solid rgba(27,166,166,0.2);border-radius:20px;padding:72px;text-align:center;position:relative;overflow:hidden}
+.pilot-panel::before{content:'';position:absolute;top:-80px;left:50%;transform:translateX(-50%);width:500px;height:300px;background:radial-gradient(ellipse,rgba(27,166,166,0.1),transparent 70%);pointer-events:none}
+.pilot-label{font-size:11px;font-weight:600;letter-spacing:0.14em;text-transform:uppercase;color:var(--teal);margin-bottom:20px;display:flex;align-items:center;justify-content:center;gap:8px}
+.pilot-label::before,.pilot-label::after{content:'';display:block;width:24px;height:1px;background:var(--teal);opacity:0.5}
+.pilot-panel h2{font-family:var(--font-serif);font-size:clamp(28px,3.5vw,40px);font-weight:400;color:var(--text);line-height:1.15;letter-spacing:-0.02em;margin-bottom:18px}
+.pilot-panel h2 em{font-style:italic;color:var(--teal2)}
+.pilot-panel p{font-size:16px;color:var(--text2);max-width:520px;margin:0 auto 36px;line-height:1.75}
+.pilot-panel .btn-primary{font-size:15px;padding:14px 36px;border-radius:10px}
+.pilot-details{display:flex;align-items:center;justify-content:center;gap:32px;margin-top:28px;flex-wrap:wrap}
+.pilot-detail{display:flex;align-items:center;gap:8px;font-size:13px;color:var(--text2)}
+.pilot-check{width:16px;height:16px;border-radius:50%;background:rgba(27,166,166,0.12);border:1px solid rgba(27,166,166,0.3);display:flex;align-items:center;justify-content:center;flex-shrink:0}
+
+/* PATIENTS */
+.patients-grid{display:grid;grid-template-columns:1fr 1fr;gap:48px;align-items:start}
+.patient-step{display:flex;gap:18px;padding:20px 0;border-bottom:1px solid var(--border)}
+.patient-step:last-child{border-bottom:none}
+.patient-step-num{width:28px;height:28px;border-radius:50%;background:rgba(27,166,166,0.1);border:1px solid rgba(27,166,166,0.2);display:flex;align-items:center;justify-content:center;flex-shrink:0;font-family:var(--font-mono);font-size:11px;color:var(--teal);margin-top:2px}
+.patient-step-title{font-size:14px;font-weight:500;color:var(--text);margin-bottom:5px}
+.patient-step-body{font-size:13px;color:var(--text2);line-height:1.6}
+.patients-callout{background:var(--surface);border:1px solid var(--border2);border-radius:12px;padding:36px;position:sticky;top:88px}
+.patients-callout-label{font-size:10px;font-weight:600;letter-spacing:0.12em;text-transform:uppercase;color:var(--teal);margin-bottom:16px}
+.patients-callout blockquote{font-family:var(--font-serif);font-size:22px;font-style:italic;color:var(--text);line-height:1.45;margin-bottom:20px}
+.patients-callout blockquote strong{font-style:normal;color:var(--teal2);font-weight:400}
+.patients-callout p{font-size:13.5px;color:var(--text2);line-height:1.65}
+
+/* PRICING */
+.pricing-strip{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:40px 48px;display:flex;align-items:center;justify-content:space-between;gap:40px;flex-wrap:wrap}
+.pricing-eyebrow{font-size:10px;font-weight:600;letter-spacing:0.12em;text-transform:uppercase;color:var(--teal);margin-bottom:10px}
+.pricing-headline{font-family:var(--font-serif);font-size:clamp(22px,2.5vw,30px);color:var(--text);line-height:1.3;margin-bottom:12px}
+.pricing-sub{font-size:14px;color:var(--text2);max-width:520px;line-height:1.65}
+.pricing-return{background:rgba(27,166,166,0.06);border:1px solid rgba(27,166,166,0.2);border-radius:12px;padding:24px 32px;text-align:center;flex-shrink:0}
+.pricing-return-num{font-family:var(--font-serif);font-size:38px;color:var(--teal2);line-height:1;margin-bottom:8px}
+.pricing-return-label{font-size:11px;color:var(--text2);letter-spacing:0.04em;line-height:1.5}
+
+/* FOOTER */
+footer{padding:48px 0 40px;border-top:1px solid var(--border);margin-top:40px}
+.footer-inner{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:16px}
+.footer-logo{display:flex;align-items:center;gap:8px;font-family:var(--font-serif);font-size:17px;color:var(--text2)}
+.footer-links{display:flex;gap:24px}
+.footer-links a{font-size:12px;color:var(--text3);text-decoration:none;transition:color 0.2s}
+.footer-links a:hover{color:var(--teal)}
+.footer-copy{font-size:12px;color:var(--text3);font-family:var(--font-mono)}
+
+/* ANIMATIONS */
+@keyframes fadeUp{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:none}}
+
+/* RESPONSIVE */
+@media(max-width:900px){
+  .pillars-grid{grid-template-columns:repeat(2,1fr)}
+  .patients-grid{grid-template-columns:1fr}
+  .patients-callout{position:static}
+}
+@media(max-width:720px){
+  .wrap{padding:0 20px}
+  section{padding:72px 0}
+  .hero{padding:80px 0 56px}
+  .workflow-steps{grid-template-columns:1fr}
+  .workflow-step{border-right:none!important;border-top:1px solid var(--border)}
+  .workflow-step:first-child{border-top:none}
+  .pilot-panel{padding:40px 24px}
+  .pricing-strip{flex-direction:column}
+  .nav-badge{display:none}
+  .problem-strip{padding:28px 24px}
+  .pillars-grid{grid-template-columns:1fr}
+}
+@media(max-width:480px){
+  .hero-cta{flex-direction:column;align-items:flex-start}
+  .pilot-details{flex-direction:column;gap:14px;align-items:flex-start}
+}
+::selection{background:rgba(27,166,166,0.22);color:var(--text)}
+::-webkit-scrollbar{width:5px}::-webkit-scrollbar-track{background:var(--bg2)}::-webkit-scrollbar-thumb{background:var(--surface2);border-radius:3px}
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-inner">
+    <a class="nav-logo" href="/">
+      <div class="logo-mark">
+        <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
+          <path d="M7 1L12 4V10L7 13L2 10V4L7 1Z" stroke="white" stroke-width="1.5" stroke-linejoin="round"/>
+          <circle cx="7" cy="7" r="2" fill="white"/>
+        </svg>
+      </div>
+      <span class="logo-word">Revytal</span>
+    </a>
+    <div class="nav-right">
+      <span class="nav-badge">Clinical Commerce Infrastructure</span>
+      <a href="https://forms.gle/T9veyQtREzwLpDQP6" class="btn btn-primary" target="_blank" rel="noopener">
+        Join the Pilot Network
+      </a>
+    </div>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="wrap">
+    <div class="hero-eyebrow">For outpatient clinics</div>
+    <h1>Revenue your clinic already earns —<br/><em>now captured automatically.</em></h1>
+    <p class="hero-sub">
+      Every session, your clinicians recommend products. Patients act on those recommendations — on Amazon, on Google, somewhere else entirely. The clinic captures nothing. Revytal closes that loop with zero workflow change.
+    </p>
+    <div class="hero-cta">
+      <a href="https://forms.gle/T9veyQtREzwLpDQP6" class="btn btn-primary" target="_blank" rel="noopener">
+        <svg width="12" height="12" viewBox="0 0 12 12" fill="none">
+          <path d="M2 6h8M6.5 3L9 6l-2.5 3" stroke="white" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+        Join the Pilot Network
+      </a>
+      <span class="hero-note">No commitment. PT-to-PT. We'll follow up directly.</span>
+    </div>
+
+    <div class="video-wrap">
+      <div class="video-label">
+        <div class="video-dot"></div>
+        <span class="video-label-text">Revytal — Live product walkthrough</span>
+      </div>
+      <div class="video-inner">
+        <video controls playsinline poster="">
+          <source src="RevytalCheckoutFlow.MOV" type="video/quicktime"/>
+          <source src="RevytalCheckoutFlow.MOV" type="video/mp4"/>
+        </video>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- PROBLEM -->
+<section>
+  <div class="wrap">
+    <div class="eyebrow">The problem</div>
+    <div class="problem-strip">
+      <p>
+        Clinicians recommend products on every visit. Patients act on those recommendations.
+        The purchase happens on Amazon. The clinic earns <strong>$0</strong>.
+        Not because the recommendation wasn't trusted — but because there was
+        <strong>no infrastructure to capture it.</strong>
+      </p>
+    </div>
+    <p style="font-size:15px;color:var(--text2);max-width:700px;line-height:1.75">
+      Revytal is the first infrastructure rail that turns clinical recommendations into automated revenue and evidence-aligned care — without changing the clinical workflow. The clinician recommends. Revytal captures. The clinic earns.
+    </p>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- VALUE PILLARS -->
+<section>
+  <div class="wrap">
+    <div class="eyebrow">Why clinics use Revytal</div>
+    <h2 class="section-title">Infrastructure that pays you<br/><em>for what you already do.</em></h2>
+    <p class="section-sub">Revytal doesn't ask you to run a product line. It captures the value already embedded in your clinical workflow and routes it back to you automatically.</p>
+
+    <div class="pillars-grid">
+      <div class="pillar-card">
+        <div class="pillar-icon">
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M8 2l1.5 3.5L13 6l-2.5 2.5.5 3.5L8 10.5 5 12l.5-3.5L3 6l3.5-.5L8 2Z" stroke="#1BA6A6" stroke-width="1.3" stroke-linejoin="round"/></svg>
+        </div>
+        <div class="pillar-title">Keep the revenue you already generate</div>
+        <div class="pillar-body">Every product recommendation you make has commercial value. Today that value leaks to Amazon. Revytal routes it back to your clinic on every order — no inventory, no overhead, no change to how you practice.</div>
+      </div>
+      <div class="pillar-card">
+        <div class="pillar-icon">
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><rect x="2" y="4" width="12" height="9" rx="2" stroke="#1BA6A6" stroke-width="1.3"/><path d="M5 4V3a3 3 0 016 0v1" stroke="#1BA6A6" stroke-width="1.3" stroke-linecap="round"/></svg>
+        </div>
+        <div class="pillar-title">Zero workflow change</div>
+        <div class="pillar-body">Revytal fits into your existing clinical flow. You don't open a new tab, log into a separate system, or add a step. The clinician recommends. Revytal handles everything else from intent to fulfillment.</div>
+      </div>
+      <div class="pillar-card">
+        <div class="pillar-icon">
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M2 8h12M10 4l4 4-4 4" stroke="#1BA6A6" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </div>
+        <div class="pillar-title">Automated checkout and fulfillment</div>
+        <div class="pillar-body">The moment a recommendation is made, Revytal generates a personalized checkout link and routes the order to the right supplier on fulfillment. No manual steps. No follow-up emails. No front desk coordination.</div>
+      </div>
+      <div class="pillar-card">
+        <div class="pillar-icon">
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M2 5l6-3 6 3v6l-6 3-6-3V5Z" stroke="#1BA6A6" stroke-width="1.3" stroke-linejoin="round"/><path d="M8 2v12M2 5l6 3 6-3" stroke="#1BA6A6" stroke-width="1.1" stroke-linecap="round"/></svg>
+        </div>
+        <div class="pillar-title">High-margin, curated products</div>
+        <div class="pillar-body">Revytal sources clinical-grade products from trusted suppliers — medical-grade orthotics, topicals, supplements, and equipment. Curated to match what you actually recommend. High margins, no race to the bottom.</div>
+      </div>
+      <div class="pillar-card">
+        <div class="pillar-icon">
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><circle cx="8" cy="5.5" r="2.5" stroke="#1BA6A6" stroke-width="1.3"/><path d="M3 13c0-2.8 2.2-5 5-5s5 2.2 5 5" stroke="#1BA6A6" stroke-width="1.3" stroke-linecap="round"/></svg>
+        </div>
+        <div class="pillar-title">Patients get a clean checkout</div>
+        <div class="pillar-body">Your patient receives a personalized, mobile-friendly checkout page tied directly to what you recommended — why each product matters, how to use it, and a frictionless one-tap purchase. HSA-eligible. Clinic-branded.</div>
+      </div>
+      <div class="pillar-card">
+        <div class="pillar-icon">
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M8 2L13 4.5V9c0 2.5-2 4.5-5 5C5 13.5 3 11.5 3 9V4.5L8 2Z" stroke="#1BA6A6" stroke-width="1.3" stroke-linejoin="round"/></svg>
+        </div>
+        <div class="pillar-title">No PHI. No EHR. Deploys today.</div>
+        <div class="pillar-body">Revytal stores no patient identifiers. It requires no EHR integration. There is no six-month implementation cycle. A clinic can run its first live order the same day it activates — the architecture is built for zero friction.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- HOW IT WORKS -->
+<section>
+  <div class="wrap">
+    <div class="eyebrow">How it works</div>
+    <h2 class="section-title">Six steps. Zero added<br/><em>workflow for the clinician.</em></h2>
+    <p class="section-sub">From the moment a clinician types a note to the moment a supplier ships an order — Revytal handles the entire chain automatically.</p>
+
+    <div class="workflow-steps">
+      <div class="workflow-step">
+        <div class="step-num">01</div>
+        <div class="step-title">Clinician enters note</div>
+        <div class="step-body">The clinician types a note or dictates as usual. Revytal listens through the ambient layer — no new interface, no new step added to the workflow.</div>
+      </div>
+      <div class="workflow-step">
+        <div class="step-num">02</div>
+        <div class="step-title">AI extracts clinical intent</div>
+        <div class="step-body">Revytal parses clinical language and extracts structured product intent — anatomy, condition, product category, and specific items mentioned during the visit.</div>
+      </div>
+      <div class="workflow-step">
+        <div class="step-num">03</div>
+        <div class="step-title">Curated SKU surfaced</div>
+        <div class="step-body">Intent is matched against Revytal's clinical-grade product database. Clinic rules, supplier availability, and pricing are applied automatically — no manual search.</div>
+      </div>
+      <div class="workflow-step">
+        <div class="step-num">04</div>
+        <div class="step-title">Checkout link generated</div>
+        <div class="step-body">A personalized checkout page is built for the patient — each product tied to the visit, with plain-language context and a clean mobile experience ready to send.</div>
+      </div>
+      <div class="workflow-step">
+        <div class="step-num">05</div>
+        <div class="step-title">Patient pays</div>
+        <div class="step-body">Patient receives a link via SMS or QR code. They review their recommendations and complete a frictionless Stripe checkout. HSA-eligible items are clearly marked.</div>
+      </div>
+      <div class="workflow-step">
+        <div class="step-num">06</div>
+        <div class="step-title">Order routed to supplier</div>
+        <div class="step-body">Revytal dispatches the order directly to the correct supplier. Revenue is logged to the clinic dashboard in real time. The recommendation cycle is complete.</div>
+      </div>
+    </div>
+
+    <div class="flow-diagram">
+      <div class="flow-nodes">
+        <div class="flow-node">
+          <div class="flow-box">
+            <div class="flow-box-label">Clinician note</div>
+            <div class="flow-box-sub">Exam room</div>
+          </div>
+        </div>
+        <div class="flow-arrow">→</div>
+        <div class="flow-node flow-highlight">
+          <div class="flow-box">
+            <div class="flow-box-label">Intent extracted</div>
+            <div class="flow-box-sub">Revytal AI</div>
+          </div>
+        </div>
+        <div class="flow-arrow">→</div>
+        <div class="flow-node flow-highlight">
+          <div class="flow-box">
+            <div class="flow-box-label">SKU matched</div>
+            <div class="flow-box-sub">Curated catalog</div>
+          </div>
+        </div>
+        <div class="flow-arrow">→</div>
+        <div class="flow-node flow-highlight">
+          <div class="flow-box">
+            <div class="flow-box-label">Checkout link</div>
+            <div class="flow-box-sub">SMS / QR sent</div>
+          </div>
+        </div>
+        <div class="flow-arrow">→</div>
+        <div class="flow-node">
+          <div class="flow-box">
+            <div class="flow-box-label">Patient pays</div>
+            <div class="flow-box-sub">Stripe · HSA</div>
+          </div>
+        </div>
+        <div class="flow-arrow">→</div>
+        <div class="flow-node">
+          <div class="flow-box">
+            <div class="flow-box-label">Supplier fulfills</div>
+            <div class="flow-box-sub">Revenue to clinic</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- PILOT -->
+<section>
+  <div class="wrap">
+    <div class="pilot-panel">
+      <div class="pilot-label">Pilot clinics</div>
+      <h2>We're looking for a small group of<br/><em>outpatient clinics to go first.</em></h2>
+      <p>No commitment, no contract. We're building this with PT clinic owners — not for them. If you recommend products and you're tired of watching that revenue walk out the door, we want to talk.</p>
+      <a href="https://forms.gle/T9veyQtREzwLpDQP6" class="btn btn-primary" target="_blank" rel="noopener">
+        Join the Pilot Network
+      </a>
+      <div class="pilot-details">
+        <div class="pilot-detail">
+          <div class="pilot-check">
+            <svg width="8" height="8" viewBox="0 0 8 8" fill="none"><path d="M1.5 4l2 2L6.5 2" stroke="#1BA6A6" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </div>
+          No setup fee during pilot
+        </div>
+        <div class="pilot-detail">
+          <div class="pilot-check">
+            <svg width="8" height="8" viewBox="0 0 8 8" fill="none"><path d="M1.5 4l2 2L6.5 2" stroke="#1BA6A6" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </div>
+          No EHR integration required
+        </div>
+        <div class="pilot-detail">
+          <div class="pilot-check">
+            <svg width="8" height="8" viewBox="0 0 8 8" fill="none"><path d="M1.5 4l2 2L6.5 2" stroke="#1BA6A6" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </div>
+          Zero workflow change
+        </div>
+        <div class="pilot-detail">
+          <div class="pilot-check">
+            <svg width="8" height="8" viewBox="0 0 8 8" fill="none"><path d="M1.5 4l2 2L6.5 2" stroke="#1BA6A6" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </div>
+          Built by a PT, for PT clinics
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- FOR PATIENTS -->
+<section>
+  <div class="wrap">
+    <div class="eyebrow">For patients</div>
+    <h2 class="section-title">The cleanest post-visit<br/><em>checkout experience.</em></h2>
+    <p class="section-sub">When your patients leave with a recommendation, they now have a direct path to act on it — no searching, no guessing, no Amazon rabbit hole.</p>
+
+    <div class="patients-grid">
+      <div>
+        <div class="patient-step">
+          <div class="patient-step-num">1</div>
+          <div>
+            <div class="patient-step-title">Receive a personalized link</div>
+            <div class="patient-step-body">After the visit, the patient receives an SMS or QR code linking to a clinic-branded page with their specific recommendations — tied to what was discussed in the room.</div>
+          </div>
+        </div>
+        <div class="patient-step">
+          <div class="patient-step-num">2</div>
+          <div>
+            <div class="patient-step-title">See what was recommended and why</div>
+            <div class="patient-step-body">Each product is tied to their diagnosis or plan — with plain-language context explaining what it is, why it was recommended, and how to use it correctly.</div>
+          </div>
+        </div>
+        <div class="patient-step">
+          <div class="patient-step-num">3</div>
+          <div>
+            <div class="patient-step-title">Purchase in one tap</div>
+            <div class="patient-step-body">Clean mobile checkout powered by Stripe. No account creation, no product hunting. HSA-eligible items are clearly marked and eligible at checkout.</div>
+          </div>
+        </div>
+        <div class="patient-step">
+          <div class="patient-step-num">4</div>
+          <div>
+            <div class="patient-step-title">Product ships directly</div>
+            <div class="patient-step-body">Orders are routed to clinical-grade suppliers and shipped to the patient. The clinic sees the revenue. The patient gets the right product. The loop is closed.</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="patients-callout">
+        <div class="patients-callout-label">The outcome</div>
+        <blockquote>
+          "The recommendation happens in the clinic. The purchase happens in the clinic's ecosystem. <strong>The revenue comes back to the clinic.</strong>"
+        </blockquote>
+        <p>Patients who receive a direct, trusted checkout link follow through at significantly higher rates. Revytal removes the friction between the recommendation and the action — which means better adherence, better outcomes, and a revenue stream your clinic actually captures.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- PRICING -->
+<section>
+  <div class="wrap">
+    <div class="eyebrow">Pricing</div>
+    <div class="pricing-strip">
+      <div>
+        <div class="pricing-eyebrow">Simple, infrastructure pricing</div>
+        <div class="pricing-headline">Straightforward SaaS monthly price.<br/>Returns of 8–10x based on your volume.</div>
+        <p class="pricing-sub">Revytal charges a flat monthly SaaS fee — no revenue cut, no percentage of clinic margin, no hidden per-recommendation fees. The more you recommend, the better the economics. A clinic making 7 product recommendations a day at a 40% conversion rate captures approximately $390 in Revytal revenue per month. The math compounds quickly across a full practice.</p>
+      </div>
+      <div class="pricing-return">
+        <div class="pricing-return-num">8–10×</div>
+        <div class="pricing-return-label">potential return<br/>on monthly SaaS fee</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <div class="footer-inner">
+      <div class="footer-logo">
+        <div class="logo-mark" style="width:22px;height:22px;border-radius:6px;box-shadow:none">
+          <svg width="10" height="10" viewBox="0 0 14 14" fill="none">
+            <path d="M7 1L12 4V10L7 13L2 10V4L7 1Z" stroke="white" stroke-width="1.5" stroke-linejoin="round"/>
+            <circle cx="7" cy="7" r="2" fill="white"/>
+          </svg>
+        </div>
+        Revytal
+      </div>
+      <div class="footer-links">
+        <a href="mailto:will@mendtherapyla.com">Contact</a>
+        <a href="https://forms.gle/T9veyQtREzwLpDQP6" target="_blank" rel="noopener">Pilot Program</a>
+      </div>
+      <span class="footer-copy">© 2025 Revytal · Clinical Commerce Infrastructure</span>
+    </div>
+  </div>
+</footer>
+
+</body>
+</html>
