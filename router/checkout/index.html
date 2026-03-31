@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Routing Order — Revytal</title>
+  <link rel="stylesheet" href="../assets/styles.css" />
+</head>
+<body>
+
+  <nav class="nav">
+    <a class="nav-logo" href="../index.html">
+      <div class="nav-logo-mark"><span>R</span></div>
+      Revytal
+    </a>
+    <span class="nav-badge">Order Routing</span>
+  </nav>
+
+  <div class="page-center">
+
+    <div class="checkout-card">
+
+      <div class="checkout-icon">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+          <path d="M5 12l5 5L19 7" stroke="#00FFAA" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </div>
+
+      <div class="checkout-title">Order Routed</div>
+      <div id="checkout-product" class="checkout-product">—</div>
+      <div id="checkout-status" class="checkout-status">Redirecting to fulfillment source…</div>
+
+      <div class="progress-bar">
+        <div class="progress-fill" id="progress-fill"></div>
+      </div>
+
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:28px;text-align:left">
+        <div style="padding:14px 16px;background:var(--bg);border:1px solid var(--border);border-radius:8px">
+          <div style="font-size:10px;text-transform:uppercase;letter-spacing:0.1em;color:var(--text-muted);margin-bottom:5px">Route type</div>
+          <div id="route-type" style="font-size:13px;font-weight:500;color:var(--green);font-family:monospace">affiliate_link</div>
+        </div>
+        <div style="padding:14px 16px;background:var(--bg);border:1px solid var(--border);border-radius:8px">
+          <div style="font-size:10px;text-transform:uppercase;letter-spacing:0.1em;color:var(--text-muted);margin-bottom:5px">Est. margin</div>
+          <div id="est-margin" style="font-size:13px;font-weight:500;color:var(--text);font-family:monospace">—</div>
+        </div>
+        <div style="padding:14px 16px;background:var(--bg);border:1px solid var(--border);border-radius:8px">
+          <div style="font-size:10px;text-transform:uppercase;letter-spacing:0.1em;color:var(--text-muted);margin-bottom:5px">Source</div>
+          <div id="route-source" style="font-size:13px;font-weight:500;color:var(--text);font-family:monospace">—</div>
+        </div>
+        <div style="padding:14px 16px;background:var(--bg);border:1px solid var(--border);border-radius:8px">
+          <div style="font-size:10px;text-transform:uppercase;letter-spacing:0.1em;color:var(--text-muted);margin-bottom:5px">Status</div>
+          <div id="route-status-badge" style="font-size:13px;font-weight:500;color:var(--green);font-family:monospace">routing…</div>
+        </div>
+      </div>
+
+      <div id="manual-link-wrap" style="display:none;margin-bottom:20px">
+        <p style="font-size:13px;color:var(--text-muted);margin-bottom:10px">If you were not redirected automatically:</p>
+        <a id="manual-link" href="#" class="btn btn-primary btn-full" target="_blank" rel="noopener noreferrer">
+          Open Fulfillment Source →
+        </a>
+      </div>
+
+      <p class="checkout-note">
+        v0.1 prototype — all orders route to affiliate links.
+        Future versions will route to clinic inventory, supplier direct, or marketplace fallback.
+      </p>
+
+    </div>
+
+    <div style="text-align:center;margin-top:28px">
+      <a href="../storefront/" style="font-size:13px;color:var(--text-muted);text-decoration:none">
+        ← Back to storefront
+      </a>
+    </div>
+
+  </div>
+
+  <footer class="footer">
+    <span class="footer-copy">© 2025 Revytal · Universal Product Router v0.1</span>
+    <div class="footer-links">
+      <a href="../index.html">Home</a>
+      <a href="../storefront/">Storefront</a>
+    </div>
+  </footer>
+
+  <script src="../router/router.js"></script>
+  <script>
+    (function () {
+      const routing = RevytalRouter.getLastRouting();
+
+      const productEl   = document.getElementById('checkout-product');
+      const statusEl    = document.getElementById('checkout-status');
+      const marginEl    = document.getElementById('est-margin');
+      const sourceEl    = document.getElementById('route-source');
+      const statusBadge = document.getElementById('route-status-badge');
+      const manualWrap  = document.getElementById('manual-link-wrap');
+      const manualLink  = document.getElementById('manual-link');
+
+      if (!routing || !routing.success) {
+        productEl.textContent   = 'No routing data found';
+        statusEl.textContent    = 'Return to the storefront and select a product.';
+        statusBadge.textContent = 'error';
+        statusBadge.style.color = '#FF6B6B';
+        return;
+      }
+
+      // Populate UI
+      productEl.textContent   = routing.product_name;
+      marginEl.textContent    = routing.estimated_margin;
+      sourceEl.textContent    = routing.source_label;
+      manualLink.href         = routing.destination;
+
+      // Redirect after 2 seconds
+      const delay = 2000;
+      const redirectAt = Date.now() + delay;
+
+      const tick = setInterval(() => {
+        const remaining = Math.max(0, Math.ceil((redirectAt - Date.now()) / 1000));
+        statusEl.textContent = `Redirecting to fulfillment source in ${remaining}s…`;
+        if (Date.now() >= redirectAt) {
+          clearInterval(tick);
+          statusEl.textContent    = 'Redirecting now…';
+          statusBadge.textContent = 'fulfilled';
+          RevytalRouter.clear();
+          window.location.href = routing.destination;
+        }
+      }, 100);
+
+      // Show manual link as fallback after 3s
+      setTimeout(() => {
+        manualWrap.style.display = 'block';
+      }, 3000);
+
+    })();
+  </script>
+
+</body>
+</html>

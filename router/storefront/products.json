@@ -1,0 +1,74 @@
+[
+  {
+    "id": "chirp-wheel",
+    "name": "Chirp Wheel+ Back Stretcher",
+    "category": "Recovery",
+    "price": 89.99,
+    "description": "Spinal canal groove design for deep muscle release. 3-wheel system targets the full back from lumbar to thoracic.",
+    "image": "https://images-na.ssl-images-amazon.com/images/I/71cFw+3a8nL._AC_SL1500_.jpg",
+    "affiliate_url": "https://www.amazon.com/dp/B07PJHXFQR?tag=revytal-20"
+  },
+  {
+    "id": "theragun-mini",
+    "name": "Theragun Mini Percussion Device",
+    "category": "Percussive Therapy",
+    "price": 179.00,
+    "description": "Portable percussive therapy at 150 minutes battery life. Three built-in speeds, triangle ergonomic grip, quiet motor.",
+    "image": "https://images-na.ssl-images-amazon.com/images/I/61RpMXv9hJL._AC_SL1500_.jpg",
+    "affiliate_url": "https://www.amazon.com/dp/B08C17SB3R?tag=revytal-20"
+  },
+  {
+    "id": "hyperice-normatec",
+    "name": "Hyperice Normatec 3 Leg System",
+    "category": "Compression Therapy",
+    "price": 699.00,
+    "description": "Dynamic air compression for lower limb recovery. Seven overlapping zones, Bluetooth app control, 60-minute sessions.",
+    "image": "https://images-na.ssl-images-amazon.com/images/I/51+nAGZHMdL._AC_SL1000_.jpg",
+    "affiliate_url": "https://www.amazon.com/dp/B08KGF7LFB?tag=revytal-20"
+  },
+  {
+    "id": "red-light-panel",
+    "name": "Mito Red Light Therapy Panel MitoPRO 300",
+    "category": "Red Light Therapy",
+    "price": 399.00,
+    "description": "660nm and 850nm wavelengths. 300 LEDs, 0% flicker, no EMF. Clinical-grade irradiance for tissue repair and inflammation.",
+    "image": "https://images-na.ssl-images-amazon.com/images/I/71X1rCxEYFL._AC_SL1500_.jpg",
+    "affiliate_url": "https://www.amazon.com/dp/B09BQJKGNW?tag=revytal-20"
+  },
+  {
+    "id": "compression-knee-brace",
+    "name": "DonJoy Performance Bionic Knee Brace",
+    "category": "Orthotics",
+    "price": 89.95,
+    "description": "Four-point leverage system for medial and lateral support. Low-profile design compatible with clinical-grade compression.",
+    "image": "https://images-na.ssl-images-amazon.com/images/I/71-JByTTBQL._AC_SL1500_.jpg",
+    "affiliate_url": "https://www.amazon.com/dp/B00IFJJ6J4?tag=revytal-20"
+  },
+  {
+    "id": "vitamin-d3",
+    "name": "Thorne Vitamin D3 + K2 Liquid",
+    "category": "Supplements",
+    "price": 34.00,
+    "description": "NSF Certified for Sport. D3 and K2 in liquid form for superior absorption. Ideal for patients with musculoskeletal conditions.",
+    "image": "https://images-na.ssl-images-amazon.com/images/I/617P2qGYUiL._AC_SL1500_.jpg",
+    "affiliate_url": "https://www.amazon.com/dp/B07YGJH4F7?tag=revytal-20"
+  },
+  {
+    "id": "magnesium-glycinate",
+    "name": "Pure Encapsulations Magnesium Glycinate",
+    "category": "Supplements",
+    "price": 42.00,
+    "description": "260mg elemental magnesium per serving. Glycinate chelate for high bioavailability and GI tolerability. Hypoallergenic.",
+    "image": "https://images-na.ssl-images-amazon.com/images/I/61zLZIqkJdL._AC_SL1500_.jpg",
+    "affiliate_url": "https://www.amazon.com/dp/B0019LTGMU?tag=revytal-20"
+  },
+  {
+    "id": "foam-roller",
+    "name": "TriggerPoint GRID Foam Roller",
+    "category": "Recovery",
+    "price": 44.99,
+    "description": "Multi-density EVA foam surface. Hollow core holds up to 500 lbs. Used in clinical settings for myofascial release.",
+    "image": "https://images-na.ssl-images-amazon.com/images/I/71W2fMtkEzL._AC_SL1500_.jpg",
+    "affiliate_url": "https://www.amazon.com/dp/B0040EGNIU?tag=revytal-20"
+  }
+]
