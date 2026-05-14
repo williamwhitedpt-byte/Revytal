@@ -1,0 +1,802 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Revytal - Product Revenue for Physical Therapy Clinics</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600;9..40,700&family=Instrument+Serif:ital@0;1&display=swap');
+
+*,*::before,*::after{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{
+  margin:0;
+  background:#f7f5ef;
+  color:#172321;
+  font-family:"DM Sans",system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+  line-height:1.6;
+  -webkit-font-smoothing:antialiased;
+}
+a{color:inherit}
+button,a{touch-action:manipulation}
+:root{
+  --ink:#172321;
+  --muted:#63716d;
+  --soft:#ebe7db;
+  --line:#d9d2c2;
+  --paper:#fffdf8;
+  --sea:#0f766e;
+  --sea-dark:#0a4f4b;
+  --sage:#d8e3d6;
+  --clay:#c46f4a;
+  --blue:#315f7d;
+  --radius:8px;
+  --serif:"Instrument Serif",Georgia,serif;
+}
+.page-shell{overflow:hidden}
+.wrap{width:min(1180px,calc(100% - 48px));margin:0 auto}
+.nav{
+  position:sticky;
+  top:0;
+  z-index:20;
+  background:rgba(247,245,239,.88);
+  backdrop-filter:blur(18px);
+  border-bottom:1px solid rgba(23,35,33,.08);
+}
+.nav-inner{
+  height:72px;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:24px;
+}
+.brand{
+  display:flex;
+  align-items:center;
+  gap:11px;
+  text-decoration:none;
+  min-width:max-content;
+}
+.brand-mark{
+  width:30px;
+  height:30px;
+  display:grid;
+  place-items:center;
+  border-radius:8px;
+  background:#0f766e;
+  color:white;
+}
+.brand-word{
+  font-family:var(--serif);
+  font-size:24px;
+  letter-spacing:.01em;
+}
+.nav-links{
+  display:flex;
+  align-items:center;
+  justify-content:flex-end;
+  gap:26px;
+  font-size:14px;
+  color:#4b5b57;
+}
+.nav-links a{
+  text-decoration:none;
+}
+.nav-links a:hover{color:var(--sea-dark)}
+.btn{
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  gap:9px;
+  min-height:44px;
+  padding:12px 20px;
+  border-radius:999px;
+  border:1px solid transparent;
+  text-decoration:none;
+  font-weight:700;
+  font-size:14px;
+  line-height:1;
+}
+.btn-primary{
+  background:var(--sea);
+  color:white;
+  box-shadow:0 14px 34px rgba(15,118,110,.22);
+}
+.btn-primary:hover{background:var(--sea-dark)}
+.btn-secondary{
+  border-color:rgba(23,35,33,.18);
+  color:var(--ink);
+  background:rgba(255,253,248,.62);
+}
+.btn-secondary:hover{border-color:rgba(15,118,110,.35);color:var(--sea-dark)}
+.hero{
+  padding:94px 0 74px;
+}
+.hero-grid{
+  display:grid;
+  grid-template-columns:minmax(0,1fr) minmax(360px,520px);
+  gap:72px;
+  align-items:center;
+}
+.eyebrow{
+  display:inline-flex;
+  align-items:center;
+  gap:10px;
+  margin:0 0 20px;
+  color:var(--sea-dark);
+  font-size:12px;
+  text-transform:uppercase;
+  letter-spacing:.13em;
+  font-weight:700;
+}
+.eyebrow::before{
+  content:"";
+  width:28px;
+  height:1px;
+  background:currentColor;
+  opacity:.55;
+}
+h1,h2,h3,p{margin-top:0}
+h1{
+  max-width:780px;
+  margin-bottom:26px;
+  font-family:var(--serif);
+  font-size:clamp(54px,7.4vw,104px);
+  line-height:.93;
+  letter-spacing:0;
+  font-weight:400;
+}
+h1 em,h2 em{
+  color:var(--sea);
+  font-style:italic;
+}
+.hero-copy{
+  max-width:620px;
+  margin-bottom:34px;
+  color:#4d5d59;
+  font-size:20px;
+  line-height:1.65;
+}
+.hero-actions{
+  display:flex;
+  flex-wrap:wrap;
+  align-items:center;
+  gap:12px;
+  margin-bottom:46px;
+}
+.trust-row{
+  display:grid;
+  grid-template-columns:repeat(3,minmax(0,1fr));
+  gap:18px;
+  max-width:680px;
+  border-top:1px solid var(--line);
+  padding-top:24px;
+}
+.trust-item strong{
+  display:block;
+  margin-bottom:4px;
+  color:#1d2d2a;
+  font-size:14px;
+}
+.trust-item span{
+  display:block;
+  color:#68756f;
+  font-size:13px;
+  line-height:1.5;
+}
+.product-panel{
+  position:relative;
+  background:#fbf8f0;
+  border:1px solid rgba(23,35,33,.12);
+  border-radius:26px;
+  padding:18px;
+  box-shadow:0 28px 70px rgba(57,48,33,.12);
+}
+.product-panel::before{
+  content:"";
+  position:absolute;
+  inset:-28px -22px auto auto;
+  width:180px;
+  height:180px;
+  border-radius:999px;
+  background:#d8e3d6;
+  z-index:-1;
+}
+.browser-bar{
+  height:42px;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:12px;
+  padding:0 10px 0 14px;
+  color:#73807b;
+  font-size:12px;
+}
+.dots{display:flex;gap:6px}
+.dots span{width:8px;height:8px;border-radius:50%;background:#c9c1af}
+.screen{
+  overflow:hidden;
+  border-radius:16px;
+  background:#111;
+  border:1px solid rgba(23,35,33,.1);
+}
+.screen video{
+  display:block;
+  width:100%;
+  aspect-ratio:16/10;
+  object-fit:cover;
+  background:#111;
+}
+.mini-metrics{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:10px;
+  margin-top:12px;
+}
+.metric{
+  border:1px solid rgba(23,35,33,.1);
+  border-radius:14px;
+  background:var(--paper);
+  padding:16px;
+}
+.metric strong{
+  display:block;
+  color:var(--sea-dark);
+  font-size:24px;
+  line-height:1;
+  margin-bottom:6px;
+}
+.metric span{
+  color:#66746f;
+  font-size:12px;
+  line-height:1.4;
+}
+section{padding:88px 0}
+.band{background:#ebe7db}
+.section-head{
+  display:grid;
+  grid-template-columns:minmax(0,520px) minmax(0,520px);
+  gap:80px;
+  align-items:end;
+  margin-bottom:48px;
+}
+h2{
+  margin-bottom:0;
+  font-family:var(--serif);
+  font-size:clamp(40px,5vw,72px);
+  line-height:.98;
+  letter-spacing:0;
+  font-weight:400;
+}
+.section-lede{
+  margin-bottom:0;
+  color:#596762;
+  font-size:18px;
+  line-height:1.7;
+}
+.pain-list{
+  display:grid;
+  grid-template-columns:repeat(3,minmax(0,1fr));
+  gap:24px;
+}
+.pain{
+  min-height:260px;
+  display:flex;
+  flex-direction:column;
+  justify-content:space-between;
+  padding:28px;
+  border-top:1px solid rgba(23,35,33,.18);
+}
+.pain-number{
+  color:var(--clay);
+  font-family:var(--serif);
+  font-size:48px;
+  line-height:1;
+}
+.pain h3{
+  margin:0 0 12px;
+  font-size:20px;
+  line-height:1.25;
+}
+.pain p{
+  margin-bottom:0;
+  color:#64716d;
+  font-size:15px;
+}
+.steps{
+  display:grid;
+  grid-template-columns:repeat(4,minmax(0,1fr));
+  border:1px solid var(--line);
+  background:var(--paper);
+}
+.step{
+  min-height:260px;
+  padding:28px;
+  border-right:1px solid var(--line);
+}
+.step:last-child{border-right:0}
+.step-kicker{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:12px;
+  margin-bottom:42px;
+  color:var(--sea);
+  font-size:12px;
+  text-transform:uppercase;
+  letter-spacing:.12em;
+  font-weight:700;
+}
+.step h3{
+  margin-bottom:12px;
+  font-size:21px;
+  line-height:1.22;
+}
+.step p{
+  margin-bottom:0;
+  color:#64716d;
+  font-size:15px;
+}
+.experience{
+  display:grid;
+  grid-template-columns:minmax(0,1fr) minmax(360px,480px);
+  gap:78px;
+  align-items:center;
+}
+.phone-wrap{
+  display:flex;
+  justify-content:center;
+}
+.phone{
+  width:min(100%,340px);
+  border:1px solid rgba(23,35,33,.18);
+  border-radius:34px;
+  background:#172321;
+  padding:12px;
+  box-shadow:0 26px 70px rgba(23,35,33,.22);
+}
+.phone-screen{
+  border-radius:24px;
+  background:#fffdf8;
+  padding:24px 20px 20px;
+}
+.clinic-chip{
+  display:inline-flex;
+  align-items:center;
+  gap:8px;
+  padding:7px 10px;
+  border-radius:999px;
+  background:#e5efe4;
+  color:#315f4b;
+  font-size:12px;
+  font-weight:700;
+}
+.phone h3{
+  margin:24px 0 8px;
+  font-family:var(--serif);
+  font-size:34px;
+  line-height:1;
+  font-weight:400;
+}
+.phone p{
+  margin-bottom:18px;
+  color:#6d7772;
+  font-size:14px;
+}
+.product-card{
+  margin-top:12px;
+  padding:14px;
+  border:1px solid #ded8ca;
+  border-radius:16px;
+  background:white;
+}
+.product-top{
+  display:flex;
+  justify-content:space-between;
+  gap:12px;
+  margin-bottom:10px;
+}
+.product-name{font-weight:700;font-size:14px}
+.price{font-weight:700;color:var(--sea-dark)}
+.product-note{font-size:12px;color:#717c77}
+.checkout-button{
+  margin-top:16px;
+  width:100%;
+  min-height:44px;
+  border:0;
+  border-radius:999px;
+  background:#172321;
+  color:white;
+  font-weight:700;
+}
+.feature-list{
+  display:grid;
+  gap:22px;
+}
+.feature{
+  display:grid;
+  grid-template-columns:34px minmax(0,1fr);
+  gap:16px;
+  padding-bottom:22px;
+  border-bottom:1px solid var(--line);
+}
+.feature:last-child{border-bottom:0;padding-bottom:0}
+.feature-icon{
+  width:34px;
+  height:34px;
+  display:grid;
+  place-items:center;
+  border-radius:50%;
+  background:#d8e3d6;
+  color:var(--sea-dark);
+}
+.feature h3{
+  margin-bottom:5px;
+  font-size:19px;
+}
+.feature p{
+  margin-bottom:0;
+  color:#64716d;
+}
+.economics{
+  display:grid;
+  grid-template-columns:minmax(0,1fr) minmax(340px,440px);
+  gap:70px;
+  align-items:start;
+}
+.math-board{
+  border-radius:26px;
+  background:#172321;
+  color:white;
+  padding:34px;
+}
+.math-board h3{
+  margin-bottom:24px;
+  font-family:var(--serif);
+  font-size:38px;
+  font-weight:400;
+  line-height:1;
+}
+.math-row{
+  display:flex;
+  justify-content:space-between;
+  gap:20px;
+  padding:16px 0;
+  border-top:1px solid rgba(255,255,255,.12);
+  color:#d6ddd9;
+  font-size:14px;
+}
+.math-row strong{color:white;font-size:18px}
+.math-row.total{
+  margin-top:8px;
+  padding-top:22px;
+  color:#bfe3db;
+}
+.math-row.total strong{
+  color:#8be0cd;
+  font-size:30px;
+}
+.note{
+  margin-top:18px;
+  color:#aebbb6;
+  font-size:12px;
+  line-height:1.55;
+}
+.cta-band{
+  padding:96px 0;
+  background:#172321;
+  color:white;
+}
+.cta-inner{
+  display:grid;
+  grid-template-columns:minmax(0,680px) auto;
+  gap:48px;
+  align-items:center;
+}
+.cta-band .eyebrow{color:#8be0cd}
+.cta-band h2{color:white}
+.cta-band p{
+  margin:24px 0 0;
+  max-width:580px;
+  color:#cbd5d1;
+  font-size:18px;
+}
+.cta-band .btn-primary{
+  background:#8be0cd;
+  color:#102320;
+  box-shadow:none;
+}
+.footer{
+  padding:38px 0;
+  background:#172321;
+  color:#b8c5c0;
+  border-top:1px solid rgba(255,255,255,.1);
+}
+.footer-inner{
+  display:flex;
+  justify-content:space-between;
+  gap:20px;
+  flex-wrap:wrap;
+  font-size:13px;
+}
+@media(max-width:960px){
+  .hero-grid,.section-head,.experience,.economics,.cta-inner{grid-template-columns:1fr;gap:44px}
+  .hero{padding-top:70px}
+  .pain-list{grid-template-columns:1fr}
+  .pain{min-height:auto;padding-left:0;padding-right:0}
+  .steps{grid-template-columns:1fr}
+  .step{min-height:auto;border-right:0;border-bottom:1px solid var(--line)}
+  .step:last-child{border-bottom:0}
+  .step-kicker{margin-bottom:24px}
+}
+@media(max-width:720px){
+  .wrap{width:min(100% - 36px,1180px)}
+  .nav-inner{height:auto;padding:18px 0;align-items:flex-start}
+  .nav-links a:not(.btn){display:none}
+  .nav-links{gap:0}
+  h1{font-size:clamp(48px,15vw,72px)}
+  .hero-copy,.section-lede,.cta-band p{font-size:16px}
+  .trust-row,.mini-metrics{grid-template-columns:1fr}
+  section{padding:68px 0}
+  .product-panel{border-radius:18px;padding:12px}
+  .math-board{padding:26px;border-radius:18px}
+}
+</style>
+</head>
+<body>
+<div class="page-shell">
+  <nav class="nav">
+    <div class="wrap nav-inner">
+      <a class="brand" href="../index.html" aria-label="Revytal current homepage">
+        <span class="brand-mark" aria-hidden="true">
+          <svg width="15" height="15" viewBox="0 0 14 14" fill="none">
+            <path d="M7 1L12 4V10L7 13L2 10V4L7 1Z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/>
+            <circle cx="7" cy="7" r="2" fill="currentColor"/>
+          </svg>
+        </span>
+        <span class="brand-word">Revytal</span>
+      </a>
+      <div class="nav-links">
+        <a href="#workflow">Workflow</a>
+        <a href="#patients">Patients</a>
+        <a href="#economics">Economics</a>
+        <a class="btn btn-primary" href="https://forms.gle/T9veyQtREzwLpDQP6" target="_blank" rel="noopener">Join the pilot</a>
+      </div>
+    </div>
+  </nav>
+
+  <main>
+    <section class="hero">
+      <div class="wrap hero-grid">
+        <div>
+          <p class="eyebrow">For physical therapy clinics</p>
+          <h1>Turn product recommendations into <em>clinic revenue.</em></h1>
+          <p class="hero-copy">Your clinicians already recommend braces, orthotics, recovery tools, topicals, and supplements. Revytal gives patients a clean way to buy them and gives your clinic a share of the value it created.</p>
+          <div class="hero-actions">
+            <a class="btn btn-primary" href="https://forms.gle/T9veyQtREzwLpDQP6" target="_blank" rel="noopener">Join the pilot network</a>
+            <a class="btn btn-secondary" href="#workflow">See how it works</a>
+          </div>
+          <div class="trust-row" aria-label="Revytal highlights">
+            <div class="trust-item">
+              <strong>No inventory</strong>
+              <span>Suppliers fulfill directly to patients.</span>
+            </div>
+            <div class="trust-item">
+              <strong>No EHR lift</strong>
+              <span>Designed to launch without a months-long integration.</span>
+            </div>
+            <div class="trust-item">
+              <strong>No workflow change</strong>
+              <span>The recommendation still starts in the room.</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="product-panel" aria-label="Revytal checkout preview">
+          <div class="browser-bar">
+            <div class="dots" aria-hidden="true"><span></span><span></span><span></span></div>
+            <span>Patient checkout preview</span>
+          </div>
+          <div class="screen">
+            <video controls playsinline muted poster="">
+              <source src="../landing/RevytalCheckoutFlow.mp4" type="video/mp4"/>
+            </video>
+          </div>
+          <div class="mini-metrics">
+            <div class="metric">
+              <strong>0</strong>
+              <span>boxes stored at the clinic</span>
+            </div>
+            <div class="metric">
+              <strong>1</strong>
+              <span>patient-friendly checkout link</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="band">
+      <div class="wrap">
+        <div class="section-head">
+          <h2>The leak is not clinical. <em>It is infrastructural.</em></h2>
+          <p class="section-lede">PTs create trusted product demand every day, then watch the purchase happen somewhere else. Revytal keeps that value inside the clinic ecosystem without asking the team to run retail.</p>
+        </div>
+        <div class="pain-list">
+          <article class="pain">
+            <span class="pain-number">01</span>
+            <div>
+              <h3>The clinician creates the demand.</h3>
+              <p>A patient trusts the provider's recommendation because it is tied to the plan of care, not an ad or generic product page.</p>
+            </div>
+          </article>
+          <article class="pain">
+            <span class="pain-number">02</span>
+            <div>
+              <h3>The purchase leaves the clinic.</h3>
+              <p>Patients search on Amazon, guess between lookalike products, and the clinic captures none of the downstream spend.</p>
+            </div>
+          </article>
+          <article class="pain">
+            <span class="pain-number">03</span>
+            <div>
+              <h3>The loop never closes.</h3>
+              <p>Clinics rarely know what patients bought, whether they followed through, or which recommendations are driving value.</p>
+            </div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section id="workflow">
+      <div class="wrap">
+        <div class="section-head">
+          <h2>Built around the way PT clinics <em>already work.</em></h2>
+          <p class="section-lede">Revytal turns a normal clinical recommendation into a curated checkout link, then routes payment, fulfillment, and clinic revenue in the background.</p>
+        </div>
+        <div class="steps">
+          <article class="step">
+            <div class="step-kicker"><span>Step 01</span><span>+</span></div>
+            <h3>Recommend as usual.</h3>
+            <p>The provider names the brace, topical, supplement, orthotic, or recovery tool that fits the patient's plan.</p>
+          </article>
+          <article class="step">
+            <div class="step-kicker"><span>Step 02</span><span>+</span></div>
+            <h3>Revytal prepares the link.</h3>
+            <p>Products are matched from a curated clinical catalog and packaged into a clean, clinic-branded checkout.</p>
+          </article>
+          <article class="step">
+            <div class="step-kicker"><span>Step 03</span><span>+</span></div>
+            <h3>The patient buys directly.</h3>
+            <p>The patient receives a QR code or SMS link with the exact products, plain-language context, and a fast checkout.</p>
+          </article>
+          <article class="step">
+            <div class="step-kicker"><span>Step 04</span><span>+</span></div>
+            <h3>Revenue returns to the clinic.</h3>
+            <p>Suppliers ship directly. Revytal logs the transaction. The clinic participates in value it already created.</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="band" id="patients">
+      <div class="wrap experience">
+        <div>
+          <p class="eyebrow">Patient experience</p>
+          <h2>A better follow-through path than <em>searching online.</em></h2>
+          <p class="section-lede">Patients do not need another portal. They need the right product, tied to the recommendation they just heard, with a checkout that feels obvious on a phone.</p>
+          <div class="feature-list" style="margin-top:42px">
+            <div class="feature">
+              <div class="feature-icon">1</div>
+              <div>
+                <h3>Clear context</h3>
+                <p>Each item can explain why it was recommended and how it supports the patient plan.</p>
+              </div>
+            </div>
+            <div class="feature">
+              <div class="feature-icon">2</div>
+              <div>
+                <h3>Clinic-branded trust</h3>
+                <p>The buying experience starts with the clinic relationship, not a generic marketplace search.</p>
+              </div>
+            </div>
+            <div class="feature">
+              <div class="feature-icon">3</div>
+              <div>
+                <h3>Direct fulfillment</h3>
+                <p>The clinic avoids inventory, storage, front-desk coordination, and shipping tasks.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="phone-wrap">
+          <div class="phone" aria-label="Mobile checkout mockup">
+            <div class="phone-screen">
+              <span class="clinic-chip">Mend PT recommends</span>
+              <h3>Your recovery kit</h3>
+              <p>Three items selected to support your home program after today's visit.</p>
+              <div class="product-card">
+                <div class="product-top">
+                  <div class="product-name">Ankle stability brace</div>
+                  <div class="price">$42</div>
+                </div>
+                <div class="product-note">Recommended for return-to-run support and daily confidence.</div>
+              </div>
+              <div class="product-card">
+                <div class="product-top">
+                  <div class="product-name">Recovery topical</div>
+                  <div class="price">$28</div>
+                </div>
+                <div class="product-note">Use after your evening mobility routine.</div>
+              </div>
+              <button class="checkout-button" type="button">Continue to checkout</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="economics">
+      <div class="wrap economics">
+        <div>
+          <p class="eyebrow">Clinic economics</p>
+          <h2>Small recommendations become a <em>new revenue line.</em></h2>
+          <p class="section-lede">The point is not to turn PTs into retailers. The point is to capture a small, repeatable share of product value that is already being created in the clinical encounter.</p>
+          <div class="feature-list" style="margin-top:42px">
+            <div class="feature">
+              <div class="feature-icon">✓</div>
+              <div>
+                <h3>High-trust recommendations</h3>
+                <p>Products are attached to a clinical moment where the patient is already motivated to act.</p>
+              </div>
+            </div>
+            <div class="feature">
+              <div class="feature-icon">✓</div>
+              <div>
+                <h3>Low operational burden</h3>
+                <p>No shelves, no returns desk, no manually managed vendor process.</p>
+              </div>
+            </div>
+            <div class="feature">
+              <div class="feature-icon">✓</div>
+              <div>
+                <h3>Pilot-friendly model</h3>
+                <p>Start with a focused product set and expand around what your clinicians already recommend.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <aside class="math-board" aria-label="Example clinic revenue math">
+          <h3>Example monthly clinic math</h3>
+          <div class="math-row"><span>Product recommendations per day</span><strong>7</strong></div>
+          <div class="math-row"><span>Patient follow-through rate</span><strong>40%</strong></div>
+          <div class="math-row"><span>Average clinic revenue per order</span><strong>$7</strong></div>
+          <div class="math-row total"><span>Estimated monthly revenue</span><strong>$390</strong></div>
+          <p class="note">Illustrative only. Actual results depend on visit volume, product mix, pricing, conversion, and pilot configuration.</p>
+        </aside>
+      </div>
+    </section>
+
+    <section class="cta-band">
+      <div class="wrap cta-inner">
+        <div>
+          <p class="eyebrow">Pilot clinics</p>
+          <h2>Help shape the product before the category hardens.</h2>
+          <p>We are looking for a small group of PT clinics to test the workflow, product catalog, checkout experience, and clinic economics with us.</p>
+        </div>
+        <a class="btn btn-primary" href="https://forms.gle/T9veyQtREzwLpDQP6" target="_blank" rel="noopener">Join the pilot network</a>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <div class="wrap footer-inner">
+      <span>Revytal - product revenue for physical therapy clinics</span>
+      <span>Candidate homepage v2 for team review</span>
+    </div>
+  </footer>
+</div>
+</body>
+</html>
