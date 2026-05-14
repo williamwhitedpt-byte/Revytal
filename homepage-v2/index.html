@@ -3,9 +3,9 @@
 <head>
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>Revytal - Product Revenue for Physical Therapy Clinics</title>
+<title>Revytal - Branded Product Shops for PT Clinics</title>
 <style>
-@import url('https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600;9..40,700&family=Instrument+Serif:ital@0;1&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600;9..40,700;9..40,800;9..40,900&display=swap');
 
 *,*::before,*::after{box-sizing:border-box}
 html{scroll-behavior:smooth}
@@ -20,18 +20,18 @@ body{
 a{color:inherit}
 button,a{touch-action:manipulation}
 :root{
-  --ink:#172321;
-  --muted:#63716d;
-  --soft:#ebe7db;
-  --line:#d9d2c2;
-  --paper:#fffdf8;
-  --sea:#0f766e;
-  --sea-dark:#0a4f4b;
-  --sage:#d8e3d6;
-  --clay:#c46f4a;
-  --blue:#315f7d;
+  --ink:#14211f;
+  --muted:#5f6e69;
+  --soft:#eee9dc;
+  --line:#d8cfbd;
+  --paper:#fffdf7;
+  --sea:#0e6f68;
+  --sea-dark:#084b47;
+  --mint:#b8eadf;
+  --sun:#f3b73f;
+  --coral:#e85d3f;
+  --blue:#286e91;
   --radius:8px;
-  --serif:"Instrument Serif",Georgia,serif;
 }
 .page-shell{overflow:hidden}
 .wrap{width:min(1180px,calc(100% - 48px));margin:0 auto}
@@ -63,13 +63,13 @@ button,a{touch-action:manipulation}
   display:grid;
   place-items:center;
   border-radius:8px;
-  background:#0f766e;
+  background:var(--sea);
   color:white;
 }
 .brand-word{
-  font-family:var(--serif);
-  font-size:24px;
-  letter-spacing:.01em;
+  font-size:22px;
+  font-weight:900;
+  letter-spacing:-.04em;
 }
 .nav-links{
   display:flex;
@@ -100,7 +100,7 @@ button,a{touch-action:manipulation}
 .btn-primary{
   background:var(--sea);
   color:white;
-  box-shadow:0 14px 34px rgba(15,118,110,.22);
+  box-shadow:0 14px 34px rgba(14,111,104,.22);
 }
 .btn-primary:hover{background:var(--sea-dark)}
 .btn-secondary{
@@ -110,7 +110,7 @@ button,a{touch-action:manipulation}
 }
 .btn-secondary:hover{border-color:rgba(15,118,110,.35);color:var(--sea-dark)}
 .hero{
-  padding:94px 0 74px;
+  padding:104px 0 82px;
 }
 .hero-grid{
   display:grid;
@@ -123,7 +123,7 @@ button,a{touch-action:manipulation}
   align-items:center;
   gap:10px;
   margin:0 0 20px;
-  color:var(--sea-dark);
+  color:var(--blue);
   font-size:12px;
   text-transform:uppercase;
   letter-spacing:.13em;
@@ -138,17 +138,21 @@ button,a{touch-action:manipulation}
 }
 h1,h2,h3,p{margin-top:0}
 h1{
-  max-width:780px;
+  max-width:800px;
   margin-bottom:26px;
-  font-family:var(--serif);
-  font-size:clamp(54px,7.4vw,104px);
-  line-height:.93;
-  letter-spacing:0;
-  font-weight:400;
+  font-size:clamp(52px,7.2vw,96px);
+  line-height:.9;
+  letter-spacing:-.075em;
+  font-weight:900;
 }
 h1 em,h2 em{
-  color:var(--sea);
-  font-style:italic;
+  color:var(--sea-dark);
+  font-style:normal;
+  font-weight:900;
+  text-decoration:underline;
+  text-decoration-color:var(--sun);
+  text-decoration-thickness:.13em;
+  text-underline-offset:.08em;
 }
 .hero-copy{
   max-width:620px;
@@ -188,19 +192,19 @@ h1 em,h2 em{
   position:relative;
   background:#fbf8f0;
   border:1px solid rgba(23,35,33,.12);
-  border-radius:26px;
+  border-radius:18px;
   padding:18px;
   box-shadow:0 28px 70px rgba(57,48,33,.12);
 }
 .product-panel::before{
   content:"";
   position:absolute;
-  inset:-28px -22px auto auto;
-  width:180px;
-  height:180px;
-  border-radius:999px;
-  background:#d8e3d6;
+  inset:-16px -16px auto auto;
+  width:46%;
+  height:54px;
+  background:repeating-linear-gradient(135deg,var(--sun) 0 8px,transparent 8px 16px);
   z-index:-1;
+  opacity:.9;
 }
 .browser-bar{
   height:42px;
@@ -241,7 +245,7 @@ h1 em,h2 em{
 }
 .metric strong{
   display:block;
-  color:var(--sea-dark);
+  color:var(--coral);
   font-size:24px;
   line-height:1;
   margin-bottom:6px;
@@ -262,11 +266,10 @@ section{padding:88px 0}
 }
 h2{
   margin-bottom:0;
-  font-family:var(--serif);
-  font-size:clamp(40px,5vw,72px);
-  line-height:.98;
-  letter-spacing:0;
-  font-weight:400;
+  font-size:clamp(38px,4.7vw,68px);
+  line-height:.92;
+  letter-spacing:-.065em;
+  font-weight:900;
 }
 .section-lede{
   margin-bottom:0;
@@ -288,10 +291,11 @@ h2{
   border-top:1px solid rgba(23,35,33,.18);
 }
 .pain-number{
-  color:var(--clay);
-  font-family:var(--serif);
-  font-size:48px;
+  color:var(--coral);
+  font-size:44px;
   line-height:1;
+  font-weight:900;
+  letter-spacing:-.06em;
 }
 .pain h3{
   margin:0 0 12px;
@@ -321,7 +325,7 @@ h2{
   justify-content:space-between;
   gap:12px;
   margin-bottom:42px;
-  color:var(--sea);
+  color:var(--blue);
   font-size:12px;
   text-transform:uppercase;
   letter-spacing:.12em;
@@ -366,17 +370,17 @@ h2{
   gap:8px;
   padding:7px 10px;
   border-radius:999px;
-  background:#e5efe4;
-  color:#315f4b;
+  background:#e8f6f2;
+  color:var(--sea-dark);
   font-size:12px;
   font-weight:700;
 }
 .phone h3{
   margin:24px 0 8px;
-  font-family:var(--serif);
-  font-size:34px;
-  line-height:1;
-  font-weight:400;
+  font-size:30px;
+  line-height:1.05;
+  font-weight:900;
+  letter-spacing:-.055em;
 }
 .phone p{
   margin-bottom:18px;
@@ -427,8 +431,9 @@ h2{
   display:grid;
   place-items:center;
   border-radius:50%;
-  background:#d8e3d6;
+  background:var(--mint);
   color:var(--sea-dark);
+  font-weight:900;
 }
 .feature h3{
   margin-bottom:5px;
@@ -452,10 +457,10 @@ h2{
 }
 .math-board h3{
   margin-bottom:24px;
-  font-family:var(--serif);
-  font-size:38px;
-  font-weight:400;
-  line-height:1;
+  font-size:34px;
+  font-weight:900;
+  line-height:.98;
+  letter-spacing:-.055em;
 }
 .math-row{
   display:flex;
@@ -473,7 +478,7 @@ h2{
   color:#bfe3db;
 }
 .math-row.total strong{
-  color:#8be0cd;
+  color:var(--mint);
   font-size:30px;
 }
 .note{
@@ -502,7 +507,7 @@ h2{
   font-size:18px;
 }
 .cta-band .btn-primary{
-  background:#8be0cd;
+  background:var(--sun);
   color:#102320;
   box-shadow:none;
 }
@@ -570,8 +575,8 @@ h2{
       <div class="wrap hero-grid">
         <div>
           <p class="eyebrow">For physical therapy clinics</p>
-          <h1>Turn product recommendations into <em>clinic revenue.</em></h1>
-          <p class="hero-copy">Your clinicians already recommend braces, orthotics, recovery tools, topicals, and supplements. Revytal gives patients a clean way to buy them and gives your clinic a share of the value it created.</p>
+          <h1>Sell the products your PTs already recommend.</h1>
+          <p class="hero-copy">A branded shop for braces, orthotics, topicals, recovery tools, and supplements. Patients get the right product faster. Your clinic keeps more of the sale.</p>
           <div class="hero-actions">
             <a class="btn btn-primary" href="https://forms.gle/T9veyQtREzwLpDQP6" target="_blank" rel="noopener">Join the pilot network</a>
             <a class="btn btn-secondary" href="#workflow">See how it works</a>
@@ -583,11 +588,11 @@ h2{
             </div>
             <div class="trust-item">
               <strong>No EHR lift</strong>
-              <span>Designed to launch without a months-long integration.</span>
+              <span>Launch without a months-long build.</span>
             </div>
             <div class="trust-item">
               <strong>No workflow change</strong>
-              <span>The recommendation still starts in the room.</span>
+              <span>Your team keeps working the same way.</span>
             </div>
           </div>
         </div>
@@ -619,29 +624,29 @@ h2{
     <section class="band">
       <div class="wrap">
         <div class="section-head">
-          <h2>The leak is not clinical. <em>It is infrastructural.</em></h2>
-          <p class="section-lede">PTs create trusted product demand every day, then watch the purchase happen somewhere else. Revytal keeps that value inside the clinic ecosystem without asking the team to run retail.</p>
+          <h2>Stop sending easy sales to Amazon.</h2>
+          <p class="section-lede">Your clinic already earns the patient's trust. Revytal gives that trust a clean place to go: your own branded product page, stocked with the items you stand behind.</p>
         </div>
         <div class="pain-list">
           <article class="pain">
             <span class="pain-number">01</span>
             <div>
-              <h3>The clinician creates the demand.</h3>
-              <p>A patient trusts the provider's recommendation because it is tied to the plan of care, not an ad or generic product page.</p>
+              <h3>Your PT names the product.</h3>
+              <p>The patient hears it from the person guiding their care. That is the hard part.</p>
             </div>
           </article>
           <article class="pain">
             <span class="pain-number">02</span>
             <div>
-              <h3>The purchase leaves the clinic.</h3>
-              <p>Patients search on Amazon, guess between lookalike products, and the clinic captures none of the downstream spend.</p>
+              <h3>The patient searches online.</h3>
+              <p>They compare lookalikes, guess at the right fit, and buy from someone else.</p>
             </div>
           </article>
           <article class="pain">
             <span class="pain-number">03</span>
             <div>
-              <h3>The loop never closes.</h3>
-              <p>Clinics rarely know what patients bought, whether they followed through, or which recommendations are driving value.</p>
+              <h3>Your clinic gets nothing.</h3>
+              <p>No sale. No follow-through signal. No simple way to guide the next patient better.</p>
             </div>
           </article>
         </div>
@@ -651,29 +656,29 @@ h2{
     <section id="workflow">
       <div class="wrap">
         <div class="section-head">
-          <h2>Built around the way PT clinics <em>already work.</em></h2>
-          <p class="section-lede">Revytal turns a normal clinical recommendation into a curated checkout link, then routes payment, fulfillment, and clinic revenue in the background.</p>
+          <h2>Your product shelf, without the shelf.</h2>
+          <p class="section-lede">Revytal houses your go-to products in one branded place. Your team shares a link. Patients buy. Suppliers ship.</p>
         </div>
         <div class="steps">
           <article class="step">
             <div class="step-kicker"><span>Step 01</span><span>+</span></div>
-            <h3>Recommend as usual.</h3>
-            <p>The provider names the brace, topical, supplement, orthotic, or recovery tool that fits the patient's plan.</p>
+            <h3>Pick the right item.</h3>
+            <p>Your PT recommends the brace, cream, supplement, orthotic, or tool they already trust.</p>
           </article>
           <article class="step">
             <div class="step-kicker"><span>Step 02</span><span>+</span></div>
-            <h3>Revytal prepares the link.</h3>
-            <p>Products are matched from a curated clinical catalog and packaged into a clean, clinic-branded checkout.</p>
+            <h3>Share your shop.</h3>
+            <p>Send a QR code or text link to a clean page with your clinic's chosen products.</p>
           </article>
           <article class="step">
             <div class="step-kicker"><span>Step 03</span><span>+</span></div>
-            <h3>The patient buys directly.</h3>
-            <p>The patient receives a QR code or SMS link with the exact products, plain-language context, and a fast checkout.</p>
+            <h3>The patient buys fast.</h3>
+            <p>No product hunt. No wrong-size guesswork. No account maze.</p>
           </article>
           <article class="step">
             <div class="step-kicker"><span>Step 04</span><span>+</span></div>
-            <h3>Revenue returns to the clinic.</h3>
-            <p>Suppliers ship directly. Revytal logs the transaction. The clinic participates in value it already created.</p>
+            <h3>You keep more value.</h3>
+            <p>The order ships from the supplier, and your clinic earns more than an Amazon affiliate cut.</p>
           </article>
         </div>
       </div>
@@ -683,28 +688,28 @@ h2{
       <div class="wrap experience">
         <div>
           <p class="eyebrow">Patient experience</p>
-          <h2>A better follow-through path than <em>searching online.</em></h2>
-          <p class="section-lede">Patients do not need another portal. They need the right product, tied to the recommendation they just heard, with a checkout that feels obvious on a phone.</p>
+          <h2>A faster path from advice to action.</h2>
+          <p class="section-lede">Patients do not need another portal. They need the item you meant, in the size and style you trust, ready to buy on their phone.</p>
           <div class="feature-list" style="margin-top:42px">
             <div class="feature">
               <div class="feature-icon">1</div>
               <div>
-                <h3>Clear context</h3>
-                <p>Each item can explain why it was recommended and how it supports the patient plan.</p>
+                <h3>Plain reasons</h3>
+                <p>Each item can say why it helps and how to use it.</p>
               </div>
             </div>
             <div class="feature">
               <div class="feature-icon">2</div>
               <div>
-                <h3>Clinic-branded trust</h3>
-                <p>The buying experience starts with the clinic relationship, not a generic marketplace search.</p>
+                <h3>Your brand, not Amazon's</h3>
+                <p>The buy starts with your clinic, where the trust already lives.</p>
               </div>
             </div>
             <div class="feature">
               <div class="feature-icon">3</div>
               <div>
-                <h3>Direct fulfillment</h3>
-                <p>The clinic avoids inventory, storage, front-desk coordination, and shipping tasks.</p>
+                <h3>Ship from the supplier</h3>
+                <p>No stock room. No packing slips. No front desk work.</p>
               </div>
             </div>
           </div>
@@ -715,20 +720,20 @@ h2{
             <div class="phone-screen">
               <span class="clinic-chip">Mend PT recommends</span>
               <h3>Your recovery kit</h3>
-              <p>Three items selected to support your home program after today's visit.</p>
+              <p>Three items chosen for today's home plan.</p>
               <div class="product-card">
                 <div class="product-top">
                   <div class="product-name">Ankle stability brace</div>
                   <div class="price">$42</div>
                 </div>
-                <div class="product-note">Recommended for return-to-run support and daily confidence.</div>
+                <div class="product-note">For return-to-run support and day-to-day confidence.</div>
               </div>
               <div class="product-card">
                 <div class="product-top">
                   <div class="product-name">Recovery topical</div>
                   <div class="price">$28</div>
                 </div>
-                <div class="product-note">Use after your evening mobility routine.</div>
+                <div class="product-note">Use after your evening mobility work.</div>
               </div>
               <button class="checkout-button" type="button">Continue to checkout</button>
             </div>
@@ -741,40 +746,40 @@ h2{
       <div class="wrap economics">
         <div>
           <p class="eyebrow">Clinic economics</p>
-          <h2>Small recommendations become a <em>new revenue line.</em></h2>
-          <p class="section-lede">The point is not to turn PTs into retailers. The point is to capture a small, repeatable share of product value that is already being created in the clinical encounter.</p>
+          <h2>A simple new revenue line.</h2>
+          <p class="section-lede">Sell the products you already recommend, without turning your clinic into a store. Patients get a cleaner path. Your clinic keeps a larger share.</p>
           <div class="feature-list" style="margin-top:42px">
             <div class="feature">
               <div class="feature-icon">✓</div>
               <div>
-                <h3>High-trust recommendations</h3>
-                <p>Products are attached to a clinical moment where the patient is already motivated to act.</p>
+                <h3>Trust is already there</h3>
+                <p>The product follows the visit, when the patient is ready to act.</p>
               </div>
             </div>
             <div class="feature">
               <div class="feature-icon">✓</div>
               <div>
-                <h3>Low operational burden</h3>
-                <p>No shelves, no returns desk, no manually managed vendor process.</p>
+                <h3>No retail mess</h3>
+                <p>No shelves, no shipping table, no vendor wrangling.</p>
               </div>
             </div>
             <div class="feature">
               <div class="feature-icon">✓</div>
               <div>
-                <h3>Pilot-friendly model</h3>
-                <p>Start with a focused product set and expand around what your clinicians already recommend.</p>
+                <h3>Start small</h3>
+                <p>Begin with the products your team names most, then grow from there.</p>
               </div>
             </div>
           </div>
         </div>
 
         <aside class="math-board" aria-label="Example clinic revenue math">
-          <h3>Example monthly clinic math</h3>
+          <h3>Sample monthly math</h3>
           <div class="math-row"><span>Product recommendations per day</span><strong>7</strong></div>
           <div class="math-row"><span>Patient follow-through rate</span><strong>40%</strong></div>
           <div class="math-row"><span>Average clinic revenue per order</span><strong>$7</strong></div>
           <div class="math-row total"><span>Estimated monthly revenue</span><strong>$390</strong></div>
-          <p class="note">Illustrative only. Actual results depend on visit volume, product mix, pricing, conversion, and pilot configuration.</p>
+          <p class="note">Example only. Results depend on visit volume, product mix, pricing, and patient follow-through.</p>
         </aside>
       </div>
     </section>
@@ -783,8 +788,8 @@ h2{
       <div class="wrap cta-inner">
         <div>
           <p class="eyebrow">Pilot clinics</p>
-          <h2>Help shape the product before the category hardens.</h2>
-          <p>We are looking for a small group of PT clinics to test the workflow, product catalog, checkout experience, and clinic economics with us.</p>
+          <h2>Help build the version your clinic would actually use.</h2>
+          <p>We are looking for a small group of PT clinics to test the shop, product list, checkout, and payout flow with us.</p>
         </div>
         <a class="btn btn-primary" href="https://forms.gle/T9veyQtREzwLpDQP6" target="_blank" rel="noopener">Join the pilot network</a>
       </div>
@@ -793,7 +798,7 @@ h2{
 
   <footer class="footer">
     <div class="wrap footer-inner">
-      <span>Revytal - product revenue for physical therapy clinics</span>
+      <span>Revytal - branded product shops for PT clinics</span>
       <span>Candidate homepage v2 for team review</span>
     </div>
   </footer>
