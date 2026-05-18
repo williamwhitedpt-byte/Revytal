@@ -1,0 +1,1425 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Revytal — Clinical Commerce Infrastructure</title>
+<link rel="stylesheet" href="style.css">
+<link rel="stylesheet" href="style.css">
+<style>
+@import url('https://fonts.googleapis.com/css2?family=DM+Mono:ital,wght@0,300;0,400;0,500;1,300&family=Instrument+Serif:ital@0;1&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600&display=swap');
+
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+
+:root{
+  --bg:        #080C10;
+  --bg2:       #0D1117;
+  --bg3:       #131920;
+  --surface:   #161D26;
+  --surface2:  #1C2530;
+  --border:    rgba(255,255,255,0.07);
+  --border2:   rgba(255,255,255,0.12);
+  --teal:      #1BA6A6;
+  --teal2:     #7ED4D4;
+  --teal3:     rgba(27,166,166,0.15);
+  --blue:      #0A3A5E;
+  --slate:     #4F6D8C;
+  --text:      #E8EDF2;
+  --text2:     #8A9BB0;
+  --text3:     #4A5A6E;
+  --green:     #22C55E;
+  --amber:     #F59E0B;
+  --red:       #EF4444;
+  --font-body: 'DM Sans', system-ui, sans-serif;
+  --font-mono: 'DM Mono', monospace;
+  --font-serif:'Instrument Serif', Georgia, serif;
+}
+
+html{scroll-behavior:smooth}
+
+body{
+  background:var(--bg);
+  color:var(--text);
+  font-family:var(--font-body);
+  min-height:100vh;
+  overflow-x:hidden;
+  -webkit-font-smoothing:antialiased;
+  line-height:1.7;
+}
+
+/* ── Background grid + ambient glow ─────────────────────── */
+body::before{
+  content:'';
+  position:fixed;inset:0;
+  background-image:
+    linear-gradient(rgba(27,166,166,0.025) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(27,166,166,0.025) 1px, transparent 1px);
+  background-size:48px 48px;
+  pointer-events:none;
+  z-index:0;
+}
+
+body::after{
+  content:'';
+  position:fixed;
+  top:-20vh;left:50%;
+  transform:translateX(-50%);
+  width:1000px;height:600px;
+  background:radial-gradient(ellipse at center, rgba(27,166,166,0.07) 0%, transparent 68%);
+  pointer-events:none;
+  z-index:0;
+}
+
+/* ── App wrapper ─────────────────────────────────────────── */
+.app{
+  position:relative;
+  z-index:1;
+  max-width:1080px;
+  margin:0 auto;
+  padding:0 24px 100px;
+}
+
+/* ── Nav ─────────────────────────────────────────────────── */
+nav{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:20px 0;
+  border-bottom:1px solid var(--border);
+  margin-bottom:0;
+  position:sticky;top:0;
+  background:rgba(8,12,16,0.85);
+  backdrop-filter:blur(16px);
+  -webkit-backdrop-filter:blur(16px);
+  z-index:100;
+}
+
+.nav-logo{
+  display:flex;align-items:center;gap:10px;
+}
+
+.nav-logo-mark{
+  width:28px;height:28px;
+  background:var(--teal);
+  border-radius:7px;
+  display:flex;align-items:center;justify-content:center;
+  box-shadow:0 0 20px rgba(27,166,166,0.4);
+  flex-shrink:0;
+}
+
+.nav-logo-mark svg{display:block}
+
+.nav-wordmark{
+  font-family:var(--font-serif);
+  font-size:20px;
+  color:var(--text);
+  letter-spacing:-0.3px;
+}
+
+.nav-right{
+  display:flex;align-items:center;gap:10px;
+}
+
+.nav-badge{
+  font-size:11px;
+  font-weight:500;
+  letter-spacing:0.1em;
+  text-transform:uppercase;
+  color:var(--teal);
+  background:rgba(27,166,166,0.1);
+  border:1px solid rgba(27,166,166,0.2);
+  padding:4px 12px;
+  border-radius:100px;
+}
+
+.nav-demo-link{
+  font-size:12px;
+  font-weight:500;
+  color:var(--text2);
+  text-decoration:none;
+  padding:6px 14px;
+  border-radius:8px;
+  border:1px solid var(--border2);
+  background:var(--surface);
+  transition:all 0.2s;
+  display:flex;align-items:center;gap:6px;
+}
+
+.nav-demo-link:hover{
+  color:var(--teal);
+  border-color:rgba(27,166,166,0.35);
+  background:rgba(27,166,166,0.07);
+}
+
+/* ── Utility ─────────────────────────────────────────────── */
+.section-gap{ padding-top:96px; }
+.section-gap-sm{ padding-top:64px; }
+
+.eyebrow{
+  display:inline-flex;align-items:center;gap:6px;
+  font-size:11px;
+  font-weight:600;
+  letter-spacing:0.12em;
+  text-transform:uppercase;
+  color:var(--teal);
+  margin-bottom:18px;
+}
+
+.eyebrow::before{
+  content:'';
+  display:block;
+  width:16px;height:1px;
+  background:var(--teal);
+  opacity:0.6;
+}
+
+h2{
+  font-family:var(--font-serif);
+  font-size:clamp(28px,3.5vw,44px);
+  font-weight:400;
+  color:var(--text);
+  line-height:1.15;
+  letter-spacing:-0.02em;
+  margin-bottom:20px;
+}
+
+h2 em{
+  font-style:italic;
+  color:var(--teal2);
+}
+
+h3{
+  font-family:var(--font-serif);
+  font-size:20px;
+  font-weight:400;
+  color:var(--text);
+  margin-bottom:10px;
+}
+
+p{
+  font-size:15px;
+  color:var(--text2);
+  line-height:1.75;
+  margin-bottom:16px;
+}
+
+p:last-child{margin-bottom:0}
+
+/* ── Divider ─────────────────────────────────────────────── */
+.divider{
+  height:1px;
+  background:var(--border);
+  margin:80px 0 0;
+}
+
+/* ── Hero section ────────────────────────────────────────── */
+.hero{
+  padding:100px 0 80px;
+  text-align:center;
+  position:relative;
+}
+
+.hero-title{
+  font-family:var(--font-serif);
+  font-size:clamp(42px,6vw,76px);
+  font-weight:400;
+  color:var(--text);
+  line-height:1.08;
+  letter-spacing:-0.03em;
+  margin-bottom:28px;
+  opacity:0;
+  animation:fadeUp 0.8s 0.15s ease both;
+}
+
+.hero-title em{
+  font-style:italic;
+  color:var(--teal2);
+}
+
+.hero-sub{
+  font-size:17px;
+  color:var(--text2);
+  max-width:560px;
+  margin:0 auto 44px;
+  line-height:1.7;
+  opacity:0;
+  animation:fadeUp 0.8s 0.3s ease both;
+}
+
+.hero-triad{
+  display:flex;
+  justify-content:center;
+  gap:0;
+  max-width:620px;
+  margin:0 auto 48px;
+  background:var(--surface);
+  border:1px solid var(--border);
+  border-radius:14px;
+  overflow:hidden;
+  opacity:0;
+  animation:fadeUp 0.8s 0.45s ease both;
+}
+
+.hero-triad-item{
+  flex:1;
+  padding:18px 24px;
+  border-right:1px solid var(--border);
+  text-align:left;
+}
+
+.hero-triad-item:last-child{border-right:none}
+
+.hero-triad-item::before{
+  content:'';
+  display:block;
+  width:18px;height:2px;
+  background:var(--teal);
+  margin-bottom:10px;
+  border-radius:2px;
+  opacity:0.7;
+}
+
+.hero-triad-item p{
+  font-size:13px;
+  font-weight:500;
+  color:var(--text2);
+  margin:0;
+  line-height:1.4;
+}
+
+.hero-cta-row{
+  display:flex;align-items:center;justify-content:center;gap:12px;
+  opacity:0;
+  animation:fadeUp 0.8s 0.6s ease both;
+}
+
+.btn-primary{
+  display:inline-flex;align-items:center;gap:8px;
+  background:var(--teal);
+  color:#fff;
+  font-family:var(--font-body);
+  font-size:14px;
+  font-weight:600;
+  padding:12px 24px;
+  border-radius:10px;
+  border:none;
+  cursor:pointer;
+  text-decoration:none;
+  transition:all 0.2s;
+  box-shadow:0 0 28px rgba(27,166,166,0.35);
+}
+
+.btn-primary:hover{
+  background:#1bbfbf;
+  box-shadow:0 0 40px rgba(27,166,166,0.5);
+  transform:translateY(-1px);
+}
+
+.btn-secondary{
+  display:inline-flex;align-items:center;gap:8px;
+  background:transparent;
+  color:var(--text2);
+  font-family:var(--font-body);
+  font-size:14px;
+  font-weight:500;
+  padding:12px 20px;
+  border-radius:10px;
+  border:1px solid var(--border2);
+  cursor:pointer;
+  text-decoration:none;
+  transition:all 0.2s;
+}
+
+.btn-secondary:hover{
+  color:var(--teal);
+  border-color:rgba(27,166,166,0.35);
+  background:rgba(27,166,166,0.05);
+}
+
+/* ── Pull quote / callout card ───────────────────────────── */
+.callout{
+  background:var(--surface);
+  border:1px solid var(--border);
+  border-left:3px solid var(--teal);
+  border-radius:0 14px 14px 0;
+  padding:28px 32px;
+  margin:32px 0;
+  position:relative;
+}
+
+.callout p{
+  font-family:var(--font-serif);
+  font-size:19px;
+  font-style:italic;
+  color:var(--text);
+  line-height:1.55;
+  margin:0;
+}
+
+.callout p strong{
+  font-style:normal;
+  color:var(--teal2);
+  font-weight:400;
+}
+
+/* ── Problem section ─────────────────────────────────────── */
+.problem-section{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:48px;
+  align-items:start;
+}
+
+@media(max-width:720px){
+  .problem-section{grid-template-columns:1fr}
+  .hero-triad{flex-direction:column}
+  .hero-triad-item{border-right:none;border-bottom:1px solid var(--border)}
+  .hero-triad-item:last-child{border-bottom:none}
+}
+
+.problem-stat-stack{
+  display:flex;flex-direction:column;gap:12px;
+}
+
+.stat-card{
+  background:var(--surface);
+  border:1px solid var(--border);
+  border-radius:14px;
+  padding:24px;
+  transition:border-color 0.3s,box-shadow 0.3s;
+}
+
+.stat-card:hover{
+  border-color:rgba(27,166,166,0.25);
+  box-shadow:0 4px 32px rgba(0,0,0,0.4);
+}
+
+.stat-n{
+  font-family:var(--font-mono);
+  font-size:32px;
+  font-weight:500;
+  color:var(--teal2);
+  display:block;
+  margin-bottom:4px;
+  letter-spacing:-0.02em;
+}
+
+.stat-l{
+  font-size:13px;
+  color:var(--text3);
+  text-transform:uppercase;
+  letter-spacing:0.08em;
+  font-weight:500;
+}
+
+/* ── Category / "not a" cards ────────────────────────────── */
+.not-grid{
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:12px;
+  margin:28px 0 32px;
+}
+
+@media(max-width:580px){
+  .not-grid{grid-template-columns:1fr}
+}
+
+.not-card{
+  background:var(--surface);
+  border:1px solid var(--border);
+  border-radius:12px;
+  padding:20px;
+}
+
+.not-card-x{
+  font-family:var(--font-mono);
+  font-size:18px;
+  color:var(--text3);
+  margin-bottom:8px;
+  display:block;
+}
+
+.not-card-text{
+  font-size:13px;
+  color:var(--text2);
+  margin:0;
+  font-weight:500;
+}
+
+/* ── What Revytal does — checklist ───────────────────────── */
+.check-list{
+  list-style:none;
+  display:flex;flex-direction:column;gap:0;
+  margin-top:20px;
+}
+
+.check-item{
+  display:flex;align-items:flex-start;gap:14px;
+  padding:14px 0;
+  border-bottom:1px solid var(--border);
+}
+
+.check-item:last-child{border-bottom:none}
+
+.check-dot{
+  width:20px;height:20px;
+  border-radius:50%;
+  background:rgba(27,166,166,0.12);
+  border:1px solid rgba(27,166,166,0.3);
+  flex-shrink:0;
+  margin-top:2px;
+  display:flex;align-items:center;justify-content:center;
+}
+
+.check-dot svg{display:block}
+
+.check-text{
+  font-size:15px;
+  color:var(--text2);
+  line-height:1.6;
+  margin:0;
+}
+
+.check-text strong{
+  color:var(--text);
+  font-weight:600;
+}
+
+/* ── Flow diagram ────────────────────────────────────────── */
+.flow-wrap{
+  background:var(--surface);
+  border:1px solid var(--border);
+  border-radius:16px;
+  padding:36px 24px 28px;
+  margin-top:32px;
+  overflow-x:auto;
+}
+
+.flow{
+  display:flex;align-items:center;justify-content:center;gap:0;
+  min-width:560px;
+}
+
+.flow-node{
+  background:var(--bg3);
+  border:1px solid var(--border2);
+  border-radius:12px;
+  padding:14px 20px;
+  text-align:center;
+  min-width:108px;
+  transition:border-color 0.3s,box-shadow 0.3s;
+}
+
+.flow-node:hover{
+  border-color:rgba(27,166,166,0.35);
+  box-shadow:0 0 20px rgba(27,166,166,0.1);
+}
+
+.flow-node.accent{
+  background:rgba(27,166,166,0.1);
+  border-color:rgba(27,166,166,0.4);
+  box-shadow:0 0 24px rgba(27,166,166,0.15);
+}
+
+.flow-label{
+  font-size:12px;
+  font-weight:600;
+  color:var(--text);
+  text-transform:uppercase;
+  letter-spacing:0.05em;
+  white-space:nowrap;
+}
+
+.flow-sub{
+  font-size:11px;
+  color:var(--text3);
+  margin-top:3px;
+  white-space:nowrap;
+}
+
+.flow-node.accent .flow-label{color:var(--teal2)}
+.flow-node.accent .flow-sub{color:rgba(126,212,212,0.6)}
+
+.flow-arrow{
+  flex-shrink:0;
+  padding:0 4px;
+  display:flex;align-items:center;
+}
+
+.flow-caption{
+  text-align:center;
+  font-size:12px;
+  color:var(--text3);
+  margin-top:20px;
+  font-family:var(--font-mono);
+  letter-spacing:0.03em;
+}
+
+/* ── Validation items ────────────────────────────────────── */
+.validation-list{
+  display:flex;flex-direction:column;gap:0;
+  margin-top:24px;
+}
+
+.val-item{
+  display:flex;align-items:flex-start;gap:14px;
+  padding:16px 0;
+  border-bottom:1px solid var(--border);
+}
+
+.val-item:last-child{border-bottom:none}
+
+.val-icon{
+  width:32px;height:32px;
+  border-radius:8px;
+  background:rgba(27,166,166,0.08);
+  border:1px solid rgba(27,166,166,0.15);
+  display:flex;align-items:center;justify-content:center;
+  flex-shrink:0;
+  margin-top:1px;
+}
+
+.val-text{
+  font-size:15px;
+  color:var(--text2);
+  line-height:1.6;
+  margin:0;
+}
+
+.val-text strong{color:var(--text);font-weight:600}
+
+/* ── Why now panel ───────────────────────────────────────── */
+.why-now-grid{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:16px;
+  margin-top:32px;
+}
+
+@media(max-width:600px){.why-now-grid{grid-template-columns:1fr}}
+
+.why-card{
+  background:var(--surface);
+  border:1px solid var(--border);
+  border-radius:14px;
+  padding:24px;
+  transition:border-color 0.3s;
+}
+
+.why-card:hover{border-color:var(--border2)}
+
+.why-card-icon{
+  width:32px;height:32px;
+  background:rgba(27,166,166,0.1);
+  border:1px solid rgba(27,166,166,0.2);
+  border-radius:8px;
+  display:flex;align-items:center;justify-content:center;
+  margin-bottom:14px;
+}
+
+.why-card h3{
+  font-family:var(--font-body);
+  font-size:14px;
+  font-weight:600;
+  color:var(--text);
+  margin-bottom:8px;
+}
+
+.why-card p{
+  font-size:13px;
+  color:var(--text3);
+  margin:0;
+  line-height:1.6;
+}
+
+/* ── Vision long term ────────────────────────────────────── */
+.vision-terminal{
+  background:var(--bg3);
+  border:1px solid var(--border);
+  border-radius:14px;
+  overflow:hidden;
+  margin-top:32px;
+}
+
+.terminal-bar{
+  display:flex;align-items:center;gap:7px;
+  padding:12px 16px;
+  border-bottom:1px solid var(--border);
+  background:var(--surface);
+}
+
+.terminal-dot{
+  width:10px;height:10px;
+  border-radius:50%;
+}
+
+.terminal-title{
+  font-family:var(--font-mono);
+  font-size:11px;
+  color:var(--text3);
+  margin-left:8px;
+  letter-spacing:0.05em;
+}
+
+.terminal-body{
+  padding:24px;
+  font-family:var(--font-mono);
+  font-size:13px;
+  line-height:1.9;
+}
+
+.t-line{display:flex;gap:10px;margin-bottom:2px}
+.t-p{color:var(--teal);opacity:0.7}
+.t-c{color:var(--text3)}
+.t-v{color:var(--teal2)}
+.t-s{color:var(--text2)}
+.t-dim{color:var(--text3);font-size:11px}
+
+/* ── Audience cards ──────────────────────────────────────── */
+.audience-grid{
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:16px;
+  margin-top:32px;
+}
+
+@media(max-width:700px){.audience-grid{grid-template-columns:1fr}}
+
+.audience-card{
+  background:var(--surface);
+  border:1px solid var(--border);
+  border-radius:16px;
+  padding:28px;
+  transition:border-color 0.3s,box-shadow 0.3s;
+}
+
+.audience-card:hover{
+  border-color:rgba(27,166,166,0.25);
+  box-shadow:0 8px 40px rgba(0,0,0,0.35);
+}
+
+.audience-tag{
+  font-size:10px;
+  font-weight:600;
+  letter-spacing:0.1em;
+  text-transform:uppercase;
+  color:var(--teal);
+  background:rgba(27,166,166,0.08);
+  border:1px solid rgba(27,166,166,0.15);
+  padding:4px 10px;
+  border-radius:100px;
+  display:inline-block;
+  margin-bottom:16px;
+}
+
+.audience-card h3{
+  font-family:var(--font-serif);
+  font-size:22px;
+  margin-bottom:10px;
+  font-weight:400;
+}
+
+.audience-card p{
+  font-size:14px;
+  line-height:1.65;
+}
+
+/* ── Win grid ────────────────────────────────────────────── */
+.win-grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(190px,1fr));
+  gap:10px;
+  margin-top:28px;
+}
+
+.win-item{
+  background:var(--surface);
+  border:1px solid var(--border);
+  border-left:2px solid var(--teal);
+  border-radius:0 10px 10px 0;
+  padding:16px 18px;
+  font-size:13px;
+  font-weight:600;
+  color:var(--text2);
+  line-height:1.4;
+  transition:color 0.2s,border-left-color 0.2s;
+}
+
+.win-item:hover{
+  color:var(--text);
+  border-left-color:var(--teal2);
+}
+
+/* ── Economics highlight ─────────────────────────────────── */
+.econ-highlight{
+  display:grid;
+  grid-template-columns:1fr 1fr 1fr;
+  gap:12px;
+  margin:28px 0;
+}
+
+@media(max-width:580px){.econ-highlight{grid-template-columns:1fr}}
+
+.econ-card{
+  background:var(--surface);
+  border:1px solid var(--border);
+  border-radius:12px;
+  padding:20px;
+  text-align:center;
+  transition:border-color 0.3s;
+}
+
+.econ-card:hover{border-color:var(--border2)}
+
+.econ-icon{
+  font-size:22px;
+  display:block;
+  margin-bottom:8px;
+}
+
+.econ-title{
+  font-size:13px;
+  font-weight:600;
+  color:var(--text);
+  margin-bottom:4px;
+}
+
+.econ-sub{
+  font-size:12px;
+  color:var(--text3);
+  line-height:1.4;
+}
+
+/* ── Section panel wrapper ───────────────────────────────── */
+.panel{
+  background:var(--surface);
+  border:1px solid var(--border);
+  border-radius:20px;
+  padding:48px;
+  margin-top:16px;
+}
+
+.panel-sm{
+  background:var(--surface);
+  border:1px solid var(--border);
+  border-radius:16px;
+  padding:32px;
+  margin-top:16px;
+}
+
+@media(max-width:640px){
+  .panel{padding:28px 20px}
+  .panel-sm{padding:24px 18px}
+}
+
+/* ── Contact section ─────────────────────────────────────── */
+.contact-panel{
+  background:linear-gradient(135deg, rgba(27,166,166,0.08) 0%, rgba(10,58,94,0.12) 100%);
+  border:1px solid rgba(27,166,166,0.2);
+  border-radius:20px;
+  padding:56px 48px;
+  text-align:center;
+  margin-top:16px;
+  position:relative;
+  overflow:hidden;
+}
+
+.contact-panel::before{
+  content:'';
+  position:absolute;
+  top:-80px;left:50%;
+  transform:translateX(-50%);
+  width:400px;height:200px;
+  background:radial-gradient(ellipse, rgba(27,166,166,0.12) 0%, transparent 70%);
+  pointer-events:none;
+}
+
+.contact-panel h2{margin-bottom:10px}
+
+.contact-panel p{
+  max-width:420px;
+  margin:0 auto 32px;
+}
+
+.contact-email{
+  display:inline-flex;align-items:center;gap:10px;
+  font-size:15px;
+  font-weight:600;
+  color:var(--teal2);
+  text-decoration:none;
+  padding:14px 28px;
+  border-radius:10px;
+  border:1px solid rgba(27,166,166,0.3);
+  background:rgba(27,166,166,0.08);
+  transition:all 0.2s;
+}
+
+.contact-email:hover{
+  background:rgba(27,166,166,0.15);
+  border-color:rgba(27,166,166,0.5);
+  box-shadow:0 0 30px rgba(27,166,166,0.2);
+}
+
+/* ── Footer ──────────────────────────────────────────────── */
+footer{
+  border-top:1px solid var(--border);
+  padding:28px 0 0;
+  margin-top:64px;
+  display:flex;align-items:center;justify-content:space-between;
+  flex-wrap:wrap;
+  gap:12px;
+}
+
+.footer-logo{
+  display:flex;align-items:center;gap:8px;
+  font-family:var(--font-serif);
+  font-size:16px;
+  color:var(--text3);
+}
+
+.footer-copy{
+  font-size:12px;
+  color:var(--text3);
+  font-family:var(--font-mono);
+}
+
+/* ── Scroll-reveal ───────────────────────────────────────── */
+.reveal{
+  opacity:0;
+  transform:translateY(20px);
+  transition:opacity 0.65s ease, transform 0.65s ease;
+}
+
+.reveal.visible{
+  opacity:1;
+  transform:none;
+}
+
+/* ── Keyframes ───────────────────────────────────────────── */
+@keyframes fadeUp{
+  from{opacity:0;transform:translateY(16px)}
+  to{opacity:1;transform:none}
+}
+
+/* ── Scrollbar ───────────────────────────────────────────── */
+::-webkit-scrollbar{width:5px}
+::-webkit-scrollbar-track{background:var(--bg2)}
+::-webkit-scrollbar-thumb{background:var(--surface2);border-radius:3px}
+
+::selection{background:rgba(27,166,166,0.22);color:var(--text)}
+</style>
+
+</head>
+<body>
+
+<div class="app">
+
+<nav>
+  <div class="nav-logo-mark">
+    <div class="nav-logo-mark">
+      <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
+        <path d="M7 1L12 4V10L7 13L2 10V4L7 1Z" stroke="white" stroke-width="1.5" stroke-linejoin="round"/>
+        <circle cx="7" cy="7" r="2" fill="white"/>
+      </svg>
+    </div>
+    <span class="nav-wordmark">Revytal</span>
+  </div>
+
+  <div class="nav-right">
+    <span class="nav-badge">Clinical Commerce Infrastructure</span>
+
+    <a class="nav-demo-link" href="demo/index.html">
+      <svg width="11" height="11" viewBox="0 0 11 11" fill="none">
+        <path d="M2 5.5L9 5.5M6.5 3L9 5.5L6.5 8" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+      Live Demo
+    </a>
+
+    <a class="nav-demo-link" href="signals.html">
+      <svg width="11" height="11" viewBox="0 0 11 11" fill="none">
+        <path d="M2 5.5L9 5.5M6.5 3L9 5.5L6.5 8" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+      Signals
+    </a>
+  </div>
+</nav>
+
+
+
+<!-- ── Hero ──────────────────────────────────────────────── -->
+<section class="hero">
+  <div class="eyebrow" style="justify-content:center;opacity:0;animation:fadeUp 0.7s 0.1s ease both">Revytal</div>
+  <h1 class="hero-title">Clinicians recommend.<br/><em>Patients act.</em><br/>Revytal automates everything in between.</h1>
+  <p class="hero-sub" style="opacity:0;animation:fadeUp 0.7s 0.3s ease both">The first infrastructure rail that turns clinical recommendations into automated revenue and evidence-aligned care without changing the clinical workflow.</p>
+
+  <div class="hero-triad">
+    <div class="hero-triad-item"><p>The rail is ambient.</p></div>
+    <div class="hero-triad-item"><p>The workflow is unchanged.</p></div>
+    <div class="hero-triad-item"><p>The economics are transformed.</p></div>
+  </div>
+
+  <div class="hero-cta-row">
+    <a href="demo/index.html" class="btn-primary">
+      <svg width="13" height="13" viewBox="0 0 13 13" fill="none"><path d="M2.5 2.5L10.5 6.5L2.5 10.5V2.5Z" fill="white"/></svg>
+      See It in Action
+    </a>
+    <a href="#problem" class="btn-secondary">Read the thesis</a>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- ── The Problem ───────────────────────────────────────── -->
+<section class="section-gap" id="problem">
+  <div class="reveal">
+    <div class="eyebrow">The Problem</div>
+    <div class="problem-section">
+      <div>
+        <h2>One part of the clinical workflow has remained <em>untouched.</em></h2>
+        <p>Outpatient healthcare has spent a decade digitizing records, automating billing, and layering AI onto documentation — but one part of the clinical workflow has remained untouched: the moment a provider recommends something.</p>
+        <p>Every day, clinicians recommend braces, equipment, skincare, supplements, and recovery tools. These recommendations shape patient behavior and drive billions in downstream spend.</p>
+        <p>Yet the infrastructure to capture, automate, and fulfill those recommendations simply doesn't exist.</p>
+        <div class="callout">
+          <p>Clinics influence the purchase. Patients trust the provider. <strong>But the revenue goes somewhere else.</strong> This is the gap. This is the category.</p>
+        </div>
+      </div>
+      <div class="problem-stat-stack">
+        <div class="stat-card">
+          <span class="stat-n">$40B+</span>
+          <span class="stat-l">Downstream clinical spend captured by retailers, not clinics</span>
+        </div>
+        <div class="stat-card">
+          <span class="stat-n">0%</span>
+          <span class="stat-l">Revenue share clinics receive from recommendations they drive</span>
+        </div>
+        <div class="stat-card">
+          <span class="stat-n">100%</span>
+          <span class="stat-l">Patient trust already in place — the intent signal exists</span>
+        </div>
+        <div class="stat-card">
+          <span class="stat-n">0</span>
+          <span class="stat-l">Infrastructure layers purpose-built to close this gap</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- ── Founding Insight ───────────────────────────────────── -->
+<section class="section-gap">
+  <div class="reveal">
+    <div class="eyebrow">The Founding Insight</div>
+    <h2>Eight years inside outpatient care revealed an <em>infrastructure gap.</em></h2>
+  </div>
+  <div class="panel reveal">
+    <p>Revytal was born from eight years inside outpatient care — where margins are tight, reimbursement is shrinking, and clinics are desperate for revenue that isn't tied to insurance.</p>
+    <p>Providers see it every day: a brace recommended in the clinic becomes an Amazon purchase; a topical becomes a CVS run; equipment becomes a Google search. The clinic drives the intent. The patient trusts the provider. But the economics leak out of the system.</p>
+    <p>This isn't a workflow problem. It's an infrastructure problem. And no one has built the rail that connects clinical intent to patient action.</p>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- ── The Category ───────────────────────────────────────── -->
+<section class="section-gap">
+  <div class="reveal">
+    <div class="eyebrow">The Category</div>
+    <h2>Clinical Commerce <em>Infrastructure</em></h2>
+    <p>Clinical Commerce Infrastructure is the rail that connects provider intent to patient action — automatically, compliantly, and without adding steps to the clinical workflow.</p>
+  </div>
+
+  <div class="not-grid reveal">
+    <div class="not-card">
+      <span class="not-card-x">✗</span>
+      <p class="not-card-text">Not a storefront</p>
+    </div>
+    <div class="not-card">
+      <span class="not-card-x">✗</span>
+      <p class="not-card-text">Not a marketplace</p>
+    </div>
+    <div class="not-card">
+      <span class="not-card-x">✗</span>
+      <p class="not-card-text">Not an affiliate layer</p>
+    </div>
+  </div>
+
+  <div class="callout reveal">
+    <p>It is <strong>infrastructure</strong> — a background system that listens to the clinical moment and turns it into revenue, fulfillment, and closed‑loop care.</p>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- ── What Revytal Does ──────────────────────────────────── -->
+<section class="section-gap">
+  <div class="reveal">
+    <div class="eyebrow">What Revytal Does</div>
+    <h2>Revytal is the first company to build <em>this rail.</em></h2>
+  </div>
+  <div class="panel reveal">
+    <ul class="check-list">
+      <li class="check-item">
+        <div class="check-dot">
+          <svg width="10" height="10" viewBox="0 0 10 10" fill="none"><path d="M2 5.5L4 7.5L8 3" stroke="#1BA6A6" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </div>
+        <p class="check-text"><strong>Providers recommend</strong> → Revytal captures the intent</p>
+      </li>
+      <li class="check-item">
+        <div class="check-dot">
+          <svg width="10" height="10" viewBox="0 0 10 10" fill="none"><path d="M2 5.5L4 7.5L8 3" stroke="#1BA6A6" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </div>
+        <p class="check-text"><strong>Patients receive</strong> a clean, curated path to purchase</p>
+      </li>
+      <li class="check-item">
+        <div class="check-dot">
+          <svg width="10" height="10" viewBox="0 0 10 10" fill="none"><path d="M2 5.5L4 7.5L8 3" stroke="#1BA6A6" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </div>
+        <p class="check-text"><strong>Suppliers fulfill</strong> directly to the patient</p>
+      </li>
+      <li class="check-item">
+        <div class="check-dot">
+          <svg width="10" height="10" viewBox="0 0 10 10" fill="none"><path d="M2 5.5L4 7.5L8 3" stroke="#1BA6A6" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </div>
+        <p class="check-text"><strong>Clinics earn revenue</strong> without inventory, logistics, or operational drag</p>
+      </li>
+    </ul>
+
+    <p style="margin-top:20px;padding-top:20px;border-top:1px solid var(--border)">
+      Revytal begins by validating the analog version — proving the workflow, mapping the supplier stack, and demonstrating that the rail can exist without adding friction to clinical care.
+    </p>
+
+    <p style="margin-top:16px">
+      But the infrastructure carries more than transactions.
+    </p>
+
+    <p style="margin-top:16px">
+      As recommendations flow through the rail, patterns emerge. Which products correlate with better adherence. Which SKUs clinicians reach for across similar diagnoses. Where the evidence base and clinical habit diverge. Revytal surfaces these signals back to providers — not as alerts or interruptions, but as ambient, evidence-aligned context that sharpens clinical reasoning without adding a single step.
+    </p>
+
+    <div style="margin-top:24px;padding-top:20px;border-top:1px solid var(--border);display:flex;flex-direction:column;gap:10px">
+      <p style="margin:0">
+        <strong style="color:var(--teal2)">The revenue loop</strong>
+        <span style="color:var(--text2)"> realigns incentives — clinics finally participate in the value they create.</span>
+      </p>
+      <p style="margin:0">
+        <strong style="color:var(--teal2)">The evidence loop</strong>
+        <span style="color:var(--text2)"> raises the floor of care — clinicians make better-supported decisions over time.</span>
+      </p>
+    </div>
+
+    <p style="margin-top:20px;padding-top:20px;border-top:1px solid var(--border);font-style:italic;color:var(--text)">
+      Revytal sits at the intersection of both. Infrastructure that pays clinics and makes them better. That is the model worth building.
+    </p>
+  </div>
+</section>
+<div class="divider"></div>
+
+
+<!-- ── How It Works ───────────────────────────────────────── -->
+<section class="section-gap">
+  <div class="reveal">
+    <div class="eyebrow">How It Works</div>
+    <h2>Ambient by design.<br/><em>Automated end‑to‑end.</em></h2>
+    <p>Revytal sits quietly in the background, turning clinical intent into automated commerce.</p>
+  </div>
+
+  <div class="flow-wrap reveal">
+    <div class="flow">
+      <div class="flow-node">
+        <div class="flow-label">Clinician</div>
+        <div class="flow-sub">Intent</div>
+      </div>
+      <div class="flow-arrow">
+        <svg width="40" height="20" viewBox="0 0 40 20" fill="none">
+          <line x1="4" y1="10" x2="32" y2="10" stroke="#1BA6A6" stroke-width="1.5" stroke-opacity="0.6"/>
+          <path d="M28 5L35 10L28 15" stroke="#1BA6A6" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+        </svg>
+      </div>
+      <div class="flow-node accent">
+        <div class="flow-label">Revytal</div>
+        <div class="flow-sub">Automation</div>
+      </div>
+      <div class="flow-arrow">
+        <svg width="40" height="20" viewBox="0 0 40 20" fill="none">
+          <line x1="4" y1="10" x2="32" y2="10" stroke="#1BA6A6" stroke-width="1.5" stroke-opacity="0.6"/>
+          <path d="M28 5L35 10L28 15" stroke="#1BA6A6" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+        </svg>
+      </div>
+      <div class="flow-node">
+        <div class="flow-label">Patient</div>
+        <div class="flow-sub">Checkout</div>
+      </div>
+      <div class="flow-arrow">
+        <svg width="40" height="20" viewBox="0 0 40 20" fill="none">
+          <line x1="4" y1="10" x2="32" y2="10" stroke="#1BA6A6" stroke-width="1.5" stroke-opacity="0.6"/>
+          <path d="M28 5L35 10L28 15" stroke="#1BA6A6" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+        </svg>
+      </div>
+      <div class="flow-node">
+        <div class="flow-label">Supplier</div>
+        <div class="flow-sub">Fulfillment</div>
+      </div>
+      <div class="flow-arrow">
+        <svg width="40" height="20" viewBox="0 0 40 20" fill="none">
+          <line x1="4" y1="10" x2="32" y2="10" stroke="#1BA6A6" stroke-width="1.5" stroke-opacity="0.6"/>
+          <path d="M28 5L35 10L28 15" stroke="#1BA6A6" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+        </svg>
+      </div>
+      <div class="flow-node">
+        <div class="flow-label">Patient</div>
+        <div class="flow-sub">Care Loop</div>
+      </div>
+    </div>
+    <p class="flow-caption">The full loop — from clinical intent to closed-loop care — runs automatically. The clinician does nothing more than recommend.</p>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- ── The Economics ─────────────────────────────────────── -->
+<section class="section-gap">
+  <div class="reveal">
+    <div class="eyebrow">The Economics</div>
+    <h2>Outpatient care runs on thin margins.<br/>Revytal <em>changes the math.</em></h2>
+  </div>
+  <div class="panel reveal">
+    <p>Reimbursement is unpredictable, delayed, and often declining. Clinics survive by optimizing schedules, negotiating rates, and squeezing efficiency out of workflows already stretched thin.</p>
+    <p>But one economic truth is universal: patients buy what clinicians recommend — clinics simply don't participate in the value they create.</p>
+    <div class="econ-highlight">
+      <div class="econ-card">
+        <span class="econ-icon">🩺</span>
+        <div class="econ-title">No inventory</div>
+        <div class="econ-sub">Suppliers ship direct. Clinics carry zero stock.</div>
+      </div>
+      <div class="econ-card">
+        <span class="econ-icon">⚡</span>
+        <div class="econ-title">No logistics</div>
+        <div class="econ-sub">Fulfillment is automated. Zero operational overhead.</div>
+      </div>
+      <div class="econ-card">
+        <span class="econ-icon">🔄</span>
+        <div class="econ-title">No workflow change</div>
+        <div class="econ-sub">The recommendation is the same. The rail is invisible.</div>
+      </div>
+    </div>
+    <div class="callout" style="margin-bottom:0">
+      <p>Billions in downstream spend flow through outpatient care every year, and clinics capture none of it. <strong>Revytal changes the economics without changing the workflow.</strong></p>
+    </div>
+    <p style="margin-top:20px;padding-top:20px;border-top:1px solid var(--border)">The revenue loop is the entry point. But it is not the whole story.</p>
+    <p style="margin-top:12px">As recommendations flow through the rail, patterns emerge across the clinical network — which products correlate with better adherence, where clinical habit and the evidence base diverge. That signal feeds back to providers as ambient, evidence-aligned context. No interruptions. No added steps.</p>
+    <p style="margin-top:12px">The revenue loop realigns incentives. The evidence loop raises the floor of care. <strong style="color:var(--teal2)">The revenue loop is the entry point. The evidence loop is what makes it defensible long-term.</strong></p>
+  </div>
+</section>
+<div class="divider"></div>
+<!-- ── Validation ─────────────────────────────────────────── -->
+<section class="section-gap">
+  <div class="reveal">
+    <div class="eyebrow">Validation</div>
+    <h2>Even at idea stage, <em>the signal is clear.</em></h2>
+    <p>This is not a behavior change problem. It's a missing infrastructure layer.</p>
+  </div>
+
+  <div class="panel-sm reveal">
+    <div class="validation-list">
+      <div class="val-item">
+        <div class="val-icon">
+          <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M2 7.5L5.5 11L12 4" stroke="#1BA6A6" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </div>
+        <p class="val-text"><strong>Clinicians want revenue not tied to insurance.</strong> The incentive alignment is immediate and obvious.</p>
+      </div>
+      <div class="val-item">
+        <div class="val-icon">
+          <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M2 7.5L5.5 11L12 4" stroke="#1BA6A6" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </div>
+        <p class="val-text"><strong>Patients already act on clinical recommendations.</strong> The behavior exists. The infrastructure doesn't.</p>
+      </div>
+      <div class="val-item">
+        <div class="val-icon">
+          <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M2 7.5L5.5 11L12 4" stroke="#1BA6A6" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </div>
+        <p class="val-text"><strong>Suppliers want direct‑to‑patient distribution</strong> rooted in clinical trust, not consumer advertising.</p>
+      </div>
+      <div class="val-item">
+        <div class="val-icon">
+          <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M2 7.5L5.5 11L12 4" stroke="#1BA6A6" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </div>
+        <p class="val-text"><strong>The analog workflow already works</strong> — Revytal simply captures it and automates what happens next.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- ── Why Now ────────────────────────────────────────────── -->
+<section class="section-gap">
+  <div class="reveal">
+    <div class="eyebrow">Why Now</div>
+    <h2>The missing layers<br/>are <em>commerce and evidence.</em></h2>
+    <p>As ambient AI becomes the operating system of outpatient care, two layers are missing simultaneously — the infrastructure that routes clinical recommendations into automated revenue, and the signal layer that turns those recommendations into evidence over time.</p>
+  </div>
+  <div class="why-now-grid reveal">
+    <div class="why-card">
+      <div class="why-card-icon">
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><rect x="2" y="4" width="12" height="9" rx="2" stroke="#1BA6A6" stroke-width="1.3"/><path d="M5 4V3a3 3 0 016 0v1" stroke="#1BA6A6" stroke-width="1.3" stroke-linecap="round"/></svg>
+      </div>
+      <h3>Documentation is automated</h3>
+      <p>AI scribes capture the clinical encounter. Recommendations are becoming structured signals — and structured signals can feed both commerce and evidence loops.</p>
+    </div>
+    <div class="why-card">
+      <div class="why-card-icon">
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><circle cx="8" cy="8" r="6" stroke="#1BA6A6" stroke-width="1.3"/><path d="M8 5v3l2 2" stroke="#1BA6A6" stroke-width="1.3" stroke-linecap="round"/></svg>
+      </div>
+      <h3>Scheduling is ambient</h3>
+      <p>The workflow overhead is collapsing. The clinical moment is surfacing — and it needs a commerce layer to complete it and an evidence layer to learn from it.</p>
+    </div>
+    <div class="why-card">
+      <div class="why-card-icon">
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M2 10l4-4 3 3 5-5" stroke="#1BA6A6" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </div>
+      <h3>Reimbursement is declining</h3>
+      <p>Clinics need revenue that isn't tied to insurance. Revytal delivers it — and pairs it with evidence-aligned insights that make the recommendation itself more defensible.</p>
+    </div>
+    <div class="why-card">
+      <div class="why-card-icon">
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M8 2l1.5 3.5L13 6l-2.5 2.5.5 3.5L8 10.5 5 12l.5-3.5L3 6l3.5-.5L8 2z" stroke="#1BA6A6" stroke-width="1.3" stroke-linejoin="round"/></svg>
+      </div>
+      <h3>The category is unnamed</h3>
+      <p>No competitor owns Clinical Commerce Infrastructure. No one is building the evidence layer on top of it. The first credible player names both and sets the terms.</p>
+    </div>
+  </div>
+  <div class="callout reveal" style="margin-top:24px">
+    <p>The rail is inevitable. The evidence layer is what makes it matter. <strong>The only question is who builds both first.</strong></p>
+  </div>
+</section>
+<div class="divider"></div>
+
+<!-- ── The Vision ─────────────────────────────────────────── -->
+<section class="section-gap">
+  <div class="reveal">
+    <div class="eyebrow">The Vision</div>
+    <h2>The commerce and evidence layer beneath<br/>the next decade of <em>clinical automation.</em></h2>
+    <p>The future of outpatient care is ambient. Documentation, scheduling, billing, and communication are all moving toward invisible automation — systems that listen, understand, and act.</p>
+    <p>But one part of the workflow has remained untouched: the moment a clinician recommends something. That moment generates two things simultaneously — a transaction and a signal. Revytal captures both.</p>
+  </div>
+  <div class="vision-terminal reveal">
+    <div class="terminal-bar">
+      <div class="terminal-dot" style="background:#EF4444"></div>
+      <div class="terminal-dot" style="background:#F59E0B"></div>
+      <div class="terminal-dot" style="background:#22C55E"></div>
+      <span class="terminal-title">revytal.longterm — vision/roadmap.ts</span>
+    </div>
+    <div class="terminal-body">
+      <div class="t-line"><span class="t-p">const</span> <span class="t-v">nearTerm</span> <span class="t-c">=</span> <span class="t-s">"Prove the rail: 10 clinics, 4 suppliers, 100+ orders."</span></div>
+      <div class="t-line" style="margin-top:8px"><span class="t-p">const</span> <span class="t-v">medTerm</span> <span class="t-c">=</span> <span class="t-s">"Default infrastructure for outpatient recommendations."</span></div>
+      <div class="t-line" style="margin-top:8px"><span class="t-p">const</span> <span class="t-v">longTerm</span> <span class="t-c">=</span> <span class="t-s">"The routing engine and evidence layer for clinical care."</span></div>
+      <div class="t-line" style="margin-top:16px"><span class="t-dim">// Clinical intent becomes a structured signal.</span></div>
+      <div class="t-line"><span class="t-dim">// Revytal becomes the rail that routes it.</span></div>
+      <div class="t-line" style="margin-top:8px"><span class="t-dim">// The fulfillment switchboard for outpatient care.</span></div>
+      <div class="t-line"><span class="t-dim">// The evidence layer that raises the floor of clinical decision-making.</span></div>
+      <div class="t-line" style="margin-top:8px"><span class="t-dim">// Infrastructure that pays clinics and makes them better.</span></div>
+    </div>
+  </div>
+</section>
+<div class="divider"></div>
+
+<!-- ── Who It's For ───────────────────────────────────────── -->
+<section class="section-gap">
+  <div class="reveal">
+    <div class="eyebrow">Who Revytal Is For</div>
+    <h2>Built for the <em>whole ecosystem.</em></h2>
+  </div>
+
+  <div class="audience-grid reveal">
+    <div class="audience-card">
+      <span class="audience-tag">Clinics</span>
+      <h3>Zero-drag revenue</h3>
+      <p>A seamless way to participate in downstream product revenue without inventory, logistics, or workflow change.</p>
+    </div>
+    <div class="audience-card">
+      <span class="audience-tag">Suppliers</span>
+      <h3>Trust-rooted distribution</h3>
+      <p>A direct‑to‑patient distribution channel rooted in clinical trust, not consumer advertising spend.</p>
+    </div>
+    <div class="audience-card">
+      <span class="audience-tag">Investors</span>
+      <h3>Category creation</h3>
+      <p>A new category of healthcare infrastructure at the idea stage — with a clear problem, a clear wedge, and a clear path to inevitability.</p>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- ── Why Revytal Wins ───────────────────────────────────── -->
+<section class="section-gap">
+  <div class="reveal">
+    <div class="eyebrow">Why Revytal Wins</div>
+    <h2>Structural advantages <em>built into the model.</em></h2>
+  </div>
+
+  <div class="win-grid reveal">
+    <div class="win-item">Infrastructure, not a tool</div>
+    <div class="win-item">Zero workflow change</div>
+    <div class="win-item">Supplier&#8209;agnostic</div>
+    <div class="win-item">Ambient AI&#8209;ready</div>
+    <div class="win-item">Category&#8209;defining narrative</div>
+    <div class="win-item">Built for outpatient care realities</div>
+  </div>
+
+  <div class="callout reveal" style="margin-top:24px">
+    <p>Revytal is the <strong>commerce layer beneath the next decade of clinical automation.</strong></p>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- ── Contact ────────────────────────────────────────────── -->
+<section class="section-gap">
+  <div class="contact-panel reveal">
+    <div class="eyebrow" style="justify-content:center">Contact</div>
+    <h2>Let's build the rail.</h2>
+    <p>Whether you're a clinic operator, supplier, or investor — if you see the gap, we want to hear from you.</p>
+    <a href="mailto:will@mendtherapyla.com" class="contact-email">
+      <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><rect x="1.5" y="3.5" width="13" height="9" rx="2" stroke="currentColor" stroke-width="1.3"/><path d="M1.5 6l6.5 4 6.5-4" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/></svg>
+      will@revytal.co
+    </a>
+  </div>
+</section>
+
+<!-- ── Footer ─────────────────────────────────────────────── -->
+<footer>
+  <div class="footer-logo">
+    <div class="nav-logo-mark" style="width:20px;height:20px;border-radius:5px;box-shadow:none">
+      <svg width="10" height="10" viewBox="0 0 14 14" fill="none">
+        <path d="M7 1L12 4V10L7 13L2 10V4L7 1Z" stroke="white" stroke-width="1.5" stroke-linejoin="round"/>
+        <circle cx="7" cy="7" r="2" fill="white"/>
+      </svg>
+    </div>
+    Revytal
+  </div>
+  <span class="footer-copy">© 2025 · Clinical Commerce Infrastructure</span>
+</footer>
+
+</div><!-- /app -->
+
+<script>
+// ── Scroll reveal ──────────────────────────────────────────
+(function(){
+  const els = document.querySelectorAll('.reveal');
+  if(!els.length) return;
+
+  const io = new IntersectionObserver((entries) => {
+    entries.forEach(e => {
+      if(e.isIntersecting){
+        e.target.classList.add('visible');
+        io.unobserve(e.target);
+      }
+    });
+  }, { threshold: 0.08, rootMargin: '0px 0px -40px 0px' });
+
+  els.forEach(el => io.observe(el));
+})();
+</script>
+</body>
+</html>
