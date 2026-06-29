@@ -71,6 +71,16 @@ button,a{touch-action:manipulation}
   backdrop-filter:blur(16px);
   border-bottom:1px solid var(--blue-wash);
 }
+.scroll-progress{
+  position:absolute;
+  left:0;
+  right:0;
+  bottom:-1px;
+  height:2px;
+  background:var(--coral);
+  transform:scaleX(0);
+  transform-origin:left;
+}
 .nav-inner{
   min-height:70px;
   display:flex;
@@ -125,7 +135,9 @@ button,a{touch-action:manipulation}
   font-size:14px;
   line-height:1;
   text-decoration:none;
+  transition:background .18s ease,border-color .18s ease,transform .18s ease;
 }
+.btn:hover{transform:translateY(-1px)}
 .btn:focus-visible{
   outline:3px solid rgba(255,107,74,.36);
   outline-offset:3px;
@@ -218,6 +230,11 @@ h1{
   border-radius:var(--radius-device);
   background:var(--blue);
   box-shadow:var(--shadow);
+  transition:transform .28s ease,box-shadow .28s ease;
+}
+.checkout-stage:hover .phone{
+  transform:translateY(-4px);
+  box-shadow:0 30px 82px rgba(16,20,38,.16);
 }
 .phone-screen{
   overflow:hidden;
@@ -270,6 +287,12 @@ h1{
   border:1px solid var(--line);
   border-radius:var(--radius);
   background:var(--soft-field);
+  transition:background .18s ease,border-color .18s ease,transform .18s ease;
+}
+.product-row:hover{
+  background:var(--clinic-white);
+  border-color:var(--line-strong);
+  transform:translateX(3px);
 }
 .product-top{
   display:flex;
@@ -298,6 +321,30 @@ h1{
   color:var(--clinic-white);
   font-family:var(--header);
   font-size:14px;
+  cursor:pointer;
+  transition:background .18s ease,transform .18s ease;
+}
+.checkout-button:hover{background:var(--coral-hover);transform:translateY(-1px)}
+.status-feed{
+  display:grid;
+  gap:8px;
+  margin-top:14px;
+  color:var(--slate);
+  font-size:12px;
+}
+.status-feed span{
+  display:none;
+  align-items:center;
+  gap:8px;
+}
+.status-feed span.is-active{display:flex}
+.status-feed span::before{
+  content:"";
+  width:7px;
+  height:7px;
+  border-radius:50%;
+  background:var(--mint);
+  box-shadow:0 0 0 4px rgba(221,239,234,.72);
 }
 .stage-note{
   max-width:342px;
@@ -338,6 +385,11 @@ h2{
   min-height:210px;
   padding:26px;
   border-right:1px solid var(--line);
+  transition:background .18s ease,transform .18s ease;
+}
+.leakage-item:hover{
+  background:var(--soft-field);
+  transform:translateY(-2px);
 }
 .leakage-item:last-child{border-right:0}
 .item-number{
@@ -369,6 +421,11 @@ h2{
   min-height:250px;
   padding:28px;
   border-right:1px solid var(--line);
+  transition:background .18s ease,transform .18s ease;
+}
+.step:hover{
+  background:var(--soft-field);
+  transform:translateY(-2px);
 }
 .step:last-child{border-right:0}
 .step::before{
@@ -385,6 +442,10 @@ h2{
   border-color:var(--coral);
   background:var(--coral-tint);
 }
+.step.is-current::before{
+  border-color:var(--coral);
+  background:var(--coral-tint);
+}
 .step-label{
   display:inline-flex;
   margin-bottom:14px;
@@ -397,6 +458,7 @@ h2{
   line-height:1;
 }
 .step.active .step-label{background:var(--coral-tint);color:var(--coral)}
+.step.is-current .step-label{background:var(--coral-tint);color:var(--coral)}
 
 .video-frame{
   overflow:hidden;
@@ -433,7 +495,9 @@ h2{
   gap:16px;
   padding-bottom:18px;
   border-bottom:1px solid var(--line);
+  transition:transform .18s ease;
 }
+.proof:hover{transform:translateX(3px)}
 .proof:last-child{border-bottom:0}
 .proof-icon{
   display:grid;
@@ -451,6 +515,11 @@ h2{
   border-radius:var(--radius);
   background:var(--soft-field);
   padding:28px;
+  transition:border-color .18s ease,transform .18s ease;
+}
+.econ-card:hover{
+  border-color:var(--line-strong);
+  transform:translateY(-2px);
 }
 .math-row{
   display:flex;
@@ -493,6 +562,10 @@ h2{
   border-left:6px solid var(--coral);
   background:var(--clinic-white);
   padding:28px;
+  transition:transform .18s ease;
+}
+.relationship-panel:hover{
+  transform:translateY(-2px);
 }
 .relationship-panel h3{
   margin-bottom:12px;
@@ -534,6 +607,16 @@ h2{
 }
 .footer-logo img{width:154px;height:auto}
 
+.motion-ready .reveal{
+  opacity:0;
+  transform:translateY(18px);
+  transition:opacity .55s ease,transform .55s ease;
+}
+.motion-ready .reveal.is-visible{
+  opacity:1;
+  transform:none;
+}
+
 @media(max-width:980px){
   .hero{min-height:auto;padding:58px 0 68px}
   .hero-grid,.section-head,.economics,.patient-band,.cta-inner{grid-template-columns:1fr;gap:42px}
@@ -561,6 +644,25 @@ h2{
   .math-row.total{display:block}
   .math-row.total strong{display:block;margin-top:8px}
 }
+@media(prefers-reduced-motion:reduce){
+  html{scroll-behavior:auto}
+  *,*::before,*::after{
+    animation-duration:.001ms!important;
+    animation-iteration-count:1!important;
+    scroll-behavior:auto!important;
+    transition-duration:.001ms!important;
+  }
+  .btn:hover,
+  .checkout-stage:hover .phone,
+  .product-row:hover,
+  .leakage-item:hover,
+  .step:hover,
+  .proof:hover,
+  .econ-card:hover,
+  .relationship-panel:hover{
+    transform:none;
+  }
+}
 </style>
 </head>
 <body>
@@ -578,12 +680,13 @@ h2{
         <a class="btn btn-primary" href="https://forms.gle/T9veyQtREzwLpDQP6" target="_blank" rel="noopener">Request pilot</a>
       </div>
     </div>
+    <div class="scroll-progress" aria-hidden="true"></div>
   </nav>
 
   <main>
     <section class="hero" id="top">
       <div class="wrap hero-grid">
-        <div>
+        <div class="reveal">
           <p class="eyebrow">Clinic-safe commerce infrastructure</p>
           <h1>Turn trusted recommendations into purchase <span class="accent-word">follow-through</span>.</h1>
           <p class="hero-copy">Revytal gives every product recommendation a clean, clinic-branded place to land, so patients can act with confidence and clinics can capture the value they already create.</p>
@@ -598,7 +701,7 @@ h2{
           </div>
         </div>
 
-        <div class="checkout-stage" aria-label="Patient checkout mockup">
+        <div class="checkout-stage reveal" aria-label="Patient checkout mockup">
           <div class="phone">
             <div class="phone-screen">
               <div class="phone-header">
@@ -625,6 +728,11 @@ h2{
                   </div>
                 </div>
                 <button class="checkout-button" type="button">Complete purchase</button>
+                <div class="status-feed" aria-live="polite">
+                  <span class="is-active">Recommendation matched to clinic catalog</span>
+                  <span>Checkout link ready for the patient</span>
+                  <span>Supplier route confirmed</span>
+                </div>
               </div>
             </div>
           </div>
@@ -635,11 +743,11 @@ h2{
 
     <section class="soft" id="platform">
       <div class="wrap">
-        <div class="section-head">
+        <div class="section-head reveal">
           <h2>Stop losing the moment after the recommendation.</h2>
           <p class="section-copy">Clinicians already create demand for braces, orthotics, topicals, supplements, and recovery tools. Revytal makes the next step clear, shoppable, and tied back to the trusted source.</p>
         </div>
-        <div class="leakage-grid">
+        <div class="leakage-grid reveal">
           <article class="leakage-item">
             <span class="item-number">01</span>
             <h3>The provider earns the trust.</h3>
@@ -661,11 +769,11 @@ h2{
 
     <section id="workflow">
       <div class="wrap">
-        <div class="section-head">
+        <div class="section-head reveal">
           <h2>A recommendation rail built for clinic reality.</h2>
           <p class="section-copy">Revytal keeps the clinical workflow intact while giving each recommendation a product page, checkout path, fulfillment route, and revenue record.</p>
         </div>
-        <div class="workflow" aria-label="Revytal workflow">
+        <div class="workflow reveal" aria-label="Revytal workflow">
           <article class="step active">
             <span class="step-label">Recommend</span>
             <h3>Name the item you trust.</h3>
@@ -692,22 +800,22 @@ h2{
 
     <section class="soft" id="checkout-flow">
       <div class="wrap">
-        <div class="section-head">
+        <div class="section-head reveal">
           <h2>See the checkout flow in motion.</h2>
           <p class="section-copy">The patient experience is intentionally simple: recommended products, plain reasons, and a direct path to purchase.</p>
         </div>
-        <div class="video-frame">
+        <div class="video-frame reveal">
           <video controls playsinline preload="metadata">
             <source src="../landing/RevytalCheckoutFlow.mp4" type="video/mp4"/>
           </video>
         </div>
-        <p class="caption">Prototype checkout flow shown for team review. Video file is shared with the existing Revytal landing page.</p>
+        <p class="caption reveal">Prototype checkout flow shown for team review. Video file is shared with the existing Revytal landing page.</p>
       </div>
     </section>
 
     <section id="economics">
       <div class="wrap economics">
-        <div>
+        <div class="reveal">
           <p class="eyebrow">Clinic economics</p>
           <h2>A new revenue line from advice already being given.</h2>
           <p class="section-copy">Revytal is designed for practical pilot economics: start with the products your team recommends most, avoid inventory overhead, and capture orders that would otherwise leak away.</p>
@@ -736,7 +844,7 @@ h2{
           </div>
         </div>
 
-        <aside class="econ-card" aria-label="Example clinic revenue math">
+        <aside class="econ-card reveal" aria-label="Example clinic revenue math">
           <h3>Sample monthly math</h3>
           <p>Illustrative pilot model based on a small clinic recommendation volume.</p>
           <div class="math-row"><span>Product recommendations per day</span><strong>7</strong></div>
@@ -750,12 +858,12 @@ h2{
 
     <section class="wash">
       <div class="wrap patient-band">
-        <div>
+        <div class="reveal">
           <p class="eyebrow">Patient follow-through</p>
           <h2>The patient gets the item you meant.</h2>
           <p class="section-copy">Revytal protects the relationship at the center of the recommendation. The patient does not need to interpret a product search. They get the clinic's intended next step.</p>
         </div>
-        <div class="relationship-panel">
+        <div class="relationship-panel reveal">
           <span class="badge">Trusted path</span>
           <h3>From advice to action, without marketplace substitution.</h3>
           <p>Each recommendation can include the clinical reason, usage note, product selection, and fulfillment path in one focused experience.</p>
@@ -765,12 +873,12 @@ h2{
 
     <section class="cta" id="pilot">
       <div class="wrap cta-inner">
-        <div>
+        <div class="reveal">
           <p class="eyebrow">Pilot clinics</p>
           <h2>Build the recommendation rail your clinic would actually use.</h2>
           <p>Revytal is looking for clinic teams ready to test the product hub, checkout flow, fulfillment path, and revenue reporting loop.</p>
         </div>
-        <a class="btn btn-primary" href="https://forms.gle/T9veyQtREzwLpDQP6" target="_blank" rel="noopener">Request pilot</a>
+        <a class="btn btn-primary reveal" href="https://forms.gle/T9veyQtREzwLpDQP6" target="_blank" rel="noopener">Request pilot</a>
       </div>
     </section>
   </main>
@@ -785,5 +893,67 @@ h2{
     </div>
   </footer>
 </div>
+<script>
+(() => {
+  const prefersReduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  const progress = document.querySelector(".scroll-progress");
+
+  const updateProgress = () => {
+    if (!progress) return;
+    const max = document.documentElement.scrollHeight - window.innerHeight;
+    const ratio = max > 0 ? window.scrollY / max : 0;
+    progress.style.transform = `scaleX(${Math.min(1, Math.max(0, ratio))})`;
+  };
+
+  updateProgress();
+  window.addEventListener("scroll", updateProgress, { passive:true });
+  window.addEventListener("resize", updateProgress);
+
+  if (prefersReduced) return;
+
+  const revealItems = Array.from(document.querySelectorAll(".reveal"));
+  revealItems.forEach((el) => {
+    const rect = el.getBoundingClientRect();
+    if (rect.top < window.innerHeight * .95) {
+      el.classList.add("is-visible");
+    }
+  });
+
+  document.documentElement.classList.add("motion-ready");
+
+  const revealObserver = new IntersectionObserver((entries) => {
+    entries.forEach((entry) => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add("is-visible");
+        revealObserver.unobserve(entry.target);
+      }
+    });
+  }, { threshold:.16 });
+
+  revealItems
+    .filter((el) => !el.classList.contains("is-visible"))
+    .forEach((el) => revealObserver.observe(el));
+
+  const steps = Array.from(document.querySelectorAll(".workflow .step"));
+  const stepObserver = new IntersectionObserver((entries) => {
+    entries.forEach((entry) => {
+      if (!entry.isIntersecting) return;
+      steps.forEach((step) => step.classList.remove("is-current"));
+      entry.target.classList.add("is-current");
+    });
+  }, { threshold:.6 });
+  steps.forEach((step) => stepObserver.observe(step));
+
+  const statuses = Array.from(document.querySelectorAll(".status-feed span"));
+  if (statuses.length > 1) {
+    let index = 0;
+    window.setInterval(() => {
+      statuses[index].classList.remove("is-active");
+      index = (index + 1) % statuses.length;
+      statuses[index].classList.add("is-active");
+    }, 2600);
+  }
+})();
+</script>
 </body>
 </html>
