@@ -489,9 +489,16 @@ textarea.field { min-height: 120px; resize: vertical; }
   text-align: right;
   font-variant-numeric: tabular-nums;
   transform-origin: center;
+  transition: color 0.18s ease;
 }
-.calc-total strong.is-spinning { animation: revenue-spin 0.08s linear infinite; }
-.calc-total strong.is-pop { animation: revenue-pop 0.34s cubic-bezier(0.2, 1.4, 0.36, 1); }
+.calc-total strong.is-spinning {
+  color: var(--blue);
+  animation: revenue-spin 0.08s linear infinite;
+}
+.calc-total strong.is-pop {
+  color: var(--coral);
+  animation: revenue-pop 0.34s cubic-bezier(0.2, 1.4, 0.36, 1);
+}
 .calc-note {
   max-width: 760px;
   margin: 8px 0 0;
