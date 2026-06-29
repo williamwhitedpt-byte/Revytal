@@ -70,22 +70,6 @@
     });
   });
 
-  document.querySelectorAll("[data-filter]").forEach((button) => {
-    button.setAttribute("aria-pressed", String(button.classList.contains("is-active")));
-    button.addEventListener("click", () => {
-      const filter = button.getAttribute("data-filter");
-      document.querySelectorAll("[data-filter]").forEach((item) => {
-        const active = item === button;
-        item.classList.toggle("is-active", active);
-        item.setAttribute("aria-pressed", String(active));
-      });
-      document.querySelectorAll("[data-category]").forEach((card) => {
-        const match = filter === "all" || card.getAttribute("data-category") === filter;
-        card.dataset.hidden = match ? "false" : "true";
-      });
-    });
-  });
-
   document.querySelectorAll("form[data-placeholder-form]").forEach((form) => {
     form.addEventListener("submit", (event) => {
       event.preventDefault();
