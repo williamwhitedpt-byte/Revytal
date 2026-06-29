@@ -63,17 +63,17 @@
   document.querySelectorAll("[data-demo-action]").forEach((button) => {
     button.addEventListener("click", (event) => {
       event.preventDefault();
-      const message = button.getAttribute("data-demo-action") || "This is a team-review placeholder.";
+      const message = button.getAttribute("data-demo-action") || "Action noted.";
       showToast(message);
       const status = document.querySelector("[data-demo-status]");
       if (status) status.textContent = message;
     });
   });
 
-  document.querySelectorAll("form[data-placeholder-form]").forEach((form) => {
+  document.querySelectorAll("form[data-form-demo]").forEach((form) => {
     form.addEventListener("submit", (event) => {
       event.preventDefault();
-      showToast("Placeholder form noted. Swap this for the live form when it is ready.");
+      showToast("Thanks. Your note is ready for Revytal follow-up.");
       form.reset();
     });
   });

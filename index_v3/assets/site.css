@@ -762,10 +762,8 @@ textarea.field { min-height: 120px; resize: vertical; }
   box-shadow: 0 0 0 5px rgba(221, 239, 234, 0.72);
 }
 .form-review-shell {
-  display: grid;
-  grid-template-columns: minmax(0, 0.75fr) minmax(320px, 1fr);
-  gap: 42px;
-  align-items: start;
+  display: block;
+  max-width: 880px;
 }
 .form-brief {
   position: sticky;
