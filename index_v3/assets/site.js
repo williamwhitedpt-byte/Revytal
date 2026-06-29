@@ -170,4 +170,56 @@
     recsValue.textContent = input.value;
     monthlyValue.textContent = formatDollars(monthlyEstimate(Number(input.value)));
   });
+
+  document.querySelectorAll("[data-review-board]").forEach((board) => {
+    const filters = Array.from(board.querySelectorAll("[data-review-filter]"));
+    const cards = Array.from(board.querySelectorAll("[data-review-card]"));
+    filters.forEach((button) => {
+      button.addEventListener("click", () => {
+        const filter = button.getAttribute("data-review-filter");
+        filters.forEach((item) => {
+          const active = item === button;
+          item.classList.toggle("is-active", active);
+          item.setAttribute("aria-pressed", String(active));
+        });
+        cards.forEach((card) => {
+          const tags = (card.getAttribute("data-review-tags") || "").split(/\s+/);
+          const match = filter === "all" || tags.includes(filter);
+          card.dataset.hidden = match ? "false" : "true";
+        });
+      });
+    });
+  });
+
+  document.querySelectorAll(".review-detail-toggle").forEach((button) => {
+    const details = button.nextElementSibling;
+    if (!details) return;
+    button.addEventListener("click", () => {
+      const open = button.getAttribute("aria-expanded") !== "true";
+      button.setAttribute("aria-expanded", String(open));
+      details.hidden = !open;
+    });
+  });
+
+  const lightbox = document.querySelector("[data-review-lightbox]");
+  if (lightbox) {
+    const image = lightbox.querySelector("[data-lightbox-target]");
+    const heading = lightbox.querySelector("[data-lightbox-heading]");
+    const closeButton = lightbox.querySelector("[data-lightbox-close]");
+    document.querySelectorAll("[data-lightbox-image]").forEach((button) => {
+      button.addEventListener("click", () => {
+        const title = button.getAttribute("data-lightbox-title") || "Page screenshot";
+        if (heading) heading.textContent = title;
+        if (image) {
+          image.src = button.getAttribute("data-lightbox-image");
+          image.alt = `${title} screenshot`;
+        }
+        if (typeof lightbox.showModal === "function") lightbox.showModal();
+      });
+    });
+    closeButton?.addEventListener("click", () => lightbox.close());
+    lightbox.addEventListener("click", (event) => {
+      if (event.target === lightbox) lightbox.close();
+    });
+  }
 })();
