@@ -79,6 +79,11 @@
   });
 
   const formatDollars = (value) => `$${Math.max(0, value).toLocaleString("en-US")}`;
+  const formatRollingDollars = (value, tick) => {
+    const digitCount = Math.max(3, String(Math.max(0, value)).length);
+    const digits = Array.from({ length: digitCount }, (_, index) => String((tick + index) % 10)).join("");
+    return `$${Number(digits).toLocaleString("en-US", { minimumIntegerDigits: digitCount })}`;
+  };
   const monthlyEstimate = (dailyRecommendations) => {
     const workDays = 20;
     const followThrough = 0.4;
@@ -114,7 +119,6 @@
     if (!input || !recsValue || !monthlyValue) return;
 
     let spinTimer;
-    let settleTimer;
     const settle = (finalValue) => {
       monthlyValue.classList.remove("is-spinning");
       monthlyValue.textContent = formatDollars(finalValue);
@@ -129,7 +133,6 @@
       const finalValue = monthlyEstimate(daily);
       recsValue.textContent = String(daily);
       window.clearInterval(spinTimer);
-      window.clearTimeout(settleTimer);
       monthlyValue.classList.remove("is-pop");
 
       if (reduced) {
@@ -138,16 +141,17 @@
       }
 
       monthlyValue.classList.add("is-spinning");
+      let spinTick = 0;
+      const spinFrames = 14;
+      monthlyValue.textContent = formatRollingDollars(finalValue, spinTick);
       spinTimer = window.setInterval(() => {
-        const low = Math.max(10, finalValue * 0.55);
-        const high = Math.max(low + 40, finalValue * 1.22);
-        const spinValue = Math.round((low + Math.random() * (high - low)) / 10) * 10;
-        monthlyValue.textContent = formatDollars(spinValue);
-      }, 55);
-      settleTimer = window.setTimeout(() => {
-        window.clearInterval(spinTimer);
-        settle(finalValue);
-      }, 520);
+        spinTick += 1;
+        monthlyValue.textContent = formatRollingDollars(finalValue, spinTick);
+        if (spinTick >= spinFrames) {
+          window.clearInterval(spinTimer);
+          settle(finalValue);
+        }
+      }, 90);
     };
 
     input.addEventListener("input", updateCalculator);

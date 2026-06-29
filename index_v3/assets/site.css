@@ -474,11 +474,16 @@ textarea.field { min-height: 120px; resize: vertical; }
   box-shadow: 0 0 0 6px rgba(255, 107, 74, 0.14);
 }
 .calc-total {
+  grid-template-columns: minmax(10rem, 1fr) minmax(5.6ch, auto);
   border-bottom: 0;
   color: var(--blue);
 }
+.calc-total-label {
+  line-height: 1.18;
+  white-space: nowrap;
+}
 .calc-total strong {
-  min-width: 168px;
+  min-width: 5.6ch;
   color: var(--coral);
   font-size: clamp(3rem, 2.2rem + 3vw, 5rem);
   line-height: 1;
