@@ -1,0 +1,5 @@
+1:"$Sreact.fragment"
+2:I[97367,["/_next/static/chunks/1z6x88ihszho0.js","/_next/static/chunks/158myu8e_yme3.js"],"OutletBoundary"]
+3:"$Sreact.suspense"
+0:{"rsc":["$","$1","c",{"children":[["$","main",null,{"id":"main","children":["$","section",null,{"className":"page-hero","children":["$","div",null,{"className":"wrap","children":["$","div",null,{"children":[["$","p",null,{"className":"eyebrow","children":"Next static preview"}],["$","h1",null,{"children":["This page is not migrated ",["$","span",null,{"className":"accent-word","children":"yet"}],"."]}],["$","p",null,{"className":"lead","children":"Use the preserved static site while this route is being ported into React."}],["$","a",null,{"className":"btn btn-primary","href":"/index_v3/","children":"Open current static review set"}]]}]}]}]}],null,["$","$L2",null,{"children":["$","$3",null,{"name":"Next.MetadataOutlet","children":"$@4"}]}]]}],"isPartial":false,"staleTime":300,"varyParams":null,"buildId":"74kv1VFEguSA_UAvdxynS"}
+4:null

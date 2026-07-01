@@ -1,0 +1,6 @@
+:HL["/assets/fonts/PolySans-Neutral.woff2","font",{"crossOrigin":"anonymous","type":"font/woff2"}]
+:HL["/assets/fonts/PolySans-Slim.woff2","font",{"crossOrigin":"anonymous","type":"font/woff2"}]
+:HL["/assets/site.css?v=20260701-next-static","style"]
+:HL["/assets/revytal-dark-logobrand.svg","image"]
+:HL["/assets/revytal-white-logobrand.svg","image"]
+0:{"tree":{"name":"","param":null,"prefetchHints":16,"slots":{"children":{"name":"clinic-conversation","param":null,"prefetchHints":0,"slots":{"children":{"name":"__PAGE__","param":null,"prefetchHints":0,"slots":null}}}}},"staleTime":300,"buildId":"74kv1VFEguSA_UAvdxynS"}
