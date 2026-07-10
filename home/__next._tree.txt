@@ -1,9 +1,0 @@
-:HL["/_next/static/chunks/1hj8gxgug62z0.css","style"]
-:HL["/assets/fonts/PolySans-Neutral.woff2","font",{"crossOrigin":"anonymous","type":"font/woff2"}]
-:HL["/assets/fonts/PolySans-Slim.woff2","font",{"crossOrigin":"anonymous","type":"font/woff2"}]
-:HL["/assets/site.css?v=20260701-next-static","style"]
-:HL["/assets/revytal-dark-logobrand.svg","image"]
-:HL["/assets/revytal-white-logobrand.svg","image"]
-:HL["/assets/revytal-dark-logo.svg","image"]
-:HL["/assets/home/clinic-select.webp","image",{"fetchPriority":"high"}]
-0:{"tree":{"name":"","param":null,"prefetchHints":16,"slots":{"children":{"name":"home","param":null,"prefetchHints":0,"slots":{"children":{"name":"__PAGE__","param":null,"prefetchHints":0,"slots":null}}}}},"staleTime":300,"buildId":"m-rLE_biO3mUdrotf1_KC"}
